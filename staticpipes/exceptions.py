@@ -1,0 +1,2 @@
+class WatchFunctionalityNotImplementedException(Exception):
+    pass

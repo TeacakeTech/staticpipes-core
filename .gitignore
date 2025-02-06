@@ -1,0 +1,8 @@
+/staticpipes.egg-info
+__pycache__
+/.ve
+/.mypy_cache
+/.pytest_cache
+/_site
+/build
+/dist
