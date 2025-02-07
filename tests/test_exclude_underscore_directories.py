@@ -3,10 +3,10 @@ import tempfile
 
 import staticpipes.build_directory
 import staticpipes.config
-import staticpipes.pipelines.copy
+import staticpipes.pipes.copy
 import staticpipes.worker
-from staticpipes.pipelines.exclude_underscore_directories import (
-    PipeLineExcludeUnderscoreDirectories,
+from staticpipes.pipes.exclude_underscore_directories import (
+    PipeExcludeUnderscoreDirectories,
 )
 
 
@@ -14,9 +14,9 @@ def test_exclude_underscore_directories():
     # setup
     out_dir = tempfile.mkdtemp(prefix="staticpipes_tests_")
     config = staticpipes.config.Config(
-        pipelines=[
-            PipeLineExcludeUnderscoreDirectories(),
-            staticpipes.pipelines.copy.PipeLineCopy(),
+        pipes=[
+            PipeExcludeUnderscoreDirectories(),
+            staticpipes.pipes.copy.PipeCopy(),
         ],
     )
     worker = staticpipes.worker.Worker(

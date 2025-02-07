@@ -15,13 +15,13 @@ Configure this tool with a simple Python `file.py` in the root of your site. Thi
 
 ```python
 from staticpipes.config import Config
-from staticpipes.pipelines.copy import PipeLineCopy
+from staticpipes.pipelines.copy import PipeCopy
 
 import os
 
 config = Config(
-    pipelines=[
-        PipeLineCopy(extensions=["html", "css", "js"]),
+    pipes=[
+        PipeCopy(extensions=["html", "css", "js"]),
     ],
 )
 
@@ -38,12 +38,12 @@ Then run with:
 Use Jinja2 templates for html files:
 
 ```python
-from staticpipes.pipelines.jinja2 import PipeLineJinja2
+from staticpipes.pipes.jinja2 import PipeJinja2
 
 config = Config(
-    pipelines=[
-        PipeLineCopy(extensions=["css", "js"]),
-        PipeLineJinja2(extensions=["html"]),
+    pipes=[
+        PipeCopy(extensions=["css", "js"]),
+        PipeJinja2(extensions=["html"]),
     ],
     context={
         "title": "An example website",
@@ -55,9 +55,9 @@ If you like putting your CSS and JS in a `assets` directory in your source, you 
 
 ```python
 config = Config(
-    pipelines=[
-        PipeLineCopy(extensions=["css", "js"], source_sub_directory="assets"),
-        PipeLineJinja2(extensions=["html"]),
+    pipes=[
+        PipeCopy(extensions=["css", "js"], source_sub_directory="assets"),
+        PipeJinja2(extensions=["html"]),
     ],
     context={
         "title": "An example website",
@@ -70,12 +70,12 @@ config = Config(
 Version your assets:
 
 ```python
-from staticpipes.pipelines.copy_with_versioning import PipeLineCopyWithVersioning
+from staticpipes.pipes.copy_with_versioning import PipeCopyWithVersioning
 
 config = Config(
-    pipelines=[
-        PipeLineCopyWithVersioning(extensions=["css", "js"]),
-        PipeLineJinja2(extensions=["html"]),
+    pipes=[
+        PipeCopyWithVersioning(extensions=["css", "js"]),
+        PipeJinja2(extensions=["html"]),
     ]
 )
 ```
@@ -84,62 +84,62 @@ config = Config(
 
 Exclude library files like `_layouts/base.html` templates:
 
-```python,
-from staticpipes.pipelines.exclude_underscore_directories import PipeLineExcludeUnderscoreDirectories
+```python
+from staticpipes.pipes.exclude_underscore_directories import PipeExcludeUnderscoreDirectories
 
 config = Config(
-    pipelines=[
-        PipeLineExcludeUnderscoreDirectories(),
-        PipeLineCopyWithVersioning(extensions=["css", "js"]),
-        PipeLineJinja2(extensions=["html"]),
+    pipes=[
+        PipeExcludeUnderscoreDirectories(),
+        PipeCopyWithVersioning(extensions=["css", "js"]),
+        PipeJinja2(extensions=["html"]),
     ],
 )
 ```
 
 Minify your JS:
 
-```python,
-from staticpipes.pipelines.javascript_minifier import ProcessJavascriptMinifier
+```python
+from staticpipes.pipes.javascript_minifier import ProcessJavascriptMinifier
 
 config = Config(
-    pipelines=[
-        PipeLineExcludeUnderscoreDirectories(),
-        PipeLineJavascriptMinifier(),
-        PipeLineCopyWithVersioning(extensions=["css"]),
-        PipeLineJinja2(extensions=["html"]),
+    pipes=[
+        PipeExcludeUnderscoreDirectories(),
+        PipeJavascriptMinifier(),
+        PipeCopyWithVersioning(extensions=["css"]),
+        PipeJinja2(extensions=["html"]),
     ],
 )
 ```
 
 Use the special Process pipeline to chain together processes - this minifies then versions JS, putting new filenames in the context for templates to use:
 
-```python,
-from staticpipes.pipelines.process import PipeLineProcess
-from staticpipes.pipelines.processors.version import ProcessVersion
-from staticpipes.pipelines.processors.javascript_minifier import ProcessJavascriptMinifier
+```python
+from staticpipes.pipes.process import PipeProcess
+from staticpipes.processes.version import ProcessVersion
+from staticpipes.processes.javascript_minifier import ProcessJavascriptMinifier
 
 config = Config(
-    pipelines=[
-        PipeLineExcludeUnderscoreDirectories(),
-        PipeLineProcess(extensions=["js"], processors=[ProcessJavascriptMinifier(), ProcessVersion()]),
-        PipeLineCopyWithVersioning(extensions=["css"]),
-        PipeLineJinja2(extensions=["html"]),
+    pipes=[
+        PipeExcludeUnderscoreDirectories(),
+        PipeProcess(extensions=["js"], processors=[ProcessJavascriptMinifier(), ProcessVersion()]),
+        PipeCopyWithVersioning(extensions=["css"]),
+        PipeJinja2(extensions=["html"]),
     ],
 )
 ```
 
 Or write your own pipeline! For instance, if you want your robots.txt to block AI crawlers here's all you need:
 
-```python,
-from staticpipes.pipelines.pipeline_base import BasePipeLine
+```python
+from staticpipes.pipes.pipe_base.py import BasePipe
 
-class PipeNoAIRobots(BasePipeLine):
+class PipeNoAIRobots(BasePipe):
     def start_build(self, current_info) -> None:
         r = requests.get("https://raw.githubusercontent.com/ai-robots-txt/ai.robots.txt/refs/heads/main/robots.txt")
         self.build_directory.write("/", "robots.txt", r.text)
 
 config = Config(
-    pipelines=[
+    pipes=[
         PipeNoAIRobots(),
     ],
 )
@@ -149,7 +149,7 @@ config = Config(
 
 Instances of pipeline classes are created and passed to the config. The same instance is used throughout. This means 
 if a pipeline wants to store information early on to use later, it can do. Pipelines classes should extend 
-the `staticpipes.BasePipeLine` class.
+the `staticpipes.pipe_base.BasePipe` class.
 
 ### Build stage 
 
@@ -182,7 +182,7 @@ with the context as temple variables so the html can actually load the CSS.
 
 Before the build stage is started a prepare stage is done. `start_prepare` is called on each pipeline, then 
 `prepare_file` for each file, then `end_prepare`. This can be used to collect  info before building. For example, 
-see the `PipeLineCopyWithVersioning` pipeline that works out the filename for any file it will work with in the prepare 
+see the `PipeCopyWithVersioning` pipeline that works out the filename for any file it will work with in the prepare 
 stage. This ensures information about the new file name is already in the context before a single build method is 
 called.
 
@@ -223,19 +223,19 @@ use the special process pipeline. Pass this as a pipeline to the config and also
 
 
 ```python
-from staticpipes.pipelines.process import PipeLineProcess
-from staticpipes.pipelines.processors.version import ProcessVersion
-from staticpipes.pipelines.processors.javascript_minifier import ProcessJavascriptMinifier
+from staticpipes.pipes.process import PipeProcess
+from staticpipes.processes.version import ProcessVersion
+from staticpipes.processes.javascript_minifier import ProcessJavascriptMinifier
 
 config = Config(
-    pipelines=[
-        PipeLineProcess(extensions=["js"], processors=[ProcessJavascriptMinifier(), ProcessVersion()]),
+    pipes=[
+        PipeProcess(extensions=["js"], processors=[ProcessJavascriptMinifier(), ProcessVersion()]),
     ],
 )
 ```
 
 Again, processes are class instances and the same class instance is used all the time. They should extend the 
-`staticpipes.pipelines.process.BaseProcessor` class. When that pipeline is called, the `process_file` method is called 
+`staticpipes.pipes.process.BaseProcessor` class. When that pipeline is called, the `process_file` method is called 
 for every file. The `process_current_info` parameter has directory, filename and contents attributes and these should 
 be changed as needed. 
 

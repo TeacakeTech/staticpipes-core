@@ -5,7 +5,7 @@ import tempfile
 
 import staticpipes.build_directory
 import staticpipes.config
-import staticpipes.pipelines.copy
+import staticpipes.pipes.copy
 import staticpipes.watcher
 import staticpipes.worker
 
@@ -14,7 +14,7 @@ def test_copy_fixture_with_extensions():
     # setup
     out_dir = tempfile.mkdtemp(prefix="staticpipes_tests_")
     config = staticpipes.config.Config(
-        pipelines=[staticpipes.pipelines.copy.PipeLineCopy(extensions=["html"])],
+        pipes=[staticpipes.pipes.copy.PipeCopy(extensions=["html"])],
     )
     worker = staticpipes.worker.Worker(
         config,
@@ -32,7 +32,7 @@ def test_copy_fixture_with_no_extensions():
     # setup
     out_dir = tempfile.mkdtemp(prefix="staticpipes_tests_")
     config = staticpipes.config.Config(
-        pipelines=[staticpipes.pipelines.copy.PipeLineCopy()],
+        pipes=[staticpipes.pipes.copy.PipeCopy()],
     )
     worker = staticpipes.worker.Worker(
         config,
@@ -56,7 +56,7 @@ def test_copy_fixture_then_watch(monkeypatch):
     )
     out_dir = tempfile.mkdtemp(prefix="staticpipes_tests_")
     config = staticpipes.config.Config(
-        pipelines=[staticpipes.pipelines.copy.PipeLineCopy(extensions=["html"])],
+        pipes=[staticpipes.pipes.copy.PipeCopy(extensions=["html"])],
     )
     worker = staticpipes.worker.Worker(
         config,
@@ -91,7 +91,7 @@ def test_copy_ignore_dist_under_source():
     )
     out_dir = os.path.join(in_dir, "in", "_site")
     config = staticpipes.config.Config(
-        pipelines=[staticpipes.pipelines.copy.PipeLineCopy(extensions=["html"])],
+        pipes=[staticpipes.pipes.copy.PipeCopy(extensions=["html"])],
     )
     worker = staticpipes.worker.Worker(
         config,
@@ -122,7 +122,7 @@ def test_copy_and_delete_files_already_in_site_dir():
     )
     out_dir = tempfile.mkdtemp(prefix="staticpipes_tests_")
     config = staticpipes.config.Config(
-        pipelines=[staticpipes.pipelines.copy.PipeLineCopy(extensions=["html"])],
+        pipes=[staticpipes.pipes.copy.PipeCopy(extensions=["html"])],
     )
     worker = staticpipes.worker.Worker(
         config,

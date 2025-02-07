@@ -3,9 +3,9 @@ import tempfile
 
 import staticpipes.build_directory
 import staticpipes.config
-import staticpipes.pipelines.process
-import staticpipes.pipelines.processors.javascript_minifier
-import staticpipes.pipelines.processors.version
+import staticpipes.pipes.process
+import staticpipes.processes.javascript_minifier
+import staticpipes.processes.version
 import staticpipes.watcher
 import staticpipes.worker
 
@@ -14,12 +14,12 @@ def test_copy_fixture_with_extensions():
     # setup
     out_dir = tempfile.mkdtemp(prefix="staticpipes_tests_")
     config = staticpipes.config.Config(
-        pipelines=[
-            staticpipes.pipelines.process.PipeLineProcess(
+        pipes=[
+            staticpipes.pipes.process.PipeProcess(
                 extensions=["js"],
                 processors=[
-                    staticpipes.pipelines.processors.javascript_minifier.ProcessJavascriptMinifier(),  # noqa
-                    staticpipes.pipelines.processors.version.ProcessVersion(),
+                    staticpipes.processes.javascript_minifier.ProcessJavascriptMinifier(),  # noqa
+                    staticpipes.processes.version.ProcessVersion(),
                 ],
             )
         ],

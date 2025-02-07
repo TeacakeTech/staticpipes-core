@@ -1,10 +1,10 @@
 import staticpipes.rjmin.rjsmin
 import staticpipes.utils
 from staticpipes.current_info import CurrentInfo
-from staticpipes.pipeline_base import BasePipeLine
+from staticpipes.pipe_base import BasePipe
 
 
-class PipeLineJavascriptMinifier(BasePipeLine):
+class PipeJavascriptMinifier(BasePipe):
     """
     A pipline that copies JS files from the source directory
     to the build site (unless already excluded)

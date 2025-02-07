@@ -1,7 +1,7 @@
 class Config:
 
-    def __init__(self, pipelines: list, context: dict = {}):
-        self.pipelines: list = pipelines
-        for pipeline in self.pipelines:
-            pipeline.config = self
+    def __init__(self, pipes: list, context: dict = {}):
+        self.pipes: list = pipes
+        for pipe in self.pipes:
+            pipe.config = self
         self.context: dict = context

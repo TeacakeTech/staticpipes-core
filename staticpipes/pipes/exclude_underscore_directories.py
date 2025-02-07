@@ -1,11 +1,11 @@
 from staticpipes.current_info import CurrentInfo
-from staticpipes.pipeline_base import BasePipeLine
+from staticpipes.pipe_base import BasePipe
 
 
-class PipeLineExcludeUnderscoreDirectories(BasePipeLine):
+class PipeExcludeUnderscoreDirectories(BasePipe):
     """Exclude any source files in directory that start with an underscore,
     and any of their children,
-    from any pipelines that follow this one.
+    from any pipes that follow this one.
 
     Use to exclude any library files eg template layouts in a "_layouts" directory.
     """

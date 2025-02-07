@@ -1,13 +1,13 @@
 import hashlib
 
-from staticpipes.pipelines.process import BaseProcessor
+from staticpipes.pipes.process import BaseProcessor
 
 
 class ProcessVersion(BaseProcessor):
     """Renames the file based on a hash of the contents,
     thus allowing them to be versioned.
 
-    The new filename is put in the context so later pipelines
+    The new filename is put in the context so later pipes
     (eg Jinja2 templates) can use it.
     """
 

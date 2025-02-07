@@ -3,8 +3,8 @@ import tempfile
 
 import staticpipes.build_directory
 import staticpipes.config
-import staticpipes.pipelines.copy_with_versioning
-import staticpipes.pipelines.jinja2
+import staticpipes.pipes.copy_with_versioning
+import staticpipes.pipes.jinja2
 import staticpipes.worker
 
 
@@ -12,11 +12,11 @@ def test_copy_fixture():
     # setup
     out_dir = tempfile.mkdtemp(prefix="staticpipes_tests_")
     config = staticpipes.config.Config(
-        pipelines=[
-            staticpipes.pipelines.copy_with_versioning.PipeLineCopyWithVersioning(
+        pipes=[
+            staticpipes.pipes.copy_with_versioning.PipeCopyWithVersioning(
                 extensions=["css", "js"], context_key="where_my_files"
             ),
-            staticpipes.pipelines.jinja2.PipeLineJinja2(extensions=["html"]),
+            staticpipes.pipes.jinja2.PipeJinja2(extensions=["html"]),
         ],
     )
     worker = staticpipes.worker.Worker(
@@ -40,7 +40,7 @@ def test_copy_fixture():
     assert os.path.exists(
         os.path.join(out_dir, "js", "main.ceba641cf86025b52dfc12a1b847b4d8.js")
     )
-    # test details in context for later pipelines to use
+    # test details in context for later pipes to use
     assert {
         "where_my_files": {
             "/styles.main.css": "/styles.main.73229b70fe5f1ad4bf6e6ef249287ad4.css",

@@ -5,7 +5,7 @@ from .exceptions import WatchFunctionalityNotImplementedException
 from .source_directory import SourceDirectory
 
 
-class BasePipeLine:
+class BasePipe:
 
     def __init__(self):
         self.config: Config = None  # type: ignore

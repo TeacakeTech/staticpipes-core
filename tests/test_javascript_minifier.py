@@ -3,7 +3,7 @@ import tempfile
 
 import staticpipes.build_directory
 import staticpipes.config
-import staticpipes.pipelines.javascript_minifier
+import staticpipes.pipes.javascript_minifier
 import staticpipes.watcher
 import staticpipes.worker
 
@@ -12,9 +12,7 @@ def test_javascript_minifier():
     # setup
     out_dir = tempfile.mkdtemp(prefix="staticpipes_tests_")
     config = staticpipes.config.Config(
-        pipelines=[
-            staticpipes.pipelines.javascript_minifier.PipeLineJavascriptMinifier()
-        ],
+        pipes=[staticpipes.pipes.javascript_minifier.PipeJavascriptMinifier()],
     )
     worker = staticpipes.worker.Worker(
         config,

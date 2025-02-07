@@ -2,17 +2,17 @@ import hashlib
 
 import staticpipes.utils
 from staticpipes.current_info import CurrentInfo
-from staticpipes.pipeline_base import BasePipeLine
+from staticpipes.pipe_base import BasePipe
 
 
-class PipeLineCopyWithVersioning(BasePipeLine):
+class PipeCopyWithVersioning(BasePipe):
     """
     A pipline that copies files from the source directory
     to the build site (unless already excluded) while
     renaming the file based on a hash of the contents,
     thus allowing them to be versioned.
 
-    The new filename is put in the context so later pipelines
+    The new filename is put in the context so later pipes
     (eg Jinja2 templates) can use it.
 
     Pass:

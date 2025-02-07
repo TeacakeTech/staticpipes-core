@@ -1,18 +1,18 @@
 import staticpipes.utils
 from staticpipes.current_info import CurrentInfo
-from staticpipes.pipeline_base import BasePipeLine
+from staticpipes.pipe_base import BasePipe
 
 
-class PipeLineProcess(BasePipeLine):
+class PipeProcess(BasePipe):
     """A pipeline that takes files and passes them through
-    a series of processors you define.
+    a series of processes you define.
     This allows one source file to go through multiple processes
     before being put in the build site.
 
     Only works on files with the right extensions not already
-    excluded by earlier pipelines.
+    excluded by earlier pipes.
 
-    For processers, see classes in staticpipes.pipelines.processors package
+    For processes, see classes in staticpipes.processes package
 
     Pass:
 
@@ -21,7 +21,7 @@ class PipeLineProcess(BasePipeLine):
     If not set, all files will be processed.
 
     - processors - a list of instances of processors from the
-    staticpipes.pipelines.processors package
+    staticpipes.pipes.processors package
 
     """
 

@@ -4,10 +4,10 @@ import jinja2
 
 import staticpipes.utils
 from staticpipes.current_info import CurrentInfo
-from staticpipes.pipeline_base import BasePipeLine
+from staticpipes.pipe_base import BasePipe
 
 
-class PipeLineJinja2(BasePipeLine):
+class PipeJinja2(BasePipe):
     """A pipeline that builds Jinja2 templates to output files
 
     Pass:

@@ -5,8 +5,8 @@ import pytest
 
 import staticpipes.build_directory
 import staticpipes.config
-import staticpipes.pipelines.copy
-import staticpipes.pipelines.copy_with_versioning
+import staticpipes.pipes.copy
+import staticpipes.pipes.copy_with_versioning
 import staticpipes.watcher
 import staticpipes.worker
 
@@ -22,8 +22,8 @@ def test_source_sub_directory_copy(source_sub_directory):
     # setup
     out_dir = tempfile.mkdtemp(prefix="staticpipes_tests_")
     config = staticpipes.config.Config(
-        pipelines=[
-            staticpipes.pipelines.copy.PipeLineCopy(
+        pipes=[
+            staticpipes.pipes.copy.PipeCopy(
                 extensions=["js", "txt"], source_sub_directory=source_sub_directory
             )
         ],
@@ -57,8 +57,8 @@ def test_source_sub_directory_copy_with_versioning(source_sub_directory):
     # setup
     out_dir = tempfile.mkdtemp(prefix="staticpipes_tests_")
     config = staticpipes.config.Config(
-        pipelines=[
-            staticpipes.pipelines.copy_with_versioning.PipeLineCopyWithVersioning(
+        pipes=[
+            staticpipes.pipes.copy_with_versioning.PipeCopyWithVersioning(
                 extensions=["js"], source_sub_directory=source_sub_directory
             )
         ],

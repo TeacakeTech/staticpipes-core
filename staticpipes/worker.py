@@ -15,7 +15,7 @@ class Worker:
         self.build_directory = BuildDirectory(build_directory)
         self.current_info = None
 
-        for pipeline in self.config.pipelines:
+        for pipeline in self.config.pipes:
             pipeline.config = self.config
             pipeline.source_directory = self.source_directory
             pipeline.build_directory = self.build_directory
@@ -29,7 +29,7 @@ class Worker:
     def _build(self):
         # Step 1: Prepare
         # start
-        for pipeline in self.config.pipelines:
+        for pipeline in self.config.pipes:
             pipeline.start_prepare(self.current_info)
         # files
         rpsd = os.path.realpath(self.source_directory.dir)
@@ -41,13 +41,13 @@ class Worker:
                         relative_dir = "/"
                     self._prepare_file(relative_dir, file)
         # end
-        for pipeline in self.config.pipelines:
+        for pipeline in self.config.pipes:
             pipeline.end_prepare(self.current_info)
 
         # Step 2: Build
         self.build_directory.prepare()
         # start
-        for pipeline in self.config.pipelines:
+        for pipeline in self.config.pipes:
             pipeline.start_build(self.current_info)
         # files
         rpsd = os.path.realpath(self.source_directory.dir)
@@ -59,7 +59,7 @@ class Worker:
                         relative_dir = "/"
                     self._process_file(relative_dir, file)
         # end
-        for pipeline in self.config.pipelines:
+        for pipeline in self.config.pipes:
             pipeline.end_build(self.current_info)
         self.build_directory.remove_all_files_we_did_not_write()
 
@@ -75,7 +75,7 @@ class Worker:
         self._build()
 
         # start
-        for pipeline in self.config.pipelines:
+        for pipeline in self.config.pipes:
             pipeline.start_watch(self.current_info)
         # Now watch
         watcher = Watcher(self)
@@ -85,13 +85,13 @@ class Worker:
     def _prepare_file(self, dir, filename):
         print("Preparing {} {} ...".format(dir, filename))
         self.current_info.reset_for_new_file()
-        for pipeline in self.config.pipelines:
+        for pipeline in self.config.pipes:
             pipeline.prepare_file(dir, filename, self.current_info)
 
     def _process_file(self, dir, filename):
         print("Processing {} {} ...".format(dir, filename))
         self.current_info.reset_for_new_file()
-        for pipeline in self.config.pipelines:
+        for pipeline in self.config.pipes:
             if self.current_info.current_file_excluded:
                 pipeline.file_excluded_during_build(dir, filename, self.current_info)
             else:
@@ -104,7 +104,7 @@ class Worker:
             return
         print("Processing during watch {} {} ...".format(dir, filename))
         self.current_info.reset_for_new_file()
-        for pipeline in self.config.pipelines:
+        for pipeline in self.config.pipes:
             try:
                 if self.current_info.current_file_excluded:
                     pipeline.file_changed_but_excluded_during_watch(

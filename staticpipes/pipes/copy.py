@@ -1,9 +1,9 @@
 import staticpipes.utils
 from staticpipes.current_info import CurrentInfo
-from staticpipes.pipeline_base import BasePipeLine
+from staticpipes.pipe_base import BasePipe
 
 
-class PipeLineCopy(BasePipeLine):
+class PipeCopy(BasePipe):
     """
     A pipline that just copies files from the source directory
     to the build site (unless already excluded).

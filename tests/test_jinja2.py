@@ -4,7 +4,7 @@ import tempfile
 
 import staticpipes.build_directory
 import staticpipes.config
-import staticpipes.pipelines.jinja2
+import staticpipes.pipes.jinja2
 import staticpipes.worker
 
 
@@ -12,7 +12,7 @@ def test_jinja2():
     # setup
     out_dir = tempfile.mkdtemp(prefix="staticpipes_tests_")
     config = staticpipes.config.Config(
-        pipelines=[staticpipes.pipelines.jinja2.PipeLineJinja2(extensions=["html"])],
+        pipes=[staticpipes.pipes.jinja2.PipeJinja2(extensions=["html"])],
         context={"hello": "World"},
     )
     worker = staticpipes.worker.Worker(
@@ -52,7 +52,7 @@ def test_jinja2_then_watch(monkeypatch):
     )
     out_dir = tempfile.mkdtemp(prefix="staticpipes_tests_")
     config = staticpipes.config.Config(
-        pipelines=[staticpipes.pipelines.jinja2.PipeLineJinja2(extensions=["html"])],
+        pipes=[staticpipes.pipes.jinja2.PipeJinja2(extensions=["html"])],
         context={"hello": "World"},
     )
     worker = staticpipes.worker.Worker(
