@@ -1,17 +1,20 @@
 # StaticPipes, the flexible and extendable static site website generator in Python
 
-Most static website generators have technologies, conventions and source code layout requirement that you have to follow. 
+Most static website generators have technologies, conventions and source code layout requirements that you have to 
+follow. 
 
 Instead this is a framework and a collection of pipelines to process your source files. 
 Use only the pipelines you want and configure them as you need. 
 
 Processes can also be chained, so the same source file goes throught multiple steps before being published.
 
-If you are a python programmer and need something different, then write a python class that extends our base class and write what you need.
+If you are a python programmer and need something different, then write a python class that extends our base class and 
+write what you need.
 
 ## Getting started
 
-Configure this tool with a simple Python `file.py` in the root of your site. This copies files with these extensions into the `_site` directory:
+Configure this tool with a simple Python `file.py` in the root of your site. This copies files with these extensions 
+into the `_site` directory:
 
 ```python
 from staticpipes.config import Config
@@ -80,7 +83,8 @@ config = Config(
 )
 ```
 
-(files like `js/main.ceba641cf86025b52dfc12a1b847b4d8.js` will be created, and that string will be available in Jinja2 variables so you can load them.)
+(files like `js/main.ceba641cf86025b52dfc12a1b847b4d8.js` will be created, and that string will be available in Jinja2 
+variables so you can load them.)
 
 Exclude library files like `_layouts/base.html` templates:
 
@@ -111,7 +115,8 @@ config = Config(
 )
 ```
 
-Use the special Process pipeline to chain together processes - this minifies then versions JS, putting new filenames in the context for templates to use:
+Use the special Process pipeline to chain together processes - this minifies then versions JS, putting new filenames in 
+the context for templates to use:
 
 ```python
 from staticpipes.pipes.process import PipeProcess
@@ -156,8 +161,8 @@ the `staticpipes.pipe_base.BasePipe` class.
 During building, the `start_build` method is called on each pipeline. Methods are always called on each pipeline in the 
 order the pipelines are passed to the config.
 
-Then, the `build_file` method is called on each pipeline for each file in the source directory. The order of files in the 
-directory is not set and should not be relied on.
+Then, the `build_file` method is called on each pipeline for each file in the source directory. The order of files in 
+the directory is not set and should not be relied on.
 
 The `end_build` method is called on each pipeline.
 
@@ -219,7 +224,8 @@ watch mode and the user will see a warning when using watch mode.
 ### Multiple processes for each source file
 
 If you want to set up a situation where every source file can go through more than one process you will want to 
-use the special process pipeline. Pass this as a pipeline to the config and also pass instances of the processes for each file.
+use the special process pipeline. Pass this as a pipeline to the config and also pass instances of the processes for 
+each file.
 
 
 ```python
