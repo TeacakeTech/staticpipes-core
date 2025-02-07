@@ -20,3 +20,6 @@ class PipeExcludeUnderscoreDirectories(BasePipe):
 
         if exclude:
             current_info.current_file_excluded = True
+
+    def file_changed_during_watch(self, dir, filename, current_info):
+        self.build_file(dir, filename, current_info)
