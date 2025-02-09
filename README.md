@@ -11,6 +11,14 @@ Processes can also be chained, so the same source file goes throught multiple st
 If you are a python programmer and need something different, then write a python class that extends our base class and 
 write what you need.
 
+## Install
+
+* `pip install staticpipes[allbuild]` - if you just want to build a website
+* `pip install staticpipes[allbuild,dev]` - if you want to develop a website
+
+If you are developing the actual tool, check it out from git, create a virtual environment and run 
+`python3 -m pip install --upgrade pip && pip install -e .[allbuild,dev,staticpipesdev]`
+
 ## Getting started
 
 Configure this tool with a simple Python `file.py` in the root of your site. This copies files with these extensions 

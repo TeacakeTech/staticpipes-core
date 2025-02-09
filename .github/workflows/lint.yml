@@ -11,7 +11,7 @@ jobs:
       with:
         python-version: 3.9
         architecture: x64
-    - run: pip install -e .[staticpipesdev]
+    - run: pip install -e .[allbuild,dev,staticpipesdev]
     - run: black --check .
     - run: isort --check .
     - run: flake8

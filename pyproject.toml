@@ -8,13 +8,16 @@ readme = "README.md"
 version = "0.0.0"
 requires-python = ">=3.9"
 dependencies = [
-    # For people building sites locally
-    "watchdog",
-    # For pipeline jinja2
-    "jinja2",
 ]
 
 [project.optional-dependencies]
+allbuild=[
+    # For pipeline jinja2
+    "jinja2",
+]
+dev= [
+    "watchdog",
+]
 staticpipesdev = ["pytest", "black", "isort", "mypy", "flake8", "sphinx"]
 
 [project.urls]
