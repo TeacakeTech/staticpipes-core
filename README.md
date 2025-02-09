@@ -6,8 +6,6 @@ follow.
 Instead this is a framework and a collection of pipelines to process your source files. 
 Use only the pipelines you want and configure them as you need. 
 
-Processes can also be chained, so the same source file goes throught multiple steps before being published.
-
 If you are a python programmer and need something different, then write a python class that extends our base class and 
 write what you need.
 
@@ -123,8 +121,8 @@ config = Config(
 )
 ```
 
-Use the special Process pipeline to chain together processes - this minifies then versions JS, putting new filenames in 
-the context for templates to use:
+Use the special Process pipeline to chain together processes, so the same source file goes through multiple steps 
+before being published. This minifies then versions JS, putting new filenames in the context for templates to use:
 
 ```python
 from staticpipes.pipes.process import PipeProcess
