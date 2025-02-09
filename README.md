@@ -24,7 +24,7 @@ into the `_site` directory:
 
 ```python
 from staticpipes.config import Config
-from staticpipes.pipelines.copy import PipeCopy
+from staticpipes.pipes.copy import PipeCopy
 
 import os
 
