@@ -1,4 +1,5 @@
-import staticpipes.rjmin.rjsmin
+import rjsmin
+
 import staticpipes.utils
 from staticpipes.current_info import CurrentInfo
 from staticpipes.pipe_base import BasePipe
@@ -20,12 +21,10 @@ class PipeJavascriptMinifier(BasePipe):
         ):
             return
 
-        f = staticpipes.rjmin.rjsmin._make_jsmin(python_only=True)
-
         self.build_directory.write(
             dir,
             filename,
-            f(self.source_directory.get_contents_as_str(dir, filename)),
+            rjsmin.jsmin(self.source_directory.get_contents_as_str(dir, filename)),
         )
 
     def file_changed_during_watch(self, dir, filename, current_info):

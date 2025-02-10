@@ -1,4 +1,5 @@
-import staticpipes.rjmin.rjsmin
+import rjsmin
+
 from staticpipes.pipes.process import BaseProcessor
 
 
@@ -9,6 +10,4 @@ class ProcessJavascriptMinifier(BaseProcessor):
         self, source_dir, source_filename, process_current_info, current_info
     ):
 
-        f = staticpipes.rjmin.rjsmin._make_jsmin(python_only=True)
-
-        process_current_info.contents = f(process_current_info.contents)
+        process_current_info.contents = rjsmin.jsmin(process_current_info.contents)
