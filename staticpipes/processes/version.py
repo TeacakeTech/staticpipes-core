@@ -1,5 +1,6 @@
 import hashlib
 
+import staticpipes.utils
 from staticpipes.pipes.process import BaseProcessor
 
 
@@ -35,32 +36,12 @@ class ProcessVersion(BaseProcessor):
         if self.context_key not in current_info.context:
             current_info.context[self.context_key] = {}
 
-        key = (
-            (
-                ""
-                if process_current_info.dir == "" or process_current_info.dir == "/"
-                else (
-                    process_current_info.dir
-                    if process_current_info.dir.startswith("/")
-                    else "/" + process_current_info.dir
-                )
+        current_info.context[self.context_key][
+            staticpipes.utils.make_path_from_dir_and_filename(
+                process_current_info.dir, process_current_info.filename
             )
-            + "/"
-            + process_current_info.filename
+        ] = staticpipes.utils.make_path_from_dir_and_filename(
+            process_current_info.dir, new_filename
         )
-        value = (
-            (
-                ""
-                if process_current_info.dir == "" or process_current_info.dir == "/"
-                else (
-                    process_current_info.dir
-                    if process_current_info.dir.startswith("/")
-                    else "/" + process_current_info.dir
-                )
-            )
-            + "/"
-            + new_filename
-        )
-        current_info.context[self.context_key][key] = value
 
         process_current_info.filename = new_filename

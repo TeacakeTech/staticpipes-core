@@ -71,25 +71,9 @@ class PipeCopyWithVersioning(BasePipe):
         if self.context_key not in current_info.context:
             current_info.context[self.context_key] = {}
 
-        key = (
-            (
-                ""
-                if out_dir == "" or out_dir == "/"
-                else (out_dir if out_dir.startswith("/") else "/" + out_dir)
-            )
-            + "/"
-            + filename
-        )
-        value = (
-            (
-                ""
-                if out_dir == "" or out_dir == "/"
-                else (out_dir if out_dir.startswith("/") else "/" + out_dir)
-            )
-            + "/"
-            + new_filename
-        )
-        current_info.context[self.context_key][key] = value
+        current_info.context[self.context_key][
+            staticpipes.utils.make_path_from_dir_and_filename(out_dir, filename)
+        ] = staticpipes.utils.make_path_from_dir_and_filename(out_dir, new_filename)
 
         self.mapping[dir + "#####" + filename] = new_filename
 
