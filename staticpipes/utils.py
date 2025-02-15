@@ -12,3 +12,12 @@ def make_path_from_dir_and_filename(dir: str, filename: str) -> str:
         + "/"
         + filename
     )
+
+
+def make_dir_and_filename_from_path(path: str):
+    bits = path.split("/")
+    filename = bits.pop()
+    dir = "/".join(bits)
+    if not dir.startswith("/") and dir:
+        dir = "/" + dir
+    return dir, filename
