@@ -14,6 +14,8 @@ dependencies = [
 allbuild=[
     # For JS Minification
     "rjsmin",
+    # For CSS Minification
+    "rcssmin",
     # For pipeline jinja2
     "jinja2",
 ]
@@ -33,7 +35,7 @@ Changelog = "https://github.com/StaticPipes/StaticPipes/blob/main/CHANGELOG.md"
 profile = "black"
 
 [[tool.mypy.overrides]]
-module = ["rjsmin.*"]
+module = ["rjsmin.*","rcssmin.*"]
 ignore_missing_imports = true
 follow_imports = "skip"
 

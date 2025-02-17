@@ -106,34 +106,36 @@ config = Config(
 )
 ```
 
-Minify your JS:
+Minify your JS & CSS:
 
 ```python
 from staticpipes.pipes.javascript_minifier import ProcessJavascriptMinifier
+from staticpipes.pipes.css_minifier import PipeCSSMinifier
 
 config = Config(
     pipes=[
         PipeExcludeUnderscoreDirectories(),
         PipeJavascriptMinifier(),
-        PipeCopyWithVersioning(extensions=["css"]),
+        PipeCSSMinifier(),
         PipeJinja2(extensions=["html"]),
     ],
 )
 ```
 
 Use the special Process pipeline to chain together processes, so the same source file goes through multiple steps 
-before being published. This minifies then versions JS, putting new filenames in the context for templates to use:
+before being published. This minifies then versions JS & CSS, putting new filenames in the context for templates to use:
 
 ```python
 from staticpipes.pipes.process import PipeProcess
 from staticpipes.processes.version import ProcessVersion
 from staticpipes.processes.javascript_minifier import ProcessJavascriptMinifier
+from staticpipes.processes.css_minifier import ProcessCSSMinifier
 
 config = Config(
     pipes=[
         PipeExcludeUnderscoreDirectories(),
         PipeProcess(extensions=["js"], processors=[ProcessJavascriptMinifier(), ProcessVersion()]),
-        PipeCopyWithVersioning(extensions=["css"]),
+        PipeProcess(extensions=["css"], processors=[ProcessCSSMinifier(), ProcessVersion()]),
         PipeJinja2(extensions=["html"]),
     ],
 )
