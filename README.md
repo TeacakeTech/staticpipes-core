@@ -109,7 +109,7 @@ config = Config(
 Minify your JS & CSS:
 
 ```python
-from staticpipes.pipes.javascript_minifier import ProcessJavascriptMinifier
+from staticpipes.pipes.javascript_minifier import PipeJavascriptMinifier
 from staticpipes.pipes.css_minifier import PipeCSSMinifier
 
 config = Config(
