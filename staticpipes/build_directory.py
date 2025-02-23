@@ -1,5 +1,6 @@
 import os
 import pathlib
+import shutil
 
 
 class BuildDirectory:
@@ -25,6 +26,17 @@ class BuildDirectory:
         else:
             with open(f, "w") as fp:
                 fp.write(contents)
+        self.written_files.append((dir if dir else "/", name))
+
+    def copy_in_file(self, dir: str, name: str, filepath: str):
+        if dir != "/":
+            if dir.startswith("/"):
+                dir = dir[1:]
+            os.makedirs(os.path.join(self.dir, dir), exist_ok=True)
+            f = os.path.join(self.dir, dir, name)
+        else:
+            f = os.path.join(self.dir, name)
+        shutil.copy(filepath, f, follow_symlinks=True)
         self.written_files.append((dir if dir else "/", name))
 
     def is_equal_to_source_dir(self, directory: str) -> bool:
