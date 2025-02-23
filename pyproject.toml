@@ -18,6 +18,8 @@ allbuild=[
     "rcssmin",
     # For pipeline jinja2
     "jinja2",
+    # For Mako
+    "mako",
     # Datatig
     "datatig",
 ]
@@ -37,7 +39,7 @@ Changelog = "https://github.com/StaticPipes/StaticPipes/blob/main/CHANGELOG.md"
 profile = "black"
 
 [[tool.mypy.overrides]]
-module = ["rjsmin.*","rcssmin.*","datatig.*"]
+module = ["rjsmin.*","rcssmin.*","datatig.*", "mako.*"]
 ignore_missing_imports = true
 follow_imports = "skip"
 
