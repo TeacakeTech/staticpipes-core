@@ -1,0 +1,5 @@
+{% extends "_templates/base.html" %}
+
+{% block content %}
+    <h1>{{ item.get_field_value("title").get_value() }}</h1>
+{% endblock %}
