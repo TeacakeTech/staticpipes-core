@@ -19,8 +19,8 @@ class DatatigFrictionless(BasePipe):
         temp_out_filename = os.path.join(temp_dir, "frictionless.zip")
 
         frictionless_writer = FrictionlessWriter(
-            current_info.context["datatig"]["config"],
-            current_info.context["datatig"]["datastore"],
+            current_info.get_context("datatig")["config"],
+            current_info.get_context("datatig")["datastore"],
             temp_out_filename,
         )
         frictionless_writer.go()

@@ -46,7 +46,7 @@ def test_copy_fixture():
             "/styles.main.css": "/styles.main.73229b70fe5f1ad4bf6e6ef249287ad4.css",
             "/js/main.js": "/js/main.ceba641cf86025b52dfc12a1b847b4d8.js",
         }
-    } == worker.current_info.context
+    } == worker.current_info.get_context()
     # test HTML
     assert os.path.exists(os.path.join(out_dir, "index.html"))
     with open(os.path.join(out_dir, "index.html")) as fp:

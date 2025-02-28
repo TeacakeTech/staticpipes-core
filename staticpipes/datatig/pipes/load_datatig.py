@@ -52,8 +52,11 @@ class LoadDatatig(BasePipe):
         datastore.process_calendars()
 
         # Into context
-        current_info.context["datatig"] = {
-            "config": config,
-            "datastore": datastore,
-            "sqlite_filename": sqlite_filename,
-        }
+        current_info.set_context(
+            "datatig",
+            {
+                "config": config,
+                "datastore": datastore,
+                "sqlite_filename": sqlite_filename,
+            },
+        )

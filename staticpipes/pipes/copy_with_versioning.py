@@ -68,12 +68,13 @@ class PipeCopyWithVersioning(BasePipe):
         filename_extension = filename_bits.pop()
         new_filename = ".".join(filename_bits) + "." + hash + "." + filename_extension
 
-        if self.context_key not in current_info.context:
-            current_info.context[self.context_key] = {}
-
-        current_info.context[self.context_key][
-            staticpipes.utils.make_path_from_dir_and_filename(out_dir, filename)
-        ] = staticpipes.utils.make_path_from_dir_and_filename(out_dir, new_filename)
+        current_info.set_context(
+            [
+                self.context_key,
+                staticpipes.utils.make_path_from_dir_and_filename(out_dir, filename),
+            ],
+            staticpipes.utils.make_path_from_dir_and_filename(out_dir, new_filename),
+        )
 
         self.mapping[dir + "#####" + filename] = new_filename
 

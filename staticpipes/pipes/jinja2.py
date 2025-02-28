@@ -43,7 +43,7 @@ class PipeJinja2(BasePipe):
     ) -> None:
         # print("JINJA2 {} {}".format(dir, filename))
         template = self.jinja2_env.get_template(os.path.join(dir, filename))
-        contents = template.render(current_info.context)
+        contents = template.render(current_info.get_context())
         self.build_directory.write(dir, filename, contents)
 
     def _update_template_information(

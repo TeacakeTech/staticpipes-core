@@ -32,7 +32,7 @@ class PipeMako(BasePipe):
             self.source_directory.get_contents_as_str(dir, filename),
             lookup=self.mako_lookup,
         )
-        contents = template.render(**current_info.context)
+        contents = template.render(**current_info.get_context())
         self.build_directory.write(dir, filename, contents)
 
     def build_file(self, dir: str, filename: str, current_info: CurrentInfo) -> None:

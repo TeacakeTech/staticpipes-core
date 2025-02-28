@@ -21,11 +21,11 @@ class DatatigItemsJinja2(BasePipe):
 
     def _build(self, current_info: CurrentInfo):
         template = self.jinja2_env.get_template(self.jinja2_template)  # type: ignore
-        for id in current_info.context["datatig"]["datastore"].get_ids_in_type(
+        for id in current_info.get_context()["datatig"]["datastore"].get_ids_in_type(
             self.type_id
         ):
-            this_context = current_info.context.copy()
-            this_context["item"] = current_info.context["datatig"][
+            this_context = current_info.get_context().copy()
+            this_context["item"] = current_info.get_context("datatig")[
                 "datastore"
             ].get_item(self.type_id, id)
             contents = template.render(this_context)
