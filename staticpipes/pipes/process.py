@@ -1,6 +1,9 @@
 import staticpipes.utils
+from staticpipes.build_directory import BuildDirectory
+from staticpipes.config import Config
 from staticpipes.current_info import CurrentInfo
 from staticpipes.pipe_base import BasePipe
+from staticpipes.source_directory import SourceDirectory
 
 
 class PipeProcess(BasePipe):
@@ -28,6 +31,12 @@ class PipeProcess(BasePipe):
     def __init__(self, extensions=[], processors=None):
         self.extensions = extensions
         self.processors = processors
+
+    def start_prepare(self, current_info: CurrentInfo) -> None:
+        for processor in self.processors:
+            processor.config = self.config
+            processor.source_directory = self.source_directory
+            processor.build_directory = self.build_directory
 
     def prepare_file(self, dir: str, filename: str, current_info: CurrentInfo) -> None:
         self._file(dir, filename, current_info, prepare=True)
@@ -83,6 +92,11 @@ class ProcessCurrentInfo:
 
 
 class BaseProcessor:
+
+    def __init__(self):
+        self.config: Config = None  # type: ignore
+        self.source_directory: SourceDirectory = None  # type: ignore
+        self.build_directory: BuildDirectory = None  # type: ignore
 
     def process_file(
         self,

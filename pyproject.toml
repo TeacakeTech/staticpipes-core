@@ -22,6 +22,8 @@ allbuild=[
     "mako",
     # Datatig
     "datatig",
+    # Markdown
+    "markdown-it-py",
 ]
 dev= [
     "watchdog",
