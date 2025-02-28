@@ -129,11 +129,15 @@ class Worker:
                 pipeline.build_file(dir, filename, self.current_info)
 
     def process_file_during_watch(self, dir, filename):
+        # Check if we should process
         if self.build_directory.is_equal_to_source_dir(
             os.path.join(self.source_directory.dir, dir)
         ):
             return
+        # Setup
         logger.info("Processing during watch {} {} ...".format(dir, filename))
+        context_version: int = self.current_info.get_context_version()
+        # Call each pipe for file
         self.current_info.reset_for_new_file()
         for pipeline in self.config.pipes:
             try:
@@ -149,4 +153,12 @@ class Worker:
                         "WATCH FEATURE NOT IMPLEMENTED IN PIPELINE {}, "
                         + "YOU MAY HAVE TO BUILD MANUALLY"
                     ).format(str(pipeline))
+                )
+        # If context changed, call each pipe for context
+        if context_version != self.current_info.get_context_version():
+            for pipeline in self.config.pipes:
+                pipeline.context_changed_during_watch(
+                    self.current_info,
+                    context_version,
+                    self.current_info.get_context_version(),
                 )

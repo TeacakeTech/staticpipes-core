@@ -187,10 +187,10 @@ A pipeline can mark a file as excluded (by setting `current_info.current_file_ex
 pipelines won't have `build_file` called for that file. However, they will have `file_excluded_during_build` called for 
 each excluded file.
 
-A context is maintained on `current_info.context`. This is a dictionary of values that is initially set in the 
-configuration object but pipelines can read and modify. For example, an earlier pipeline might version a CSS file 
-at a particular location and store the location in the context. A later pipeline might build Jinja2 templates 
-with the context as temple variables so the html can actually load the CSS.
+A context is maintained on `current_info` via `get_context`, `set_context` and other methods. This is a dictionary of 
+values that is initially set in the configuration object but pipelines can read and modify. For example, an earlier 
+pipeline might version a CSS file at a particular location and store the location in the context. A later pipeline 
+might build Jinja2 templates with the context as temple variables so the html can actually load the CSS.
 
 ### Prepare stage
 
@@ -207,7 +207,8 @@ It's not possible to exclude any files during the prepare stage.
 
 In watch mode, a normal build is done first. The `start_watch` method is then called on each pipeline. Then every time 
 a file is changed, the `file_changed_during_watch` or `file_changed_but_excluded_during_watch` method is called for 
-that file. There is no `end_watch` method, as the watch stage is ended by the user forcibly quitting the program.
+that file. The history of the context is tracked, and if the history changes the `context_changed_during_watch` method 
+is called. There is no `end_watch` method, as the watch stage is ended by the user forcibly quitting the program.
 
 Writing pipelines for watch mode can be more complicated than writing pipelines for build mode. This is due to the 
 idea of dependencies. If the process of building source file A depends in some way on building source file B, 

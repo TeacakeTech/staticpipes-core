@@ -84,4 +84,4 @@ def test_source_sub_directory_copy_with_versioning(source_sub_directory):
         "versioning_new_filenames": {
             "/js/main.js": "/js/main.ceba641cf86025b52dfc12a1b847b4d8.js",
         }
-    } == worker.current_info.context
+    } == worker.current_info.get_context()

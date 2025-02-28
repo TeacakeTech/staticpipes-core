@@ -46,7 +46,7 @@ class PipeJinja2(BasePipe):
     ) -> None:
         logger.debug("Actually buliding template {} {}".format(dir, filename))
         template = self.jinja2_env.get_template(os.path.join(dir, filename))
-        contents = template.render(current_info.context)
+        contents = template.render(current_info.get_context())
         self.build_directory.write(dir, filename, contents)
 
     def _update_template_information(
@@ -158,3 +158,12 @@ class PipeJinja2(BasePipe):
                     if x not in out:
                         out.append(x)
         return out
+
+    def context_changed_during_watch(
+        self, current_info: CurrentInfo, old_version: int, new_version: int
+    ) -> None:
+        # For now we don't do anything clever, we just rebuild all templates
+        for template_path, template_info in self._template_information.items():
+            if not template_info["file_excluded"]:
+                d, f = staticpipes.utils.make_dir_and_filename_from_path(template_path)
+                self._actually_build_template(d, f, current_info)

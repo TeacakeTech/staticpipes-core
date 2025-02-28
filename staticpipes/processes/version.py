@@ -33,15 +33,16 @@ class ProcessVersion(BaseProcessor):
 
         new_filename = ".".join(filename_bits) + "." + hash + "." + filename_extension
 
-        if self.context_key not in current_info.context:
-            current_info.context[self.context_key] = {}
-
-        current_info.context[self.context_key][
+        current_info.set_context(
+            [
+                self.context_key,
+                staticpipes.utils.make_path_from_dir_and_filename(
+                    process_current_info.dir, process_current_info.filename
+                ),
+            ],
             staticpipes.utils.make_path_from_dir_and_filename(
-                process_current_info.dir, process_current_info.filename
-            )
-        ] = staticpipes.utils.make_path_from_dir_and_filename(
-            process_current_info.dir, new_filename
+                process_current_info.dir, new_filename
+            ),
         )
 
         process_current_info.filename = new_filename

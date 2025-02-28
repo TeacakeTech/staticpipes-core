@@ -49,4 +49,4 @@ def test_copy_fixture_with_extensions():
         "versioning_new_filenames": {
             "/main.js": "/main.b1cee5ed8ca8405563a5be2227ddab36.js",
         }
-    } == worker.current_info.context
+    } == worker.current_info.get_context()
