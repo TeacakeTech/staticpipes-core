@@ -60,3 +60,9 @@ class BasePipe:
         """Called once for every file as it changes during the watch stage,
         if an earlier pipeline has excluded this file."""
         pass
+
+    def context_changed_during_watch(
+        self, current_info: CurrentInfo, old_version: int, new_version: int
+    ) -> None:
+        """TODO document, in readme too"""
+        pass

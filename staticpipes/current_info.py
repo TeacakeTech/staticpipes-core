@@ -4,6 +4,7 @@ class CurrentInfo:
         self._context: dict = context
         self.watch: bool = watch
         self.current_file_excluded: bool = False
+        self._context_history: list = []
 
     def reset_for_new_file(self):
         self.current_file_excluded = False
@@ -25,3 +26,7 @@ class CurrentInfo:
                     s[bit] = {}
                 s = s[bit]
             s[key[0]] = value
+        self._context_history.append(key)
+
+    def get_context_version(self) -> int:
+        return len(self._context_history)

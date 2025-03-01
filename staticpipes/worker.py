@@ -98,6 +98,7 @@ class Worker:
                 pipeline.build_file(dir, filename, self.current_info)
 
     def process_file_during_watch(self, dir, filename):
+        context_version: int = self.current_info.get_context_version()
         if self.build_directory.is_equal_to_source_dir(
             os.path.join(self.source_directory.dir, dir)
         ):
@@ -118,4 +119,11 @@ class Worker:
                         "WATCH FEATURE NOT IMPLEMENTED IN PIPELINE {}, "
                         + "YOU MAY HAVE TO BUILD MANUALLY"
                     ).format(str(pipeline))
+                )
+        if context_version != self.current_info.get_context_version():
+            for pipeline in self.config.pipes:
+                pipeline.context_changed_during_watch(
+                    self.current_info,
+                    context_version,
+                    self.current_info.get_context_version(),
                 )
