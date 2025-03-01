@@ -6,7 +6,7 @@ import staticpipes.config
 import staticpipes.pipes.process
 import staticpipes.processes.change_extension
 import staticpipes.processes.jinja2
-import staticpipes.processes.load_markdown
+import staticpipes.processes.markdown_to_html
 import staticpipes.watcher
 import staticpipes.worker
 
@@ -19,7 +19,7 @@ def test_markdown_jinja2():
             staticpipes.pipes.process.PipeProcess(
                 extensions=["md"],
                 processors=[
-                    staticpipes.processes.load_markdown.ProcessLoadMarkdown(),  # noqa
+                    staticpipes.processes.markdown_to_html.ProcessMarkdownToHTML(),  # noqa
                     staticpipes.processes.jinja2.ProcessJinja2("base.html"),
                     staticpipes.processes.change_extension.ProcessChangeExtension(
                         "html"
