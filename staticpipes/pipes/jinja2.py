@@ -1,3 +1,4 @@
+import logging
 import os.path
 
 import jinja2
@@ -6,6 +7,8 @@ import jinja2.meta
 import staticpipes.utils
 from staticpipes.current_info import CurrentInfo
 from staticpipes.pipe_base import BasePipe
+
+logger = logging.getLogger(__name__)
 
 
 class PipeJinja2(BasePipe):
@@ -41,7 +44,7 @@ class PipeJinja2(BasePipe):
     def _actually_build_template(
         self, dir: str, filename: str, current_info: CurrentInfo
     ) -> None:
-        # print("JINJA2 {} {}".format(dir, filename))
+        logger.debug("Actually buliding template {} {}".format(dir, filename))
         template = self.jinja2_env.get_template(os.path.join(dir, filename))
         contents = template.render(current_info.get_context())
         self.build_directory.write(dir, filename, contents)
