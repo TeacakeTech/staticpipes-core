@@ -24,6 +24,8 @@ allbuild=[
     "datatig",
     # Markdown
     "markdown-it-py",
+    # YAML
+    "pyyaml",
 ]
 dev= [
     "watchdog",
