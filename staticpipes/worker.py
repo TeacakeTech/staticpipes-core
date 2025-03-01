@@ -1,10 +1,13 @@
 import copy
+import logging
 import os
 
 from .build_directory import BuildDirectory
 from .current_info import CurrentInfo
 from .exceptions import WatchFunctionalityNotImplementedException
 from .source_directory import SourceDirectory
+
+logger = logging.getLogger(__name__)
 
 
 class Worker:
@@ -79,17 +82,17 @@ class Worker:
             pipeline.start_watch(self.current_info)
         # Now watch
         watcher = Watcher(self)
-        print("Watching ...")
+        logger.info("Watching ...")
         watcher.watch()
 
     def _prepare_file(self, dir, filename):
-        print("Preparing {} {} ...".format(dir, filename))
+        logger.info("Preparing {} {} ...".format(dir, filename))
         self.current_info.reset_for_new_file()
         for pipeline in self.config.pipes:
             pipeline.prepare_file(dir, filename, self.current_info)
 
     def _process_file(self, dir, filename):
-        print("Processing {} {} ...".format(dir, filename))
+        logger.info("Processing {} {} ...".format(dir, filename))
         self.current_info.reset_for_new_file()
         for pipeline in self.config.pipes:
             if self.current_info.current_file_excluded:
@@ -102,7 +105,7 @@ class Worker:
             os.path.join(self.source_directory.dir, dir)
         ):
             return
-        print("Processing during watch {} {} ...".format(dir, filename))
+        logger.info("Processing during watch {} {} ...".format(dir, filename))
         self.current_info.reset_for_new_file()
         for pipeline in self.config.pipes:
             try:
@@ -113,7 +116,7 @@ class Worker:
                 else:
                     pipeline.file_changed_during_watch(dir, filename, self.current_info)
             except WatchFunctionalityNotImplementedException:
-                print(
+                logger.error(
                     (
                         "WATCH FEATURE NOT IMPLEMENTED IN PIPELINE {}, "
                         + "YOU MAY HAVE TO BUILD MANUALLY"
