@@ -15,6 +15,8 @@ def cli(config, source_dir, build_directory, log_level=logging.INFO):
 
     watch_parser = subparsers.add_parser("watch")  # noqa
 
+    serve_parser = subparsers.add_parser("serve")  # noqa
+
     args = parser.parse_args()
 
     # Set up logging
@@ -35,3 +37,7 @@ def cli(config, source_dir, build_directory, log_level=logging.INFO):
     elif args.subparser_name == "watch":
         worker = Worker(config, source_dir, build_directory)
         worker.watch()
+
+    elif args.subparser_name == "serve":
+        worker = Worker(config, source_dir, build_directory)
+        worker.serve()
