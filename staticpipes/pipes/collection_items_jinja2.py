@@ -25,14 +25,14 @@ class CollectionItemsJinja2(BasePipe):
 
         for item in collection.get_items():
             this_context = current_info.get_context().copy()
-            this_context["item"] = item
+            this_context["item_id"] = item.get_id()
+            this_context["item_data"] = item.get_data()
             contents = template.render(this_context)
             self.build_directory.write(
                 self._output_dir,
                 item.get_id() + "." + self._output_filename_extension,
                 contents,
             )
-            # TODO item.get_id() is datatig specific and needs to be made a standard staticpipes collection thing
 
     def start_build(self, current_info: CurrentInfo) -> None:
         self._jinja2_env = jinja2.Environment(
