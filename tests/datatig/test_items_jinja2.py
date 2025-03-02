@@ -3,8 +3,8 @@ import tempfile
 
 import staticpipes.build_directory
 import staticpipes.config
-import staticpipes.datatig.pipes.datatig_items_jinja2
 import staticpipes.datatig.pipes.load_datatig
+import staticpipes.pipes.collection_items_jinja2
 import staticpipes.pipes.javascript_minifier
 import staticpipes.watcher
 import staticpipes.worker
@@ -16,7 +16,7 @@ def test_items_jinja2():
     config = staticpipes.config.Config(
         pipes=[
             staticpipes.datatig.pipes.load_datatig.LoadDatatig(),
-            staticpipes.datatig.pipes.datatig_items_jinja2.DatatigItemsJinja2(
+            staticpipes.pipes.collection_items_jinja2.CollectionItemsJinja2(
                 type_id="datas", jinja2_template="_templates/item.html"
             ),  # noqa
         ],

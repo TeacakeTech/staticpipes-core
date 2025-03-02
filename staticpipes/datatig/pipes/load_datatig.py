@@ -8,6 +8,7 @@ from datatig.sqlite import DataStoreSQLite
 from datatig.validate.jsonschema import JsonSchemaValidator
 
 from staticpipes.current_info import CurrentInfo
+from staticpipes.datatig.datatig_collection import DataTigCollection
 from staticpipes.pipe_base import BasePipe
 
 
@@ -60,3 +61,7 @@ class LoadDatatig(BasePipe):
                 "sqlite_filename": sqlite_filename,
             },
         )
+        for type_id, type_config in config.get_types().items():
+            current_info.set_context(
+                ["collection", type_id], DataTigCollection(config, datastore, type_id)
+            )

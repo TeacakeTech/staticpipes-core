@@ -1,5 +1,5 @@
 {% extends "_templates/base.html" %}
 
 {% block content %}
-    <h1>{{ item.get_field_value("title").get_value() }}</h1>
+    <h1>{{ item.get_field_value("title").get_value() }}{# TODO this is datatig specific and needs to be made a standard staticpipes collection thing #}</h1>
 {% endblock %}
