@@ -24,6 +24,7 @@ class Worker:
             pipeline.build_directory = self.build_directory
 
     def build(self):
+        """Builds the website"""
         self.current_info = CurrentInfo(
             context=copy.copy(self.config.context), watch=False
         )
@@ -67,6 +68,7 @@ class Worker:
         self.build_directory.remove_all_files_we_did_not_write()
 
     def watch(self):
+        """Builds the website, then watches for any changes and partially rebuilds."""
         # Only import this when watch function called,
         # so we can use build part without watch dependencies
         from .watcher import Watcher
@@ -86,7 +88,8 @@ class Worker:
         watcher.watch()
 
     def serve(self):
-
+        """Builds the website, then serves the website locally
+        while watching for any changes and partially rebuilds."""
         # Only import this when watch function called,
         # so we can use build part without watch dependencies
         import threading
