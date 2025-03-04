@@ -12,15 +12,15 @@ class PipeCopy(BasePipe):
     Pass:
 
     - extensions - a list of file extensions that will be copied
-    eg ["js", "css", "html"].
-    If not set, all files will be copied.
+      eg ["js", "css", "html"].
+      If not set, all files will be copied.
 
     - source_sub_directory - if your files are in a subdirectory
-    pass that here.
-    Any files outside that will be ignored and the subdirectory
-    will not appear in the build directory.
-    eg pass "assets" and "assets/main.css"
-    will appear in build site as "main.css"
+      pass that here.
+      Any files outside that will be ignored and the subdirectory
+      will not appear in the build directory.
+      eg pass "assets" and "assets/main.css"
+      will appear in build site as "main.css"
 
     """
 
@@ -33,6 +33,7 @@ class PipeCopy(BasePipe):
         )
 
     def build_file(self, dir: str, filename: str, current_info: CurrentInfo) -> None:
+        """"""
         if self.extensions and not staticpipes.utils.does_filename_have_extension(
             filename, self.extensions
         ):
@@ -53,4 +54,5 @@ class PipeCopy(BasePipe):
         )
 
     def file_changed_during_watch(self, dir, filename, current_info):
+        """"""
         self.build_file(dir, filename, current_info)

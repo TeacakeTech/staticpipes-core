@@ -18,7 +18,8 @@ class PipeCopyWithVersioning(BasePipe):
     Pass:
 
     - extensions - a list of file extensions that will be copied
-    eg ["js", "css", "html"].
+    eg ["js", "css"].
+    You can pass an empty list to copy all files.
 
     - source_sub_directory - if your files are in a subdirectory
     pass that here.
@@ -34,7 +35,7 @@ class PipeCopyWithVersioning(BasePipe):
 
     def __init__(
         self,
-        extensions,
+        extensions=["js", "css"],
         context_key="versioning_new_filenames",
         source_sub_directory=None,
     ):
@@ -48,7 +49,7 @@ class PipeCopyWithVersioning(BasePipe):
         self.mapping = {}
 
     def prepare_file(self, dir: str, filename: str, current_info: CurrentInfo) -> None:
-        if not staticpipes.utils.does_filename_have_extension(
+        if self.extensions and not staticpipes.utils.does_filename_have_extension(
             filename, self.extensions
         ):
             return
@@ -79,7 +80,7 @@ class PipeCopyWithVersioning(BasePipe):
         self.mapping[dir + "#####" + filename] = new_filename
 
     def build_file(self, dir: str, filename: str, current_info: CurrentInfo) -> None:
-        if not staticpipes.utils.does_filename_have_extension(
+        if self.extensions and not staticpipes.utils.does_filename_have_extension(
             filename, self.extensions
         ):
             return
