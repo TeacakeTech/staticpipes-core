@@ -4,6 +4,15 @@
         <title>{{ module_name }} Reference - StaticPipes Documentation</title>
     </head>
     <body>
-        {{ module_name }}
+        <h2>{{ module_name }}</h2>
+        {% if classes %}
+            {% for class in classes %}
+                <h3>Class: {{ class.name }}</h3>
+                {% for function in class.functions %}
+                    <h4>Function: {{ function.name }}</h4>
+                {% endfor %}
+            {% endfor %}
+        {% endif %}
+
     </body>
 </html>

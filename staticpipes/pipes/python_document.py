@@ -39,10 +39,6 @@ class PipePythonDocument(BasePipe):
             if inspect.ismodule(v):
                 self._inspect_module(v, current_info)
 
-        # ALSO need to do
-        # for _, name, _ in pkgutil.iter_modules([package.__name__]):
-        #    print(__import__(package.__name__ + "." + name))
-
     def _inspect_module(self, module, current_info: CurrentInfo):
         self._modules_found_names.append(module.__name__)
 
@@ -52,17 +48,30 @@ class PipePythonDocument(BasePipe):
 
         this_context = current_info.get_context().copy()
         this_context["module_name"] = module.__name__
+        this_context["modules"] = []
+        this_context["classes"] = []
+
+        for k, v in inspect.getmembers(module):
+            if inspect.ismodule(v) and [
+                i for i in self._packages if v.__name__.startswith(i.__name__)
+            ]:
+                this_context["modules"].append({"module": v})
+                if v.__name__ not in self._modules_found_names:
+                    self._inspect_module(v, current_info)
+            if inspect.isclass(v):
+                class_info = {"class": v, "name": v.__name__, "functions": []}
+                for class_k, class_v in inspect.getmembers(v):
+                    if inspect.isfunction(class_v) and not class_v.__name__.startswith(
+                        "_"
+                    ):
+                        class_info["functions"].append(
+                            {"function": class_v, "name": class_v.__name__}
+                        )
+                this_context["classes"].append(class_info)
+
         contents = template.render(this_context)
         self.build_directory.write(
             self._output_dir,
             module.__name__ + "." + self._output_filename_extension,
             contents,
         )
-
-        for k, v in inspect.getmembers(module):
-            if (
-                inspect.ismodule(v)
-                and [i for i in self._packages if v.__name__.startswith(i.__name__)]
-                and v.__name__ not in self._modules_found_names
-            ):
-                self._inspect_module(v, current_info)
