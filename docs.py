@@ -1,11 +1,13 @@
 import logging
 import os
 
+import staticpipes
 from staticpipes.config import Config
 from staticpipes.pipes.exclude_underscore_directories import (
     PipeExcludeUnderscoreDirectories,
 )
 from staticpipes.pipes.process import PipeProcess
+from staticpipes.pipes.python_document import PipePythonDocument
 from staticpipes.processes.change_extension import ProcessChangeExtension
 from staticpipes.processes.jinja2 import ProcessJinja2
 from staticpipes.processes.markdown_to_html import ProcessMarkdownToHTML
@@ -23,6 +25,11 @@ config = Config(
                 ProcessJinja2(template="_templates/base.html"),
                 ProcessChangeExtension("html"),
             ]
+        ),
+        PipePythonDocument(
+            packages=[staticpipes],
+            output_dir="reference",
+            jinja2_template="_templates/reference.html",
         ),
     ],
     context={},
