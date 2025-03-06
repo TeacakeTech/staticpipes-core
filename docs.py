@@ -6,7 +6,7 @@ from staticpipes.pipes.exclude_underscore_directories import (
     PipeExcludeUnderscoreDirectories,
 )
 from staticpipes.pipes.process import PipeProcess
-from staticpipes.pipes.pydoc import PipePydoc
+from staticpipes.pipes.python_document_process import PipePythonDocumentProcess
 from staticpipes.processes.change_extension import ProcessChangeExtension
 from staticpipes.processes.jinja2 import ProcessJinja2
 from staticpipes.processes.markdown_yaml_to_html_context import (
@@ -24,7 +24,7 @@ config = Config(
                 ProcessChangeExtension("html"),
             ],
         ),
-        PipePydoc(
+        PipePythonDocumentProcess(
             pkgutil_walk_packages_args=[
                 (
                     [
@@ -38,7 +38,7 @@ config = Config(
             module_names=["staticpipes"],
             output_dir="reference",
             processors=[
-                ProcessJinja2(template="_templates/base.html"),
+                ProcessJinja2(template="_templates/reference.html"),
             ],
         ),
     ],
