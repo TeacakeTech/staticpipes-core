@@ -10,7 +10,6 @@ from staticpipes.pipes.process import PipeProcess
 from staticpipes.pipes.python_document import PipePythonDocument
 from staticpipes.processes.change_extension import ProcessChangeExtension
 from staticpipes.processes.jinja2 import ProcessJinja2
-from staticpipes.processes.markdown_to_html import ProcessMarkdownToHTML
 from staticpipes.processes.markdown_yaml_to_html_context import (
     ProcessMarkdownYAMLToHTMLContext,
 )
@@ -19,12 +18,12 @@ config = Config(
     pipes=[
         PipeExcludeUnderscoreDirectories(),
         PipeProcess(
+            extensions=["md"],
             processors=[
                 ProcessMarkdownYAMLToHTMLContext(),
-                ProcessMarkdownToHTML(),
                 ProcessJinja2(template="_templates/base.html"),
                 ProcessChangeExtension("html"),
-            ]
+            ],
         ),
         PipePythonDocument(
             packages=[staticpipes],
