@@ -1,7 +1,7 @@
 import yaml
 from markdown_it import MarkdownIt
 
-from staticpipes.pipes.process import BaseProcessor
+from staticpipes.process_base import BaseProcessor
 
 
 class ProcessMarkdownYAMLToHTMLContext(BaseProcessor):

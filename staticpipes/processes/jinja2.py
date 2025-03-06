@@ -1,6 +1,6 @@
 import jinja2
 
-from staticpipes.pipes.process import BaseProcessor
+from staticpipes.process_base import BaseProcessor
 
 
 class ProcessJinja2(BaseProcessor):
@@ -20,7 +20,6 @@ class ProcessJinja2(BaseProcessor):
 
         # print("JINJA2 {} {}".format(dir, filename))
         template = jinja2_env.get_template(self._template)
-        context = current_info.get_context().copy()
-        context["content"] = process_current_info.contents
-        contents = template.render(context)
+        process_current_info.context["content"] = process_current_info.contents
+        contents = template.render(process_current_info.context)
         process_current_info.contents = contents

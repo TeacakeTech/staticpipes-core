@@ -1,9 +1,7 @@
 import staticpipes.utils
-from staticpipes.build_directory import BuildDirectory
-from staticpipes.config import Config
 from staticpipes.current_info import CurrentInfo
 from staticpipes.pipe_base import BasePipe
-from staticpipes.source_directory import SourceDirectory
+from staticpipes.process_current_info import ProcessCurrentInfo
 
 
 class PipeProcess(BasePipe):
@@ -64,6 +62,7 @@ class PipeProcess(BasePipe):
             self.source_directory.get_contents_as_str(dir, filename),
             prepare=prepare,
             build=build,
+            context=current_info.get_context().copy(),
         )
 
         # TODO something about excluding files
@@ -79,30 +78,3 @@ class PipeProcess(BasePipe):
 
     def file_changed_during_watch(self, dir, filename, current_info):
         self.build_file(dir, filename, current_info)
-
-
-class ProcessCurrentInfo:
-
-    def __init__(self, dir, filename, contents, prepare: bool, build: bool):
-        self.dir = dir
-        self.filename = filename
-        self.contents = contents
-        self.prepare: bool = prepare
-        self.build: bool = build
-
-
-class BaseProcessor:
-
-    def __init__(self):
-        self.config: Config = None  # type: ignore
-        self.source_directory: SourceDirectory = None  # type: ignore
-        self.build_directory: BuildDirectory = None  # type: ignore
-
-    def process_file(
-        self,
-        source_dir: str,
-        source_filename: str,
-        process_current_info: ProcessCurrentInfo,
-        current_info: CurrentInfo,
-    ):
-        pass
