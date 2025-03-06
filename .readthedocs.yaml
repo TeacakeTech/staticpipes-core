@@ -12,7 +12,8 @@ build:
     python: "3.11"
   jobs:
     build:
-      html: 
-      - pip install .[allbuild]
+      html:
+      # Because the docsite has the python documentation, it needs to be able to import everything the code can
+      - pip install .[allbuild,dev]
       - python docs.py build
 
