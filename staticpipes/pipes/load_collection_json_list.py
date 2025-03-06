@@ -1,6 +1,6 @@
 import json
 
-from staticpipes.collection_base import BaseCollection, BaseCollectionItem
+from staticpipes.collection import Collection, CollectionItem
 from staticpipes.current_info import CurrentInfo
 from staticpipes.pipe_base import BasePipe
 
@@ -22,11 +22,11 @@ class LoadCollectionJSONList(BasePipe):
             data = json.load(fp)
             idx = 0
             for raw_data in data:
-                items.append(BaseCollectionItem(id=str(idx), data=raw_data))
+                items.append(CollectionItem(id=str(idx), data=raw_data))
                 idx += 1
 
         current_info.set_context(
-            ["collection", self._collection_name], BaseCollection(items=items)
+            ["collection", self._collection_name], Collection(items=items)
         )
 
     # TODO reload on watch

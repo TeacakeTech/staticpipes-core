@@ -1,6 +1,6 @@
 import csv
 
-from staticpipes.collection_base import BaseCollection, BaseCollectionItem
+from staticpipes.collection import Collection, CollectionItem
 from staticpipes.current_info import CurrentInfo
 from staticpipes.pipe_base import BasePipe
 
@@ -26,10 +26,10 @@ class LoadCollectionCSV(BasePipe):
             for row in csv_reader:
                 if row:
                     data = {header_row[i]: row[i] for i in range(1, len(row))}
-                    items.append(BaseCollectionItem(id=row[0], data=data))
+                    items.append(CollectionItem(id=row[0], data=data))
 
         current_info.set_context(
-            ["collection", self._collection_name], BaseCollection(items=items)
+            ["collection", self._collection_name], Collection(items=items)
         )
 
     # TODO reload on watch
