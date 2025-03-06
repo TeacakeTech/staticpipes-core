@@ -3,7 +3,9 @@ import tempfile
 
 import staticpipes.build_directory
 import staticpipes.config
+import staticpipes.pipes.collection_items_process
 import staticpipes.pipes.load_collection_csv
+import staticpipes.processes.jinja2
 import staticpipes.watcher
 import staticpipes.worker
 
@@ -12,7 +14,17 @@ def test_collection_csv():
     # setup
     out_dir = tempfile.mkdtemp(prefix="staticpipes_tests_")
     config = staticpipes.config.Config(
-        pipes=[staticpipes.pipes.load_collection_csv.LoadCollectionCSV()],
+        pipes=[
+            staticpipes.pipes.load_collection_csv.LoadCollectionCSV(),
+            staticpipes.pipes.collection_items_process.PipeCollectionItemsProcess(
+                type_id="data",
+                processors=[
+                    staticpipes.processes.jinja2.ProcessJinja2(
+                        template="_templates/item.html"
+                    )
+                ],
+            ),
+        ],
     )
     worker = staticpipes.worker.Worker(
         config,
@@ -23,7 +35,7 @@ def test_collection_csv():
     )
     # run
     worker.build()
-    # test
+    # test collection
     collection = worker.current_info.get_context()["collection"]["data"]
     assert len(collection.get_items()) == 2
     assert collection.get_items()[0].get_id() == "cat"
@@ -35,3 +47,11 @@ def test_collection_csv():
     assert collection.get_items()[1].get_data() == {
         "Title": "Dog",
     }
+    # test output
+    with open(os.path.join(out_dir, "data", "cat.html")) as fp:
+        contents = fp.read()
+    contents = "".join([i.strip() for i in contents.split("\n")])
+    assert (
+        "<!doctype html><html><head><title>Cat</title></head><body>Floofy</body></html>"  # noqa
+        == contents
+    )

@@ -5,7 +5,6 @@ import staticpipes.build_directory
 import staticpipes.config
 import staticpipes.datatig.pipes.load_datatig
 import staticpipes.pipes.collection_items_process
-import staticpipes.pipes.javascript_minifier
 import staticpipes.processes.jinja2
 import staticpipes.watcher
 import staticpipes.worker
