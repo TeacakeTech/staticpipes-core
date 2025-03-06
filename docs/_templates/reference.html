@@ -5,5 +5,15 @@
     </head>
     <body>
         <h1>{{ python_document["name"] }}</h1>
+
+        {% if python_document["classes"] %}
+            {% for class in python_document["classes"] %}
+                <h2>Class: {{ class.name }}</h2>
+                {% for function in class.functions %}
+                    <h3>Function: {{ function.name }}</h3>
+                {% endfor %}
+            {% endfor %}
+        {% endif %}
+
     </body>
 </html>

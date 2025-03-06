@@ -52,8 +52,23 @@ def test_copy_fixture_with_extensions():
         contents = fp.read()
     assert "<h1>staticpipes</h1>" in contents
 
-    # test staticpipes.worker
-    assert os.path.exists(os.path.join(out_dir, "staticpipes.worker.html"))
-    with open(os.path.join(out_dir, "staticpipes.worker.html")) as fp:
+    # test staticpipes.base_pipe
+    assert os.path.exists(os.path.join(out_dir, "staticpipes.pipe_base.html"))
+    with open(os.path.join(out_dir, "staticpipes.pipe_base.html")) as fp:
         contents = fp.read()
-    assert "<h1>staticpipes.worker</h1>" in contents
+    assert "<h1>staticpipes.pipe_base</h1>" in contents
+    assert "<h2>Class: BasePipe</h2>" in contents
+
+    # test staticpipes.pipes.python_document_process
+    assert os.path.exists(
+        os.path.join(out_dir, "staticpipes.pipes.python_document_process.html")
+    )
+    with open(
+        os.path.join(out_dir, "staticpipes.pipes.python_document_process.html")
+    ) as fp:
+        contents = fp.read()
+    assert "<h1>staticpipes.pipes.python_document_process</h1>" in contents
+    assert "<h2>Class: PipePythonDocumentProcess</h2>" in contents
+    # only classes in this module should be included, so no imports
+    # (We've tested BasePipe appears in it's proper place above)
+    assert "<h2>Class: BasePipe</h2>" not in contents

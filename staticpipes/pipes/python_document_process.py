@@ -1,3 +1,4 @@
+import inspect
 import logging
 import pkgutil
 import pydoc
@@ -44,7 +45,19 @@ class PipePythonDocumentProcess(BasePipe):
         object, name = pydoc.resolve(modname)  # type: ignore
 
         context = current_info.get_context().copy()
-        context["python_document"] = {"name": name}
+        context["python_document"] = {"name": name, "classes": []}
+
+        for k, v in inspect.getmembers(object):
+            if inspect.isclass(v) and v.__module__ == modname:
+                class_info = {"class": v, "name": v.__name__, "functions": []}
+                for class_k, class_v in inspect.getmembers(v):
+                    if inspect.isfunction(class_v) and not class_v.__name__.startswith(
+                        "_"
+                    ):
+                        class_info["functions"].append(  # type: ignore
+                            {"function": class_v, "name": class_v.__name__}
+                        )
+                context["python_document"]["classes"].append(class_info)
 
         process_current_info = ProcessCurrentInfo(
             self._output_dir,
