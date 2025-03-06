@@ -25,10 +25,17 @@ config = Config(
             ],
         ),
         PipePydoc(
-            pydoc_dir=os.path.join(
-                os.path.dirname(os.path.realpath(__file__)), "staticpipes"
-            ),
-            pydoc_pkgpath="staticpipes.",
+            pkgutil_walk_packages_args=[
+                (
+                    [
+                        os.path.join(
+                            os.path.dirname(os.path.realpath(__file__)), "staticpipes"
+                        )
+                    ],
+                    "staticpipes.",
+                )
+            ],
+            module_names=["staticpipes"],
             output_dir="reference",
             processors=[
                 ProcessJinja2(template="_templates/base.html"),

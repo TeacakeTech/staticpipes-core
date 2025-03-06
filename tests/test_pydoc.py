@@ -15,10 +15,19 @@ def test_copy_fixture_with_extensions():
     config = staticpipes.config.Config(
         pipes=[
             PipePydoc(
-                pydoc_dir=os.path.join(
-                    os.path.dirname(os.path.realpath(__file__)), "..", "staticpipes"
-                ),
-                pydoc_pkgpath="staticpipes.",
+                pkgutil_walk_packages_args=[
+                    (
+                        [
+                            os.path.join(
+                                os.path.dirname(os.path.realpath(__file__)),
+                                "..",
+                                "staticpipes",
+                            )
+                        ],
+                        "staticpipes.",
+                    )
+                ],
+                module_names=["staticpipes"],
                 output_dir="",
                 processors=[
                     ProcessJinja2(template="template.html"),
@@ -33,7 +42,13 @@ def test_copy_fixture_with_extensions():
     )
     # run
     worker.build()
-    # test
+    # test staticpipes
+    assert os.path.exists(os.path.join(out_dir, "staticpipes.html"))
+    with open(os.path.join(out_dir, "staticpipes.html")) as fp:
+        contents = fp.read()
+    assert "<strong>pipes</strong>&nbsp;(package)" in contents
+
+    # test staticpipes.worker
     assert os.path.exists(os.path.join(out_dir, "staticpipes.worker.html"))
     with open(os.path.join(out_dir, "staticpipes.worker.html")) as fp:
         contents = fp.read()
