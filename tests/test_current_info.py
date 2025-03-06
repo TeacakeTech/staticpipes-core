@@ -18,5 +18,7 @@ import staticpipes.current_info
 )
 def test_current_info_context(start, key, value, out):
     ci = staticpipes.current_info.CurrentInfo(start)
+    assert 0 == ci.get_context_version()
     ci.set_context(key, value)
+    assert 1 == ci.get_context_version()
     assert out == ci.get_context()
