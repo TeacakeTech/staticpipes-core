@@ -49,11 +49,12 @@ class PipeCollectionItemsProcess(BasePipe):
                     process_current_info,
                     current_info,
                 )
-                self.build_directory.write(
-                    process_current_info.dir,
-                    process_current_info.filename,
-                    process_current_info.contents,
-                )
+
+            self.build_directory.write(
+                process_current_info.dir,
+                process_current_info.filename,
+                process_current_info.contents,
+            )
 
     def start_build(self, current_info: CurrentInfo) -> None:
         self._build(current_info)
