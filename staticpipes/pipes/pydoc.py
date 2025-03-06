@@ -33,7 +33,7 @@ class PipePydoc(BasePipe):
 
     def _build(self, current_info: CurrentInfo):
 
-        html = pydoc.HTMLDoc()
+        html = OurHTMLDoc()
 
         for importer, modname, ispkg in pkgutil.walk_packages(
             [self._pydoc_dir], self._pydoc_pkgpath
@@ -67,3 +67,11 @@ class PipePydoc(BasePipe):
 
     def start_build(self, current_info: CurrentInfo) -> None:
         self._build(current_info)
+
+
+class OurHTMLDoc(pydoc.HTMLDoc):
+
+    def modulelink(self, object):
+        """This is ususally to a page that is not rendered,
+        for now just remove hyperlink."""
+        return object.__name__
