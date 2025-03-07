@@ -14,18 +14,6 @@ def test_copy_fixture_with_extensions():
     config = staticpipes.config.Config(
         pipes=[
             PipeLoadCollectionPythonDocs(
-                pkgutil_walk_packages_args=[
-                    (
-                        [
-                            os.path.join(
-                                os.path.dirname(os.path.realpath(__file__)),
-                                "..",
-                                "staticpipes",
-                            )
-                        ],
-                        "staticpipes.",
-                    )
-                ],
                 module_names=["staticpipes"],
             ),
         ],

@@ -14,11 +14,9 @@ class PipeLoadCollectionPythonDocs(BasePipe):
 
     def __init__(
         self,
-        pkgutil_walk_packages_args: list = [],
         module_names: list = [],
         collection_name: str = "python_docs",
     ):
-        self._pkgutil_walk_packages_args = pkgutil_walk_packages_args
         self._module_names = module_names
         self._collection_name = collection_name
 
@@ -27,21 +25,20 @@ class PipeLoadCollectionPythonDocs(BasePipe):
         # vars
         collection = Collection()
         # load
-        for a1, a2 in self._pkgutil_walk_packages_args:
-            for importer, modname, ispkg in pkgutil.walk_packages(a1, a2):
-                collection.add_item(self._build_modname(modname, current_info))
         for modname in self._module_names:
-            collection.add_item(self._build_modname(modname, current_info))
+            self._build_modname(modname, collection)
         # set context
         current_info.set_context(["collection", self._collection_name], collection)
 
-    def _build_modname(self, modname, current_info: CurrentInfo):
+    def _build_modname(self, modname, collection):
 
+        # vars
         logger.debug("Building for " + modname)
         object, name = pydoc.resolve(modname)  # type: ignore
 
         data: dict = {"name": name, "classes": [], "modules": []}
 
+        # other modules in a package
         if hasattr(object, "__path__"):
             for importer, modname, ispkg in pkgutil.iter_modules(object.__path__):
                 data["modules"].append(  # type: ignore
@@ -52,6 +49,7 @@ class PipeLoadCollectionPythonDocs(BasePipe):
                     }
                 )
 
+        # items in this module
         for k, v in inspect.getmembers(object):
             if inspect.isclass(v) and v.__module__ == modname:
                 class_info = {
@@ -77,4 +75,10 @@ class PipeLoadCollectionPythonDocs(BasePipe):
                         )
                 data["classes"].append(class_info)
 
-        return CollectionItem(id=name, data=data)
+        # Add to results
+        collection.add_item(CollectionItem(id=name, data=data))
+
+        # Call for other modules we found
+        for module in data["modules"]:
+            if not collection.get_item(module["full_name"]):
+                self._build_modname(module["full_name"], collection)

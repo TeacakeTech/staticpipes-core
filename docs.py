@@ -26,16 +26,6 @@ config = Config(
             ],
         ),
         PipeLoadCollectionPythonDocs(
-            pkgutil_walk_packages_args=[
-                (
-                    [
-                        os.path.join(
-                            os.path.dirname(os.path.realpath(__file__)), "staticpipes"
-                        )
-                    ],
-                    "staticpipes.",
-                )
-            ],
             collection_name="python_docs",
             module_names=["staticpipes"],
         ),
