@@ -4,7 +4,17 @@
         <title>{{ title }} - StaticPipes Documentation</title>
     </head>
     <body>
+
         <h1>{{ python_document["name"] }}</h1>
+
+        {% if python_document["modules"] %}
+            <h2>Package</h2>
+            <ul>
+            {% for module in python_document["modules"] %}
+                <li><a href="{{ module.full_name }}.html">{{ module.module_name }} {% if module.is_package %}(Package){% endif %}</a></li>
+            {% endfor %}
+            </ul>
+        {% endif %}
 
         {% if python_document["classes"] %}
             {% for class in python_document["classes"] %}

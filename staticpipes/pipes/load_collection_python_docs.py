@@ -40,7 +40,17 @@ class PipeLoadCollectionPythonDocs(BasePipe):
         logger.debug("Building for " + modname)
         object, name = pydoc.resolve(modname)  # type: ignore
 
-        data: dict = {"name": name, "classes": []}
+        data: dict = {"name": name, "classes": [], "modules": []}
+
+        if hasattr(object, "__path__"):
+            for importer, modname, ispkg in pkgutil.iter_modules(object.__path__):
+                data["modules"].append(  # type: ignore
+                    {
+                        "module_name": modname,
+                        "full_name": name + "." + modname,
+                        "is_package": ispkg,
+                    }
+                )
 
         for k, v in inspect.getmembers(object):
             if inspect.isclass(v) and v.__module__ == modname:

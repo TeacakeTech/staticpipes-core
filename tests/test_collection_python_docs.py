@@ -46,6 +46,7 @@ def test_copy_fixture_with_extensions():
         "staticpipes"
     )
     assert record is not None
+    assert [i for i in record.get_data()["modules"] if i["module_name"] == "pipes"]
 
     # test staticpipes.base_pipe
     record = worker.current_info.get_context("collection")["python_docs"].get_item(
@@ -53,6 +54,7 @@ def test_copy_fixture_with_extensions():
     )
     assert record is not None
     assert [i for i in record.get_data()["classes"] if i["name"] == "BasePipe"]
+    assert not record.get_data()["modules"]
 
     # test staticpipes.pipes.python_document_process
     record = worker.current_info.get_context("collection")["python_docs"].get_item(
