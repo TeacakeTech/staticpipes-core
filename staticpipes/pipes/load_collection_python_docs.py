@@ -45,8 +45,10 @@ class PipeLoadCollectionPythonDocs(BasePipe):
             if inspect.isclass(v) and v.__module__ == modname:
                 class_info = {"class": v, "name": v.__name__, "functions": []}
                 for class_k, class_v in inspect.getmembers(v):
-                    if inspect.isfunction(class_v) and not class_v.__name__.startswith(
-                        "_"
+                    if (
+                        inspect.isfunction(class_v)
+                        and not class_v.__name__.startswith("_")
+                        and class_v.__module__ == modname
                     ):
                         class_info["functions"].append(  # type: ignore
                             {"function": class_v, "name": class_v.__name__}
