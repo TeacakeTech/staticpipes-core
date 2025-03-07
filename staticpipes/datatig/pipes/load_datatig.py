@@ -12,7 +12,7 @@ from staticpipes.datatig.datatig_collection import DataTigCollection
 from staticpipes.pipe_base import BasePipe
 
 
-class LoadDatatig(BasePipe):
+class PipeLoadDatatig(BasePipe):
 
     def __init__(self):
         pass

@@ -5,7 +5,7 @@ from staticpipes.current_info import CurrentInfo
 from staticpipes.pipe_base import BasePipe
 
 
-class LoadCollectionCSV(BasePipe):
+class PipeLoadCollectionCSV(BasePipe):
 
     def __init__(self, directory="", filename="data.csv", collection_name="data"):
         self._directory = directory

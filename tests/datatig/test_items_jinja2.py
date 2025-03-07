@@ -15,7 +15,7 @@ def test_items_jinja2():
     out_dir = tempfile.mkdtemp(prefix="staticpipes_tests_")
     config = staticpipes.config.Config(
         pipes=[
-            staticpipes.datatig.pipes.load_datatig.LoadDatatig(),
+            staticpipes.datatig.pipes.load_datatig.PipeLoadDatatig(),
             staticpipes.pipes.collection_items_process.PipeCollectionItemsProcess(
                 type_id="datas",
                 processors=[

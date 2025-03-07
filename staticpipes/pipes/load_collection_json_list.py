@@ -5,7 +5,7 @@ from staticpipes.current_info import CurrentInfo
 from staticpipes.pipe_base import BasePipe
 
 
-class LoadCollectionJSONList(BasePipe):
+class PipeLoadCollectionJSONList(BasePipe):
 
     def __init__(self, directory="", filename="data.json", collection_name="data"):
         self._directory = directory

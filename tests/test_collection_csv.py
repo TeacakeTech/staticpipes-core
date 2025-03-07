@@ -15,7 +15,7 @@ def test_collection_csv():
     out_dir = tempfile.mkdtemp(prefix="staticpipes_tests_")
     config = staticpipes.config.Config(
         pipes=[
-            staticpipes.pipes.load_collection_csv.LoadCollectionCSV(),
+            staticpipes.pipes.load_collection_csv.PipeLoadCollectionCSV(),
             staticpipes.pipes.collection_items_process.PipeCollectionItemsProcess(
                 type_id="data",
                 processors=[
