@@ -23,6 +23,7 @@ class PipeLoadCollectionPythonDocs(BasePipe):
         self._collection_name = collection_name
 
     def start_prepare(self, current_info: CurrentInfo) -> None:
+        """"""
         # vars
         collection = Collection()
         # load
@@ -43,7 +44,13 @@ class PipeLoadCollectionPythonDocs(BasePipe):
 
         for k, v in inspect.getmembers(object):
             if inspect.isclass(v) and v.__module__ == modname:
-                class_info = {"class": v, "name": v.__name__, "functions": []}
+                class_info = {
+                    "class": v,
+                    "name": v.__name__,
+                    "functions": [],
+                    "docstring": inspect.getdoc(v),
+                    "comments": inspect.getcomments(v),
+                }
                 for class_k, class_v in inspect.getmembers(v):
                     if (
                         inspect.isfunction(class_v)
@@ -51,7 +58,12 @@ class PipeLoadCollectionPythonDocs(BasePipe):
                         and class_v.__module__ == modname
                     ):
                         class_info["functions"].append(  # type: ignore
-                            {"function": class_v, "name": class_v.__name__}
+                            {
+                                "function": class_v,
+                                "name": class_v.__name__,
+                                "docstring": inspect.getdoc(class_v),
+                                "comments": inspect.getcomments(class_v),
+                            }
                         )
                 data["classes"].append(class_info)
 

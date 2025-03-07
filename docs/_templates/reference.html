@@ -9,8 +9,14 @@
         {% if python_document["classes"] %}
             {% for class in python_document["classes"] %}
                 <h2>Class: {{ class.name }}</h2>
+                <div>
+                    {{ class.docstring or class.comments or "No Info." }}
+                </div>
                 {% for function in class.functions %}
                     <h3>Function: {{ function.name }}</h3>
+                    <div>
+                        {{ function.docstring or function.comments or "No Info." }}
+                    </div>
                 {% endfor %}
             {% endfor %}
         {% endif %}
