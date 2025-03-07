@@ -5,8 +5,7 @@ import staticpipes.build_directory
 import staticpipes.config
 import staticpipes.watcher
 import staticpipes.worker
-from staticpipes.pipes.python_document_process import PipePythonDocumentProcess
-from staticpipes.processes.jinja2 import ProcessJinja2
+from staticpipes.pipes.load_collection_python_docs import PipeLoadCollectionPythonDocs
 
 
 def test_copy_fixture_with_extensions():
@@ -14,7 +13,7 @@ def test_copy_fixture_with_extensions():
     out_dir = tempfile.mkdtemp(prefix="staticpipes_tests_")
     config = staticpipes.config.Config(
         pipes=[
-            PipePythonDocumentProcess(
+            PipeLoadCollectionPythonDocs(
                 pkgutil_walk_packages_args=[
                     (
                         [
@@ -28,10 +27,6 @@ def test_copy_fixture_with_extensions():
                     )
                 ],
                 module_names=["staticpipes"],
-                output_dir="",
-                processors=[
-                    ProcessJinja2(template="template.html"),
-                ],
             ),
         ],
     )
@@ -47,28 +42,28 @@ def test_copy_fixture_with_extensions():
     # run
     worker.build()
     # test staticpipes
-    assert os.path.exists(os.path.join(out_dir, "staticpipes.html"))
-    with open(os.path.join(out_dir, "staticpipes.html")) as fp:
-        contents = fp.read()
-    assert "<h1>staticpipes</h1>" in contents
+    record = worker.current_info.get_context("collection")["python_docs"].get_item(
+        "staticpipes"
+    )
+    assert record is not None
 
     # test staticpipes.base_pipe
-    assert os.path.exists(os.path.join(out_dir, "staticpipes.pipe_base.html"))
-    with open(os.path.join(out_dir, "staticpipes.pipe_base.html")) as fp:
-        contents = fp.read()
-    assert "<h1>staticpipes.pipe_base</h1>" in contents
-    assert "<h2>Class: BasePipe</h2>" in contents
+    record = worker.current_info.get_context("collection")["python_docs"].get_item(
+        "staticpipes.pipe_base"
+    )
+    assert record is not None
+    assert [i for i in record.get_data()["classes"] if i["name"] == "BasePipe"]
 
     # test staticpipes.pipes.python_document_process
-    assert os.path.exists(
-        os.path.join(out_dir, "staticpipes.pipes.python_document_process.html")
+    record = worker.current_info.get_context("collection")["python_docs"].get_item(
+        "staticpipes.pipes.load_collection_python_docs"
     )
-    with open(
-        os.path.join(out_dir, "staticpipes.pipes.python_document_process.html")
-    ) as fp:
-        contents = fp.read()
-    assert "<h1>staticpipes.pipes.python_document_process</h1>" in contents
-    assert "<h2>Class: PipePythonDocumentProcess</h2>" in contents
+    assert record is not None
+    assert [
+        i
+        for i in record.get_data()["classes"]
+        if i["name"] == "PipeLoadCollectionPythonDocs"
+    ]
     # only classes in this module should be included, so no imports
     # (We've tested BasePipe appears in it's proper place above)
-    assert "<h2>Class: BasePipe</h2>" not in contents
+    assert not [i for i in record.get_data()["classes"] if i["name"] == "BasePipe"]

@@ -17,7 +17,7 @@ def test_collection_csv():
         pipes=[
             staticpipes.pipes.load_collection_csv.PipeLoadCollectionCSV(),
             staticpipes.pipes.collection_items_process.PipeCollectionItemsProcess(
-                type_id="data",
+                collection_name="data",
                 processors=[
                     staticpipes.processes.jinja2.ProcessJinja2(
                         template="_templates/item.html"

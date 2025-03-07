@@ -2,11 +2,12 @@ import logging
 import os
 
 from staticpipes.config import Config
+from staticpipes.pipes.collection_items_process import PipeCollectionItemsProcess
 from staticpipes.pipes.exclude_underscore_directories import (
     PipeExcludeUnderscoreDirectories,
 )
+from staticpipes.pipes.load_collection_python_docs import PipeLoadCollectionPythonDocs
 from staticpipes.pipes.process import PipeProcess
-from staticpipes.pipes.python_document_process import PipePythonDocumentProcess
 from staticpipes.processes.change_extension import ProcessChangeExtension
 from staticpipes.processes.jinja2 import ProcessJinja2
 from staticpipes.processes.markdown_yaml_to_html_context import (
@@ -24,7 +25,7 @@ config = Config(
                 ProcessChangeExtension("html"),
             ],
         ),
-        PipePythonDocumentProcess(
+        PipeLoadCollectionPythonDocs(
             pkgutil_walk_packages_args=[
                 (
                     [
@@ -35,8 +36,13 @@ config = Config(
                     "staticpipes.",
                 )
             ],
+            collection_name="python_docs",
             module_names=["staticpipes"],
+        ),
+        PipeCollectionItemsProcess(
+            collection_name="python_docs",
             output_dir="reference",
+            context_key_item_data="python_document",
             processors=[
                 ProcessJinja2(template="_templates/reference.html"),
             ],

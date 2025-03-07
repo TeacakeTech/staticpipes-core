@@ -17,7 +17,7 @@ def test_items_jinja2():
         pipes=[
             staticpipes.datatig.pipes.load_datatig.PipeLoadDatatig(),
             staticpipes.pipes.collection_items_process.PipeCollectionItemsProcess(
-                type_id="datas",
+                collection_name="datas",
                 processors=[
                     staticpipes.processes.jinja2.ProcessJinja2(
                         template="_templates/item.html"

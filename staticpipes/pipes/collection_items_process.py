@@ -7,15 +7,19 @@ class PipeCollectionItemsProcess(BasePipe):
 
     def __init__(
         self,
-        type_id: str,
+        collection_name: str,
         processors: list,
         output_dir=None,
         output_filename_extension="html",
+        context_key_item_id: str = "item_id",
+        context_key_item_data: str = "item_data",
     ):
-        self._type_id = type_id
+        self._collection_name = collection_name
         self._processors = processors
-        self._output_dir = output_dir or type_id
+        self._output_dir = output_dir or collection_name
         self._output_filename_extension = output_filename_extension
+        self._context_key_item_id = context_key_item_id
+        self._context_key_item_data = context_key_item_data
 
     def start_prepare(self, current_info: CurrentInfo) -> None:
         for processor in self._processors:
@@ -25,12 +29,12 @@ class PipeCollectionItemsProcess(BasePipe):
 
     def _build(self, current_info: CurrentInfo):
 
-        collection = current_info.get_context("collection")[self._type_id]
+        collection = current_info.get_context("collection")[self._collection_name]
 
         for item in collection.get_items():
             this_context = current_info.get_context().copy()
-            this_context["item_id"] = item.get_id()
-            this_context["item_data"] = item.get_data()
+            this_context[self._context_key_item_id] = item.get_id()
+            this_context[self._context_key_item_data] = item.get_data()
 
             process_current_info = ProcessCurrentInfo(
                 self._output_dir,
