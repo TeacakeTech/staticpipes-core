@@ -17,6 +17,7 @@ class PipeMako(BasePipe):
         self._all_templates = []
 
     def start_build(self, current_info: CurrentInfo) -> None:
+        """"""
         self.mako_lookup = mako.lookup.TemplateLookup(
             directories=[self.source_directory.dir],
             # Have to set this to zero, otherwise tests fail!!!!!!!!!
@@ -36,6 +37,7 @@ class PipeMako(BasePipe):
         self.build_directory.write(dir, filename, contents)
 
     def build_file(self, dir: str, filename: str, current_info: CurrentInfo) -> None:
+        """"""
         if not staticpipes.utils.does_filename_have_extension(
             filename, self.extensions
         ):
@@ -47,6 +49,7 @@ class PipeMako(BasePipe):
             self._all_templates.append((dir, filename))
 
     def file_changed_during_watch(self, dir, filename, current_info):
+        """"""
         if not staticpipes.utils.does_filename_have_extension(
             filename, self.extensions
         ):
@@ -56,6 +59,7 @@ class PipeMako(BasePipe):
             self._actually_build_template(x[0], x[1], current_info)
 
     def file_changed_but_excluded_during_watch(self, dir, filename, current_info):
+        """"""
         if not staticpipes.utils.does_filename_have_extension(
             filename, self.extensions
         ):

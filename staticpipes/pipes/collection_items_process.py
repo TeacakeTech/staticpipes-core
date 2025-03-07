@@ -22,6 +22,7 @@ class PipeCollectionItemsProcess(BasePipe):
         self._context_key_item_data = context_key_item_data
 
     def start_prepare(self, current_info: CurrentInfo) -> None:
+        """"""
         for processor in self._processors:
             processor.config = self.config
             processor.source_directory = self.source_directory
@@ -61,4 +62,5 @@ class PipeCollectionItemsProcess(BasePipe):
             )
 
     def start_build(self, current_info: CurrentInfo) -> None:
+        """"""
         self._build(current_info)

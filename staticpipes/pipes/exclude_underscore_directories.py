@@ -11,6 +11,7 @@ class PipeExcludeUnderscoreDirectories(BasePipe):
     """
 
     def build_file(self, dir: str, filename: str, current_info: CurrentInfo) -> None:
+        """"""
 
         exclude = False
 
@@ -22,4 +23,5 @@ class PipeExcludeUnderscoreDirectories(BasePipe):
             current_info.current_file_excluded = True
 
     def file_changed_during_watch(self, dir, filename, current_info):
+        """"""
         self.build_file(dir, filename, current_info)

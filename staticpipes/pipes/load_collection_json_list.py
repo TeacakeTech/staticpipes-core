@@ -13,6 +13,7 @@ class PipeLoadCollectionJSONList(BasePipe):
         self._collection_name = collection_name
 
     def start_prepare(self, current_info: CurrentInfo) -> None:
+        """"""
 
         items = []
 
