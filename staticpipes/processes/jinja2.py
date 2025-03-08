@@ -18,7 +18,6 @@ class ProcessJinja2(BaseProcessor):
             autoescape=jinja2.select_autoescape(),
         )
 
-        # print("JINJA2 {} {}".format(dir, filename))
         template = jinja2_env.get_template(self._template)
         process_current_info.context["content"] = process_current_info.contents
         contents = template.render(process_current_info.context)

@@ -40,6 +40,7 @@ class PipeLoadCollectionCSV(BasePipe):
             with open(temp_file_name) as fp:
                 self._load(fp, collection)
 
+
         current_info.set_context(["collection", self._collection_name], collection)
 
     def _load(self, fp, collection):
@@ -50,10 +51,6 @@ class PipeLoadCollectionCSV(BasePipe):
         for row in csv_reader:
             if row:
                 data = {header_row[i]: row[i] for i in range(1, len(row))}
-                print("B")
-                print(collection.get_records())
                 collection.add_record(CollectionRecord(id=row[0], data=data))
-
-                print(collection.get_records())
 
     # TODO reload on watch

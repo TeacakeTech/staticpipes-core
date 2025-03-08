@@ -8,7 +8,7 @@ import staticpipes.worker
 from staticpipes.pipes.load_collection_python_docs import PipeLoadCollectionPythonDocs
 
 
-def test_copy_fixture_with_extensions():
+def test_collection_python_docs():
     # setup
     out_dir = tempfile.mkdtemp(prefix="staticpipes_tests_")
     config = staticpipes.config.Config(
