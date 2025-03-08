@@ -29,6 +29,12 @@ class PipeProcess(BasePipe):
         self.extensions = extensions
         self.processors = processors
 
+    def start_prepare(self, current_info: CurrentInfo) -> None:
+        for processor in self.processors:
+            processor.config = self.config
+            processor.source_directory = self.source_directory
+            processor.build_directory = self.build_directory
+
     def prepare_file(self, dir: str, filename: str, current_info: CurrentInfo) -> None:
         self._file(dir, filename, current_info, prepare=True)
 
@@ -55,6 +61,7 @@ class PipeProcess(BasePipe):
             self.source_directory.get_contents_as_str(dir, filename),
             prepare=prepare,
             build=build,
+            context=current_info.get_context().copy(),
         )
 
         # TODO something about excluding files
@@ -74,12 +81,15 @@ class PipeProcess(BasePipe):
 
 class ProcessCurrentInfo:
 
-    def __init__(self, dir, filename, contents, prepare: bool, build: bool):
+    def __init__(
+        self, dir, filename, contents, prepare: bool, build: bool, context: dict
+    ):
         self.dir = dir
         self.filename = filename
         self.contents = contents
         self.prepare: bool = prepare
         self.build: bool = build
+        self.context: dict = context
 
 
 class BaseProcessor:
