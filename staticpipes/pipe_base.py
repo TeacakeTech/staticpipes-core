@@ -64,5 +64,5 @@ class BasePipe:
     def context_changed_during_watch(
         self, current_info: CurrentInfo, old_version: int, new_version: int
     ) -> None:
-        """TODO document, in readme too"""
+        """Called if the context has changed during watch."""
         pass

@@ -26,7 +26,11 @@ class CurrentInfo:
                     s[bit] = {}
                 s = s[bit]
             s[key[0]] = value
-        self._context_history.append(key)
+        if self.watch:
+            self._context_history.append(key)
 
     def get_context_version(self) -> int:
-        return len(self._context_history)
+        if self.watch:
+            return len(self._context_history)
+        else:
+            raise Exception("This only works in watch mode")
