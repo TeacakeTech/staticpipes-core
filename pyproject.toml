@@ -18,6 +18,10 @@ allbuild=[
     "rcssmin",
     # For pipeline jinja2
     "jinja2",
+    # For Markdown
+    "markdown-it-py",
+    # For YAML
+    "pyyaml",
 ]
 dev= [
     "watchdog",
