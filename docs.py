@@ -32,7 +32,7 @@ config = Config(
         PipeCollectionItemsProcess(
             collection_name="python_docs",
             output_dir="reference",
-            context_key_item_data="python_document",
+            context_key_record_data="python_document",
             processors=[
                 ProcessJinja2(template="_templates/reference.html"),
             ],
