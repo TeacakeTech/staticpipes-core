@@ -22,9 +22,9 @@ allbuild=[
     "mako",
     # Datatig
     "datatig",
-    # Markdown
+    # For Markdown
     "markdown-it-py",
-    # YAML
+    # For YAML
     "pyyaml",
     # Requests
     "requests",
