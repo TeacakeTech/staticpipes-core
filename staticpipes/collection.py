@@ -16,8 +16,8 @@ class CollectionItem(BaseCollectionItem):
 
 class Collection(BaseCollection):
 
-    def __init__(self, items=[]):
-        self._items = items
+    def __init__(self):
+        self._items = []
 
     def add_item(self, item: BaseCollectionItem):
         self._items.append(item)

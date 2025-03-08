@@ -1,6 +1,8 @@
 import os
 import tempfile
 
+import pytest
+
 import staticpipes.build_directory
 import staticpipes.config
 import staticpipes.pipes.collection_items_process
@@ -10,12 +12,24 @@ import staticpipes.watcher
 import staticpipes.worker
 
 
-def test_collection_csv():
+@pytest.mark.parametrize(
+    "url, filename",
+    [
+        (
+            "https://raw.githubusercontent.com/StaticPipes/StaticPipes/refs/heads/theattic/tests/fixtures/collection_csv/data.csv",  # noqa
+            None,
+        ),
+        (None, "data.csv"),
+    ],
+)
+def test_collection_csv(url, filename):
     # setup
     out_dir = tempfile.mkdtemp(prefix="staticpipes_tests_")
     config = staticpipes.config.Config(
         pipes=[
-            staticpipes.pipes.load_collection_csv.PipeLoadCollectionCSV(),
+            staticpipes.pipes.load_collection_csv.PipeLoadCollectionCSV(
+                url=url, filename=filename
+            ),
             staticpipes.pipes.collection_items_process.PipeCollectionItemsProcess(
                 collection_name="data",
                 processors=[

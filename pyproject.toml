@@ -26,6 +26,8 @@ allbuild=[
     "markdown-it-py",
     # YAML
     "pyyaml",
+    # Requests
+    "requests",
 ]
 dev= [
     "watchdog",

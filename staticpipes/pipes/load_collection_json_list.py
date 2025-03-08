@@ -15,7 +15,7 @@ class PipeLoadCollectionJSONList(BasePipe):
     def start_prepare(self, current_info: CurrentInfo) -> None:
         """"""
 
-        items = []
+        collection = Collection()
 
         with self.source_directory.get_contents_as_filepointer(
             self._directory, self._filename
@@ -23,11 +23,9 @@ class PipeLoadCollectionJSONList(BasePipe):
             data = json.load(fp)
             idx = 0
             for raw_data in data:
-                items.append(CollectionItem(id=str(idx), data=raw_data))
+                collection.add_item(CollectionItem(id=str(idx), data=raw_data))
                 idx += 1
 
-        current_info.set_context(
-            ["collection", self._collection_name], Collection(items=items)
-        )
+        current_info.set_context(["collection", self._collection_name], collection)
 
     # TODO reload on watch
