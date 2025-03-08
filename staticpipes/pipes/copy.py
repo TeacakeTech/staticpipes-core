@@ -24,7 +24,7 @@ class PipeCopy(BasePipe):
 
     """
 
-    def __init__(self, extensions=[], source_sub_directory=None):
+    def __init__(self, extensions=None, source_sub_directory=None):
         self.extensions = extensions
         self.source_sub_directory = (
             "/" + source_sub_directory

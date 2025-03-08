@@ -26,7 +26,7 @@ class PipeProcess(BasePipe):
 
     """
 
-    def __init__(self, extensions=[], processors=None):
+    def __init__(self, extensions=None, processors=None):
         self.extensions = extensions
         self.processors = processors
 
