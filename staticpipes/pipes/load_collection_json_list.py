@@ -1,6 +1,6 @@
 import json
 
-from staticpipes.collection import Collection, CollectionItem
+from staticpipes.collection import Collection, CollectionRecord
 from staticpipes.current_info import CurrentInfo
 from staticpipes.pipe_base import BasePipe
 
@@ -23,7 +23,7 @@ class PipeLoadCollectionJSONList(BasePipe):
             data = json.load(fp)
             idx = 0
             for raw_data in data:
-                collection.add_item(CollectionItem(id=str(idx), data=raw_data))
+                collection.add_record(CollectionRecord(id=str(idx), data=raw_data))
                 idx += 1
 
         current_info.set_context(["collection", self._collection_name], collection)

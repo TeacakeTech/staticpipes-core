@@ -1,19 +1,28 @@
-class BaseCollectionItem:
+import abc
+import typing
 
+
+class BaseCollectionRecord(abc.ABC):
+
+    @abc.abstractmethod
     def get_id(self):
         pass
 
+    @abc.abstractmethod
     def get_data(self):
         pass
 
 
-class BaseCollection:
+class BaseCollection(abc.ABC):
 
-    def add_item(self, item: BaseCollectionItem):
+    @abc.abstractmethod
+    def add_record(self, record: BaseCollectionRecord) -> None:
         pass
 
-    def get_items(self):
+    @abc.abstractmethod
+    def get_records(self) -> list:
         pass
 
-    def get_item(self, id):
+    @abc.abstractmethod
+    def get_record(self, id) -> typing.Optional[BaseCollectionRecord]:
         pass

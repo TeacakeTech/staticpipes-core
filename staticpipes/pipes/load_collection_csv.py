@@ -4,7 +4,7 @@ import tempfile
 
 import requests
 
-from staticpipes.collection import Collection, CollectionItem
+from staticpipes.collection import Collection, CollectionRecord
 from staticpipes.current_info import CurrentInfo
 from staticpipes.pipe_base import BasePipe
 
@@ -51,9 +51,9 @@ class PipeLoadCollectionCSV(BasePipe):
             if row:
                 data = {header_row[i]: row[i] for i in range(1, len(row))}
                 print("B")
-                print(collection.get_items())
-                collection.add_item(CollectionItem(id=row[0], data=data))
+                print(collection.get_records())
+                collection.add_record(CollectionRecord(id=row[0], data=data))
 
-                print(collection.get_items())
+                print(collection.get_records())
 
     # TODO reload on watch

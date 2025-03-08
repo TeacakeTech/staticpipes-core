@@ -11,15 +11,15 @@ class PipeCollectionItemsProcess(BasePipe):
         processors: list,
         output_dir=None,
         output_filename_extension="html",
-        context_key_item_id: str = "item_id",
-        context_key_item_data: str = "item_data",
+        context_key_record_id: str = "record_id",
+        context_key_record_data: str = "record_data",
     ):
         self._collection_name = collection_name
         self._processors = processors
         self._output_dir = output_dir or collection_name
         self._output_filename_extension = output_filename_extension
-        self._context_key_item_id = context_key_item_id
-        self._context_key_item_data = context_key_item_data
+        self._context_key_record_id = context_key_record_id
+        self._context_key_record_data = context_key_record_data
 
     def start_prepare(self, current_info: CurrentInfo) -> None:
         """"""
@@ -32,14 +32,14 @@ class PipeCollectionItemsProcess(BasePipe):
 
         collection = current_info.get_context("collection")[self._collection_name]
 
-        for item in collection.get_items():
+        for record in collection.get_records():
             this_context = current_info.get_context().copy()
-            this_context[self._context_key_item_id] = item.get_id()
-            this_context[self._context_key_item_data] = item.get_data()
+            this_context[self._context_key_record_id] = record.get_id()
+            this_context[self._context_key_record_data] = record.get_data()
 
             process_current_info = ProcessCurrentInfo(
                 self._output_dir,
-                item.get_id() + "." + self._output_filename_extension,
+                record.get_id() + "." + self._output_filename_extension,
                 "",
                 prepare=False,
                 build=True,
@@ -50,7 +50,7 @@ class PipeCollectionItemsProcess(BasePipe):
             for processor in self._processors:
                 processor.process_file(
                     self._output_dir,
-                    item.get_id() + "." + self._output_filename_extension,
+                    record.get_id() + "." + self._output_filename_extension,
                     process_current_info,
                     current_info,
                 )

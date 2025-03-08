@@ -1,7 +1,9 @@
-from staticpipes.collection_base import BaseCollection, BaseCollectionItem
+import typing
+
+from staticpipes.collection_base import BaseCollection, BaseCollectionRecord
 
 
-class CollectionItem(BaseCollectionItem):
+class CollectionRecord(BaseCollectionRecord):
 
     def __init__(self, id=None, data=None):
         self._id = id
@@ -17,15 +19,16 @@ class CollectionItem(BaseCollectionItem):
 class Collection(BaseCollection):
 
     def __init__(self):
-        self._items = []
+        self._records: list = []
 
-    def add_item(self, item: BaseCollectionItem):
-        self._items.append(item)
+    def add_record(self, record: BaseCollectionRecord) -> None:
+        self._records.append(record)
 
-    def get_items(self):
-        return self._items
+    def get_records(self) -> list:
+        return self._records
 
-    def get_item(self, id):
-        for item in self._items:
-            if item.get_id() == id:
-                return item
+    def get_record(self, id) -> typing.Optional[BaseCollectionRecord]:
+        for record in self._records:
+            if record.get_id() == id:
+                return record
+        return None

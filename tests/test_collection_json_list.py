@@ -31,15 +31,15 @@ def test_collection_json_list():
     worker.build()
     # test collection
     collection = worker.current_info.get_context()["collection"]["data"]
-    assert len(collection.get_items()) == 2
-    assert collection.get_items()[0].get_id() == "0"
-    assert collection.get_items()[0].get_data() == {
+    assert len(collection.get_records()) == 2
+    assert collection.get_records()[0].get_id() == "0"
+    assert collection.get_records()[0].get_data() == {
         "Id": "cat",
         "Description": "Floofy",
         "Title": "Cat",
     }
-    assert collection.get_items()[1].get_id() == "1"
-    assert collection.get_items()[1].get_data() == {
+    assert collection.get_records()[1].get_id() == "1"
+    assert collection.get_records()[1].get_data() == {
         "Id": "dog",
         "Title": "Dog",
     }

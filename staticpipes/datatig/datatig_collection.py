@@ -1,4 +1,6 @@
-from staticpipes.collection_base import BaseCollection, BaseCollectionItem
+import typing
+
+from staticpipes.collection_base import BaseCollection, BaseCollectionRecord
 
 
 class DataTigCollection(BaseCollection):
@@ -8,17 +10,28 @@ class DataTigCollection(BaseCollection):
         self._datastore = datastore
         self._type_id = type_id
 
-    def get_items(self):
+    def get_records(self):
         for id in self._datastore.get_ids_in_type(self._type_id):
-            yield DataTigCollectionItem(
+            yield DataTigCollectionRecord(
                 self._config,
                 self._datastore,
                 self._type_id,
                 self._datastore.get_item(self._type_id, id),
             )
 
+    def add_record(self, record: BaseCollectionRecord) -> None:
+        raise Exception("Not possible")
 
-class DataTigCollectionItem(BaseCollectionItem):
+    def get_record(self, id) -> typing.Optional[BaseCollectionRecord]:
+        return DataTigCollectionRecord(
+            self._config,
+            self._datastore,
+            self._type_id,
+            self._datastore.get_item(self._type_id, id),
+        )
+
+
+class DataTigCollectionRecord(BaseCollectionRecord):
 
     def __init__(self, config, datastore, type_id, item):
         self._config = config

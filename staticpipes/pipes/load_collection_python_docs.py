@@ -3,7 +3,7 @@ import logging
 import pkgutil
 import pydoc
 
-from staticpipes.collection import Collection, CollectionItem
+from staticpipes.collection import Collection, CollectionRecord
 from staticpipes.current_info import CurrentInfo
 from staticpipes.pipe_base import BasePipe
 
@@ -76,9 +76,9 @@ class PipeLoadCollectionPythonDocs(BasePipe):
                 data["classes"].append(class_info)
 
         # Add to results
-        collection.add_item(CollectionItem(id=name, data=data))
+        collection.add_record(CollectionRecord(id=name, data=data))
 
         # Call for other modules we found
         for module in data["modules"]:
-            if not collection.get_item(module["full_name"]):
+            if not collection.get_record(module["full_name"]):
                 self._build_modname(module["full_name"], collection)
