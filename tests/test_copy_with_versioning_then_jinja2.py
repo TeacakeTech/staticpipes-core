@@ -60,7 +60,6 @@ def test_copy_fixture():
     )
 
 
-
 def test_watch_while_change_js_file(monkeypatch):
     monkeypatch.setattr(staticpipes.watcher.Watcher, "watch", lambda self: None)
     # setup
