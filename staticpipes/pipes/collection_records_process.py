@@ -3,7 +3,7 @@ from staticpipes.pipe_base import BasePipe
 from staticpipes.process_current_info import ProcessCurrentInfo
 
 
-class PipeCollectionItemsProcess(BasePipe):
+class PipeCollectionRecordsProcess(BasePipe):
 
     def __init__(
         self,

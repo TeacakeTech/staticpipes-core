@@ -5,7 +5,7 @@ import pytest
 
 import staticpipes.build_directory
 import staticpipes.config
-import staticpipes.pipes.collection_items_process
+import staticpipes.pipes.collection_records_process
 import staticpipes.pipes.load_collection_csv
 import staticpipes.processes.jinja2
 import staticpipes.watcher
@@ -30,7 +30,7 @@ def test_collection_csv(url, filename):
             staticpipes.pipes.load_collection_csv.PipeLoadCollectionCSV(
                 url=url, filename=filename
             ),
-            staticpipes.pipes.collection_items_process.PipeCollectionItemsProcess(
+            staticpipes.pipes.collection_records_process.PipeCollectionRecordsProcess(
                 collection_name="data",
                 processors=[
                     staticpipes.processes.jinja2.ProcessJinja2(

@@ -3,7 +3,7 @@ import tempfile
 
 import staticpipes.build_directory
 import staticpipes.config
-import staticpipes.pipes.collection_items_process
+import staticpipes.pipes.collection_records_process
 import staticpipes.pipes.load_collection_json_list
 import staticpipes.processes.jinja2
 import staticpipes.watcher

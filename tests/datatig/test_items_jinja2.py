@@ -4,7 +4,7 @@ import tempfile
 import staticpipes.build_directory
 import staticpipes.config
 import staticpipes.datatig.pipes.load_datatig
-import staticpipes.pipes.collection_items_process
+import staticpipes.pipes.collection_records_process
 import staticpipes.processes.jinja2
 import staticpipes.watcher
 import staticpipes.worker
@@ -16,7 +16,7 @@ def test_items_jinja2():
     config = staticpipes.config.Config(
         pipes=[
             staticpipes.datatig.pipes.load_datatig.PipeLoadDatatig(),
-            staticpipes.pipes.collection_items_process.PipeCollectionItemsProcess(
+            staticpipes.pipes.collection_records_process.PipeCollectionRecordsProcess(
                 collection_name="datas",
                 processors=[
                     staticpipes.processes.jinja2.ProcessJinja2(

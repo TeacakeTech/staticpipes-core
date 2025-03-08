@@ -2,7 +2,7 @@ import logging
 import os
 
 from staticpipes.config import Config
-from staticpipes.pipes.collection_items_process import PipeCollectionItemsProcess
+from staticpipes.pipes.collection_records_process import PipeCollectionRecordsProcess
 from staticpipes.pipes.exclude_underscore_directories import (
     PipeExcludeUnderscoreDirectories,
 )
@@ -29,7 +29,7 @@ config = Config(
             collection_name="python_docs",
             module_names=["staticpipes"],
         ),
-        PipeCollectionItemsProcess(
+        PipeCollectionRecordsProcess(
             collection_name="python_docs",
             output_dir="reference",
             context_key_record_data="python_document",
