@@ -20,8 +20,6 @@ allbuild=[
     "jinja2",
     # For Mako
     "mako",
-    # Datatig
-    "datatig",
     # For Markdown
     "markdown-it-py",
     # For YAML
@@ -45,7 +43,7 @@ Changelog = "https://github.com/StaticPipes/StaticPipes/blob/main/CHANGELOG.md"
 profile = "black"
 
 [[tool.mypy.overrides]]
-module = ["rjsmin.*","rcssmin.*","datatig.*", "mako.*"]
+module = ["rjsmin.*","rcssmin.*","mako.*"]
 ignore_missing_imports = true
 follow_imports = "skip"
 
