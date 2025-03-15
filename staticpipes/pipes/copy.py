@@ -25,7 +25,7 @@ class PipeCopy(BasePipe):
     """
 
     def __init__(self, extensions=None, source_sub_directory=None):
-        self.extensions = extensions
+        self.extensions: list = extensions or []
         self.source_sub_directory = (
             "/" + source_sub_directory
             if source_sub_directory and not source_sub_directory.startswith("/")
