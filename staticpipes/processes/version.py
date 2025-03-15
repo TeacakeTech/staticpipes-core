@@ -21,6 +21,7 @@ class ProcessVersion(BaseProcessor):
     def process_file(
         self, source_dir, source_filename, process_current_info, current_info
     ):
+        """"""
 
         contents_bytes = (
             process_current_info.contents

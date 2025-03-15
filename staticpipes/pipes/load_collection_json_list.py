@@ -6,6 +6,13 @@ from staticpipes.pipe_base import BasePipe
 
 
 class PipeLoadCollectionJSONList(BasePipe):
+    """
+    Creates a collection and loads data from a list
+    in a single JSON file in the source directory.
+
+    The index of position in the list (zero based) is
+    used as the id of items in the collection.
+    """
 
     def __init__(self, directory="", filename="data.json", collection_name="data"):
         self._directory = directory

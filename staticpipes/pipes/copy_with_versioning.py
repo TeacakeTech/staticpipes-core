@@ -49,6 +49,7 @@ class PipeCopyWithVersioning(BasePipe):
         self.mapping = {}
 
     def prepare_file(self, dir: str, filename: str, current_info: CurrentInfo) -> None:
+        """"""
         if self.extensions and not staticpipes.utils.does_filename_have_extension(
             filename, self.extensions
         ):
@@ -80,6 +81,7 @@ class PipeCopyWithVersioning(BasePipe):
         self.mapping[dir + "#####" + filename] = new_filename
 
     def build_file(self, dir: str, filename: str, current_info: CurrentInfo) -> None:
+        """"""
         if self.extensions and not staticpipes.utils.does_filename_have_extension(
             filename, self.extensions
         ):
@@ -102,5 +104,6 @@ class PipeCopyWithVersioning(BasePipe):
         )
 
     def file_changed_during_watch(self, dir, filename, current_info):
+        """"""
         self.prepare_file(dir, filename, current_info)
         self.build_file(dir, filename, current_info)

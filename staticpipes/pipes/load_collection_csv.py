@@ -6,6 +6,13 @@ from staticpipes.pipe_base import BasePipe
 
 
 class PipeLoadCollectionCSV(BasePipe):
+    """
+    Creates a collection and loads data from a CSV in the source directory.
+
+    The first row of the CSV is used as field names.
+
+    The first column of the CSV is used as the id of items in the collection.
+    """
 
     def __init__(self, directory=None, filename=None, collection_name="data"):
         self._directory = directory
@@ -13,6 +20,7 @@ class PipeLoadCollectionCSV(BasePipe):
         self._collection_name = collection_name
 
     def start_prepare(self, current_info: CurrentInfo) -> None:
+        """"""
         collection = Collection()
 
         with self.source_directory.get_contents_as_filepointer(

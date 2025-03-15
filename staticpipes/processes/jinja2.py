@@ -4,6 +4,16 @@ from staticpipes.pipes.process import BaseProcessor
 
 
 class ProcessJinja2(BaseProcessor):
+    """
+    Renders Jinja2.
+
+    The current contents of the file are put in the "content" variable in the context.
+
+    Pass:
+
+    - template - the path to the template in the source directory to render.
+
+    """
 
     def __init__(self, template):
         self._template = template
@@ -11,6 +21,7 @@ class ProcessJinja2(BaseProcessor):
     def process_file(
         self, source_dir, source_filename, process_current_info, current_info
     ):
+        """"""
 
         # TODO cache this
         jinja2_env = jinja2.Environment(

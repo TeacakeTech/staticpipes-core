@@ -36,6 +36,7 @@ class PipeJinja2(BasePipe):
         self._watch_rebuild_all = watch_rebuild_all
 
     def start_build(self, current_info: CurrentInfo) -> None:
+        """"""
         self.jinja2_env = jinja2.Environment(
             loader=jinja2.FileSystemLoader(self.source_directory.dir),
             autoescape=jinja2.select_autoescape(),
@@ -84,6 +85,7 @@ class PipeJinja2(BasePipe):
                 ] = referenced_templates
 
     def build_file(self, dir: str, filename: str, current_info: CurrentInfo) -> None:
+        """"""
         if not staticpipes.utils.does_filename_have_extension(
             filename, self.extensions
         ):
@@ -97,6 +99,7 @@ class PipeJinja2(BasePipe):
     def file_excluded_during_build(
         self, dir: str, filename: str, current_info: CurrentInfo
     ) -> None:
+        """"""
         if not staticpipes.utils.does_filename_have_extension(
             filename, self.extensions
         ):
@@ -106,9 +109,11 @@ class PipeJinja2(BasePipe):
             self._update_template_information(dir, filename, True)
 
     def file_changed_during_watch(self, dir, filename, current_info):
+        """"""
         self._template_changed_during_watch(dir, filename, current_info, False)
 
     def file_changed_but_excluded_during_watch(self, dir, filename, current_info):
+        """"""
         self._template_changed_during_watch(dir, filename, current_info, True)
 
     def _template_changed_during_watch(
@@ -162,6 +167,7 @@ class PipeJinja2(BasePipe):
     def context_changed_during_watch(
         self, current_info: CurrentInfo, old_version: int, new_version: int
     ) -> None:
+        """"""
         # For now we don't do anything clever, we just rebuild all templates
         for template_path, template_info in self._template_information.items():
             if not template_info["file_excluded"]:

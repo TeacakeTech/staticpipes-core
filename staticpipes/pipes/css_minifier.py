@@ -16,6 +16,7 @@ class PipeCSSMinifier(BasePipe):
         self.extensions = extensions
 
     def build_file(self, dir: str, filename: str, current_info: CurrentInfo) -> None:
+        """"""
         if self.extensions and not staticpipes.utils.does_filename_have_extension(
             filename, self.extensions
         ):
@@ -28,4 +29,5 @@ class PipeCSSMinifier(BasePipe):
         )
 
     def file_changed_during_watch(self, dir, filename, current_info):
+        """"""
         self.build_file(dir, filename, current_info)

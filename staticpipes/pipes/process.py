@@ -30,15 +30,18 @@ class PipeProcess(BasePipe):
         self.processors = processors
 
     def start_prepare(self, current_info: CurrentInfo) -> None:
+        """"""
         for processor in self.processors:
             processor.config = self.config
             processor.source_directory = self.source_directory
             processor.build_directory = self.build_directory
 
     def prepare_file(self, dir: str, filename: str, current_info: CurrentInfo) -> None:
+        """"""
         self._file(dir, filename, current_info, prepare=True)
 
     def build_file(self, dir: str, filename: str, current_info: CurrentInfo) -> None:
+        """"""
         self._file(dir, filename, current_info, build=True)
 
     def _file(
