@@ -1,6 +1,6 @@
 import rjsmin
 
-from staticpipes.pipes.process import BaseProcessor
+from staticpipes.process_base import BaseProcessor
 
 
 class ProcessJavascriptMinifier(BaseProcessor):

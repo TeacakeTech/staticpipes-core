@@ -1,6 +1,6 @@
 import jinja2
 
-from staticpipes.pipes.process import BaseProcessor
+from staticpipes.process_base import BaseProcessor
 
 
 class ProcessJinja2(BaseProcessor):

@@ -1,6 +1,7 @@
 import staticpipes.utils
 from staticpipes.current_info import CurrentInfo
 from staticpipes.pipe_base import BasePipe
+from staticpipes.process_current_info import ProcessCurrentInfo
 
 
 class PipeProcess(BasePipe):
@@ -80,28 +81,3 @@ class PipeProcess(BasePipe):
 
     def file_changed_during_watch(self, dir, filename, current_info):
         self.build_file(dir, filename, current_info)
-
-
-class ProcessCurrentInfo:
-
-    def __init__(
-        self, dir, filename, contents, prepare: bool, build: bool, context: dict
-    ):
-        self.dir = dir
-        self.filename = filename
-        self.contents = contents
-        self.prepare: bool = prepare
-        self.build: bool = build
-        self.context: dict = context
-
-
-class BaseProcessor:
-
-    def process_file(
-        self,
-        source_dir: str,
-        source_filename: str,
-        process_current_info: ProcessCurrentInfo,
-        current_info: CurrentInfo,
-    ):
-        pass

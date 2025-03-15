@@ -1,6 +1,6 @@
 from staticpipes.current_info import CurrentInfo
 from staticpipes.pipe_base import BasePipe
-from staticpipes.pipes.process import ProcessCurrentInfo
+from staticpipes.process_current_info import ProcessCurrentInfo
 
 
 class PipeCollectionRecordsProcess(BasePipe):
