@@ -11,6 +11,13 @@ logger = logging.getLogger(__name__)
 
 
 class PipeLoadCollectionPythonDocs(BasePipe):
+    """
+    Creates a collection and loads python documentation from python code into it.
+
+    Every module is an item in the collection,
+    and the id is the full name of that module.
+
+    """
 
     def __init__(
         self,

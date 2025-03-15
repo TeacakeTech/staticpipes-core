@@ -9,11 +9,7 @@ class SourceDirectory:
 
     @contextmanager
     def get_contents_as_filepointer(self, dir, filename, mode=""):
-        if dir != "/":
-            f = os.path.join(self.dir, dir, filename)
-        else:
-            f = os.path.join(self.dir, filename)
-        fp = open(f, "r" + mode)
+        fp = open(self.get_full_filename(dir, filename), "r" + mode)
         yield fp
         fp.close()
 
@@ -24,3 +20,9 @@ class SourceDirectory:
     def get_contents_as_str(self, dir, filename) -> str:
         with self.get_contents_as_filepointer(dir, filename, "") as fp:
             return fp.read()
+
+    def get_full_filename(self, dir: str, filename: str) -> str:
+        if dir != "/":
+            return os.path.join(self.dir, dir, filename)
+        else:
+            return os.path.join(self.dir, filename)

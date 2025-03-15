@@ -12,20 +12,30 @@ class BuildDirectory:
     def prepare(self):
         os.makedirs(self.dir, exist_ok=True)
 
-    def write(self, dir: str, name: str, contents):
+    def _get_filename_to_write(self, dir: str, name: str) -> str:
+        """Also makes dirs."""
         if dir != "/":
             if dir.startswith("/"):
                 dir = dir[1:]
             os.makedirs(os.path.join(self.dir, dir), exist_ok=True)
-            f = os.path.join(self.dir, dir, name)
+            return os.path.join(self.dir, dir, name)
         else:
-            f = os.path.join(self.dir, name)
-        if isinstance(contents, bytes):
-            with open(f, "wb") as fp:
-                fp.write(contents)
-        else:
-            with open(f, "w") as fp:
-                fp.write(contents)
+            return os.path.join(self.dir, name)
+
+    def write(self, dir: str, name: str, contents):
+        with open(
+            self._get_filename_to_write(dir, name),
+            "wb" if isinstance(contents, bytes) else "w",
+        ) as fp:
+            fp.write(contents)
+        self.written_files.append((dir if dir else "/", name))
+
+    def copy_in_file(self, dir: str, name: str, source_filepath: str):
+        shutil.copy(
+            source_filepath,
+            self._get_filename_to_write(dir, name),
+            follow_symlinks=True,
+        )
         self.written_files.append((dir if dir else "/", name))
 
     def copy_in_file(self, dir: str, name: str, filepath: str):

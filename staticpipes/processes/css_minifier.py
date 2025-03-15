@@ -9,5 +9,6 @@ class ProcessCSSMinifier(BaseProcessor):
     def process_file(
         self, source_dir, source_filename, process_current_info, current_info
     ):
+        """"""
 
         process_current_info.contents = rcssmin.cssmin(process_current_info.contents)

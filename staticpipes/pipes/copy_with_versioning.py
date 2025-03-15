@@ -97,10 +97,10 @@ class PipeCopyWithVersioning(BasePipe):
 
         new_filename = self.mapping[dir + "#####" + filename]
 
-        self.build_directory.write(
+        self.build_directory.copy_in_file(
             out_dir,
             new_filename,
-            self.source_directory.get_contents_as_bytes(dir, filename),
+            self.source_directory.get_full_filename(dir, filename),
         )
 
     def file_changed_during_watch(self, dir, filename, current_info):

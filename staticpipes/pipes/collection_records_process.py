@@ -4,6 +4,13 @@ from staticpipes.process_current_info import ProcessCurrentInfo
 
 
 class PipeCollectionRecordsProcess(BasePipe):
+    """
+    Takes a collection, and for every item in that collection
+    passes it throught a series of processes you define.
+
+    Typical uses include with the Jinja2 process, so you can make
+    a HTML page for every item in a collection.
+    """
 
     def __init__(
         self,
