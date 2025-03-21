@@ -251,7 +251,7 @@ config = Config(
 ```
 
 Again, processes are class instances and the same class instance is used all the time. They should extend the 
-`staticpipes.pipes.process.BaseProcessor` class. When that pipeline is called, the `process_file` method is called 
+`staticpipes.process_base.BaseProcessor` class. When that pipeline is called, the `process_file` method is called 
 for every file. The `process_current_info` parameter has directory, filename and contents attributes and these should 
 be changed as needed. 
 
