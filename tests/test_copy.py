@@ -46,6 +46,24 @@ def test_copy_fixture_with_no_extensions():
     assert os.path.exists(os.path.join(out_dir, "readme.md"))
 
 
+def test_copy_fixture_with_directory():
+    # setup
+    out_dir = tempfile.mkdtemp(prefix="staticpipes_tests_")
+    config = staticpipes.config.Config(
+        pipes=[staticpipes.pipes.copy.PipeCopy(directories=["/css"])],
+    )
+    worker = staticpipes.worker.Worker(
+        config,
+        os.path.join(os.path.dirname(os.path.realpath(__file__)), "fixtures", "copy"),
+        out_dir,
+    )
+    # run
+    worker.build()
+    # test
+    assert os.path.exists(os.path.join(out_dir, "css", "main.css"))
+    assert not os.path.exists(os.path.join(out_dir, "readme.md"))
+
+
 def test_copy_fixture_then_watch(monkeypatch):
     monkeypatch.setattr(staticpipes.watcher.Watcher, "watch", lambda self: None)
     # setup

@@ -22,23 +22,35 @@ class PipeCopy(BasePipe):
     eg pass "assets" and "assets/main.css"
     will appear in build site as "main.css"
 
+    - directories - Only items in these directories and
+    their children will be copied.
+
     """
 
-    def __init__(self, extensions=None, source_sub_directory=None):
+    def __init__(
+        self, extensions=None, source_sub_directory=None, directories: list = ["/"]
+    ):
         self.extensions: list = extensions or []
         self.source_sub_directory = (
             "/" + source_sub_directory
             if source_sub_directory and not source_sub_directory.startswith("/")
             else source_sub_directory
         )
+        self.directories: list = directories
 
     def build_file(self, dir: str, filename: str, current_info: CurrentInfo) -> None:
         """"""
+        # Check Extensions
         if self.extensions and not staticpipes.utils.does_filename_have_extension(
             filename, self.extensions
         ):
             return
 
+        # Directories
+        if not staticpipes.utils.is_directory_in_list(dir, self.directories):
+            return
+
+        # Source Sub Dir then copy
         if self.source_sub_directory:
             test_dir = "/" + dir if not dir.startswith("/") else dir
             if not test_dir.startswith(self.source_sub_directory):

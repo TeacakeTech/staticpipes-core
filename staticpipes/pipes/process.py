@@ -21,14 +21,18 @@ class PipeProcess(BasePipe):
     eg ["js", "css", "html"].
     If not set, all files will be processed.
 
+    - directories - Only items in these directories and
+    their children will be processed.
+
     - processors - a list of instances of processors from the
     staticpipes.pipes.processors package
 
     """
 
-    def __init__(self, extensions=None, processors=None):
+    def __init__(self, extensions=None, processors=None, directories: list = ["/"]):
         self.extensions: list = extensions or []
         self.processors = processors
+        self.directories: list = directories
 
     def start_prepare(self, current_info: CurrentInfo) -> None:
         """"""
@@ -53,9 +57,14 @@ class PipeProcess(BasePipe):
         prepare: bool = False,
         build: bool = False,
     ) -> None:
+        # Check Extensions
         if self.extensions and not staticpipes.utils.does_filename_have_extension(
             filename, self.extensions
         ):
+            return
+
+        # Directories
+        if not staticpipes.utils.is_directory_in_list(dir, self.directories):
             return
 
         # TODO get as string or byte?

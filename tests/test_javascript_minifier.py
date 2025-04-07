@@ -26,7 +26,7 @@ def test_javascript_minifier():
     # run
     worker.build()
     # test
-    assert os.path.exists(os.path.join(out_dir, "main.js"))
-    with open(os.path.join(out_dir, "main.js")) as fp:
+    assert os.path.exists(os.path.join(out_dir, "js", "main.js"))
+    with open(os.path.join(out_dir, "js", "main.js")) as fp:
         contents = fp.read()
     assert """var x="cat";""" == contents
