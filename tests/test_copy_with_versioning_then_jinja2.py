@@ -9,7 +9,7 @@ import staticpipes.pipes.jinja2
 import staticpipes.worker
 
 
-def test_copy_fixture():
+def test_copy_with_versioning_then_jinja2_fixture():
     # setup
     out_dir = tempfile.mkdtemp(prefix="staticpipes_tests_")
     config = staticpipes.config.Config(
