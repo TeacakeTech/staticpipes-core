@@ -1,4 +1,8 @@
 import csv
+import os
+import tempfile
+
+import requests
 
 from staticpipes.collection import Collection, CollectionRecord
 from staticpipes.current_info import CurrentInfo
@@ -14,19 +18,33 @@ class PipeLoadCollectionCSV(BasePipe):
     The first column of the CSV is used as the id of items in the collection.
     """
 
-    def __init__(self, directory=None, filename=None, collection_name="data"):
+    def __init__(self, directory=None, filename=None, url=None, collection_name="data"):
+        if filename and url:
+            raise Exception("Pass one of filename or URL, not both.")
+        if not (filename or url):
+            raise Exception("Pass one of filename or URL, not nothing.")
         self._directory = directory
         self._filename = filename
+        self._url = url
         self._collection_name = collection_name
 
     def start_prepare(self, current_info: CurrentInfo) -> None:
         """"""
         collection = Collection()
 
-        with self.source_directory.get_contents_as_filepointer(
-            self._directory or "", self._filename
-        ) as fp:
-            self._load(fp, collection)
+        if self._filename:
+            with self.source_directory.get_contents_as_filepointer(
+                self._directory or "", self._filename
+            ) as fp:
+                self._load(fp, collection)
+        elif self._url:
+            r = requests.get(self._url)
+            fp, temp_file_name = tempfile.mkstemp()
+            os.close(fp)
+            with open(temp_file_name, "w") as fp:
+                fp.write(r.text)
+            with open(temp_file_name) as fp:
+                self._load(fp, collection)
 
         current_info.set_context(["collection", self._collection_name], collection)
 
