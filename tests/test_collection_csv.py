@@ -57,3 +57,36 @@ def test_collection_csv():
         "<!doctype html><html><head><title>Cat</title></head><body>Floofy</body></html>"  # noqa
         == contents
     )
+
+
+def test_pipe_collection_records_process_collection_with_filter_function():
+    # setup
+    out_dir = tempfile.mkdtemp(prefix="staticpipes_tests_")
+    config = staticpipes.config.Config(
+        pipes=[
+            staticpipes.pipes.load_collection_csv.PipeLoadCollectionCSV(
+                filename="data.csv"
+            ),
+            staticpipes.pipes.collection_records_process.PipeCollectionRecordsProcess(
+                collection_name="data",
+                processors=[
+                    staticpipes.processes.jinja2.ProcessJinja2(
+                        template="_templates/record.html"
+                    )
+                ],
+                filter_function=(lambda r: r.get_id() == "cat"),
+            ),
+        ],
+    )
+    worker = staticpipes.worker.Worker(
+        config,
+        os.path.join(
+            os.path.dirname(os.path.realpath(__file__)), "fixtures", "collection_csv"
+        ),
+        out_dir,
+    )
+    # run
+    worker.build()
+    # test output
+    assert os.path.exists(os.path.join(out_dir, "data", "cat.html"))
+    assert not os.path.exists(os.path.join(out_dir, "data", "dog.html"))

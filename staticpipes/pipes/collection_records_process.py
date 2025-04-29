@@ -1,3 +1,7 @@
+from collections.abc import Callable
+from typing import Optional
+
+from staticpipes.collection_base import BaseCollectionRecord
 from staticpipes.current_info import CurrentInfo
 from staticpipes.pipe_base import BasePipe
 from staticpipes.process_current_info import ProcessCurrentInfo
@@ -20,6 +24,7 @@ class PipeCollectionRecordsProcess(BasePipe):
         output_filename_extension="html",
         context_key_record_id: str = "record_id",
         context_key_record_data: str = "record_data",
+        filter_function: Optional[Callable[[BaseCollectionRecord], bool]] = None,
     ):
         self._collection_name = collection_name
         self._processors = processors
@@ -27,6 +32,9 @@ class PipeCollectionRecordsProcess(BasePipe):
         self._output_filename_extension = output_filename_extension
         self._context_key_record_id = context_key_record_id
         self._context_key_record_data = context_key_record_data
+        self._filter_function: Optional[Callable[[BaseCollectionRecord], bool]] = (
+            filter_function
+        )
 
     def start_prepare(self, current_info: CurrentInfo) -> None:
         """"""
@@ -40,6 +48,10 @@ class PipeCollectionRecordsProcess(BasePipe):
         collection = current_info.get_context("collection")[self._collection_name]
 
         for record in collection.get_records():
+
+            if self._filter_function and not self._filter_function(record):
+                continue
+
             this_context = current_info.get_context().copy()
             this_context[self._context_key_record_id] = record.get_id()
             this_context[self._context_key_record_data] = record.get_data()
