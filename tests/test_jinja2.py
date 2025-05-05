@@ -2,8 +2,11 @@ import os
 import shutil
 import tempfile
 
+import pytest
+
 import staticpipes.build_directory
 import staticpipes.config
+import staticpipes.jinja2_environment
 import staticpipes.pipes.exclude_underscore_directories
 import staticpipes.pipes.jinja2
 import staticpipes.watcher
@@ -25,7 +28,20 @@ class PipeJinja2TestClass(staticpipes.pipes.jinja2.PipeJinja2):
         super()._actually_build_template(dir, filename, current_info)
 
 
-def test_jinja2_then_watch_while_change_output_file(monkeypatch):
+@pytest.mark.parametrize(
+    "jinja2_environment,expected_hello_var_output_in_html",
+    [
+        (None, "World &lt;3"),
+        (staticpipes.jinja2_environment.Jinja2Environment(), "World &lt;3"),
+        (
+            staticpipes.jinja2_environment.Jinja2Environment(autoescape=False),
+            "World <3",
+        ),
+    ],
+)
+def test_jinja2_then_watch_while_change_output_file(
+    monkeypatch, jinja2_environment, expected_hello_var_output_in_html
+):
     monkeypatch.setattr(staticpipes.watcher.Watcher, "watch", lambda self: None)
     # setup
     in_dir = tempfile.mkdtemp(prefix="staticpipes_tests_")
@@ -38,13 +54,15 @@ def test_jinja2_then_watch_while_change_output_file(monkeypatch):
         os.path.join(in_dir, "in"),
     )
     out_dir = tempfile.mkdtemp(prefix="staticpipes_tests_")
-    jinja2_pipeline = PipeJinja2TestClass(extensions=["html"])
+    jinja2_pipeline = PipeJinja2TestClass(
+        extensions=["html"], jinja2_environment=jinja2_environment
+    )
     config = staticpipes.config.Config(
         pipes=[
             staticpipes.pipes.exclude_underscore_directories.PipeExcludeUnderscoreDirectories(),  # noqa
             jinja2_pipeline,
         ],
-        context={"hello": "World"},
+        context={"hello": "World <3"},
     )
     worker = staticpipes.worker.Worker(
         config,
@@ -60,7 +78,9 @@ def test_jinja2_then_watch_while_change_output_file(monkeypatch):
         contents = fp.read()
     contents = "".join([i.strip() for i in contents.split("\n")])
     assert (
-        "<!doctype html><html><head><title>Hello</title></head><body><h1>Hello</h1>Hello World</body></html>"  # noqa
+        "<!doctype html><html><head><title>Hello</title></head><body><h1>Hello</h1>Hello "  # noqa
+        + expected_hello_var_output_in_html
+        + "</body></html>"
         == contents
     )
     # Edit index.html
@@ -78,7 +98,9 @@ def test_jinja2_then_watch_while_change_output_file(monkeypatch):
         contents = fp.read()
     contents = "".join([i.strip() for i in contents.split("\n")])
     assert (
-        "<!doctype html><html><head><title>Hello</title></head><body><h1>Hello</h1>Goodbye World</body></html>"  # noqa
+        "<!doctype html><html><head><title>Hello</title></head><body><h1>Hello</h1>Goodbye "  # noqa
+        + expected_hello_var_output_in_html
+        + "</body></html>"
         == contents
     )
 

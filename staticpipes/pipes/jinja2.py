@@ -1,11 +1,13 @@
 import logging
 import os.path
+from typing import Optional
 
 import jinja2
 import jinja2.meta
 
 import staticpipes.utils
 from staticpipes.current_info import CurrentInfo
+from staticpipes.jinja2_environment import Jinja2Environment
 from staticpipes.pipe_base import BasePipe
 
 logger = logging.getLogger(__name__)
@@ -29,24 +31,27 @@ class PipeJinja2(BasePipe):
 
     """
 
-    def __init__(self, extensions=["html"], watch_rebuild_all=False):
+    def __init__(
+        self,
+        extensions=["html"],
+        watch_rebuild_all=False,
+        jinja2_environment: Optional[Jinja2Environment] = None,
+    ):
         self.extensions = extensions
-        self.jinja2_env = None
+        self._jinja2_environment: Optional[Jinja2Environment] = jinja2_environment
         self._template_information: dict = {}
         self._watch_rebuild_all = watch_rebuild_all
-
-    def start_build(self, current_info: CurrentInfo) -> None:
-        """"""
-        self.jinja2_env = jinja2.Environment(
-            loader=jinja2.FileSystemLoader(self.source_directory.dir),
-            autoescape=jinja2.select_autoescape(),
-        )
 
     def _actually_build_template(
         self, dir: str, filename: str, current_info: CurrentInfo
     ) -> None:
-        logger.debug("Actually buliding template {} {}".format(dir, filename))
-        template = self.jinja2_env.get_template(os.path.join(dir, filename))
+
+        logger.debug("Actually building template {} {}".format(dir, filename))
+        if not self._jinja2_environment:
+            self._jinja2_environment = Jinja2Environment()
+        template = self._jinja2_environment.get(
+            source_directory=self.source_directory
+        ).get_template(os.path.join(dir, filename))
         contents = template.render(current_info.get_context())
         self.build_directory.write(dir, filename, contents)
 
@@ -61,7 +66,11 @@ class PipeJinja2(BasePipe):
         }
 
         if not self._watch_rebuild_all:
-            ast = self.jinja2_env.parse(
+            if not self._jinja2_environment:
+                self._jinja2_environment = Jinja2Environment()
+            ast = self._jinja2_environment.get(
+                source_directory=self.source_directory
+            ).parse(
                 source=self.source_directory.get_contents_as_str(dir, filename),
                 filename=os.path.join(dir, filename),
             )
