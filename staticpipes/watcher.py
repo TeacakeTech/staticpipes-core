@@ -29,7 +29,9 @@ class Watcher(watchdog.events.FileSystemEventHandler):
         for ext in self.ignore_extensions:
             if event.src_path.endswith(ext):
                 return
-        if isinstance(event, watchdog.events.DirModifiedEvent):
+        if isinstance(event, watchdog.events.DirModifiedEvent) or isinstance(
+            event, watchdog.events.DirCreatedEvent
+        ):
             return
         # print("on_modified " + str(event))
 
