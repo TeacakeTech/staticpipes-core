@@ -85,7 +85,7 @@ class Worker:
         logger.info("Watching ...")
         watcher.watch()
 
-    def serve(self):
+    def serve(self, server_address: str, server_port: int):
 
         # Only import this when watch function called,
         # so we can use build part without watch dependencies
@@ -102,7 +102,7 @@ class Worker:
 
         # Start HTTP server in background
         threading.Thread(
-            target=server, args=(self.build_directory.dir, "localhost", 8000)
+            target=server, args=(self.build_directory.dir, server_address, server_port)
         ).start()
 
         # start watching

@@ -12,7 +12,7 @@ DIRECTORY = None
 logger = logging.getLogger(__name__)
 
 
-def server(directory_name, server_address, server_port):
+def server(directory_name, server_address: str, server_port: int):
     global DIRECTORY
     DIRECTORY = directory_name
     httpd = http.server.HTTPServer((server_address, server_port), Handler)

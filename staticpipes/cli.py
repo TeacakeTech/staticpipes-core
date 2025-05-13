@@ -16,6 +16,8 @@ def cli(config, source_dir, build_directory, log_level=logging.INFO):
     watch_parser = subparsers.add_parser("watch")  # noqa
 
     serve_parser = subparsers.add_parser("serve")  # noqa
+    serve_parser.add_argument("-p", "--port", type=int)
+    serve_parser.add_argument("-a", "--address")
 
     args = parser.parse_args()
 
@@ -40,4 +42,6 @@ def cli(config, source_dir, build_directory, log_level=logging.INFO):
 
     elif args.subparser_name == "serve":
         worker = Worker(config, source_dir, build_directory)
-        worker.serve()
+        worker.serve(
+            server_address=args.address or "localhost", server_port=args.port or 8000
+        )
