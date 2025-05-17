@@ -1,4 +1,4 @@
-# StaticPipes, the flexible and extendable static site website generator in Python
+# StaticPipes - the unopinionated, flexible, and extendable static site website generator in Python
 
 Most static website generators have technologies, conventions and source code layout requirements that you have to 
 follow. 
