@@ -19,7 +19,7 @@ If you are developing the actual tool, check it out from git, create a virtual e
 
 ## Getting started
 
-Configure this tool with a simple Python `file.py` in the root of your site. This copies files with these extensions 
+Configure this tool with a simple Python `site.py` in the root of your site. This copies files with these extensions 
 into the `_site` directory:
 
 ```python
@@ -36,7 +36,13 @@ config = Config(
 
 if __name__ == "__main__":
     from staticpipes.cli import cli
-    cli(config, os.path.join(os.path.dirname(os.path.realpath(__file__))), "_site")
+    cli(
+        config, 
+        # The source directory - same directory as this file is in
+        os.path.dirname(os.path.realpath(__file__)), 
+        # The build directory - _site directory below this file (It will create it for you!)
+        os.path.join(os.path.dirname(os.path.realpath(__file__)), "_site")
+    )
 ```
 
 Then run with:
