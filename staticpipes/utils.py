@@ -40,3 +40,9 @@ def is_directory_in_list(check_dir: str, directories: list) -> bool:
             return True
     # No
     return False
+
+
+def is_link_internal(link: str) -> bool:
+    if link.lower().startswith(("http://", "https://", "data:")):
+        return False
+    return True

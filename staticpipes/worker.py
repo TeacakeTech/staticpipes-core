@@ -17,11 +17,16 @@ class Worker:
         self.source_directory = SourceDirectory(source_dir)
         self.build_directory = BuildDirectory(build_directory)
         self.current_info = None
+        self._check_reports: list = []
 
         for pipeline in self.config.pipes:
             pipeline.config = self.config
             pipeline.source_directory = self.source_directory
             pipeline.build_directory = self.build_directory
+
+        for check in self.config.checks:
+            check.config = self.config
+            check.build_directory = self.build_directory
 
     def build(self):
         self.current_info = CurrentInfo(
@@ -66,6 +71,54 @@ class Worker:
             pipeline.end_build(self.current_info)
         self.build_directory.remove_all_files_we_did_not_write()
 
+        # Step 3: check
+        self._check()
+
+    def _check(self):
+        if not self.config.checks:
+            logger.info("No checks defined")
+            return
+
+        self._check_reports: list = []
+        # start
+        for check in self.config.checks:
+            for c_r in check.start_check():
+                self._check_reports.append(c_r)
+        # files
+        rpbd = os.path.realpath(self.build_directory.dir)
+        for root, dirs, files in os.walk(rpbd):
+            for file in files:
+                relative_dir = root[len(rpbd) + 1 :]
+                if not relative_dir:
+                    relative_dir = "/"
+                for check in self.config.checks:
+                    for c_r in check.check_file(relative_dir, file):
+                        self._check_reports.append(c_r)
+        # end
+        for check in self.config.checks:
+            for c_r in check.end_check():
+                self._check_reports.append(c_r)
+
+        # Log
+        if len(self._check_reports) == 0:
+            logger.info("Check Reports count: 0")
+        else:
+            logger.warn("Check Reports count: {}".format(len(self._check_reports)))
+            for check_report in self._check_reports:
+                report = (
+                    "Report: \n"
+                    + "  type      : {} from generator {}\n".format(
+                        check_report.type, check_report.generator_class
+                    )
+                    + "  dir       : {}\n".format(check_report.dir)
+                    + "  file      : {}\n".format(check_report.file)
+                    + "  message   : {}\n".format(check_report.message)
+                    + "  line, col : {}, {}".format(
+                        check_report.line, check_report.column
+                    )
+                )
+                logger.warn(report)
+
     def watch(self):
         # Only import this when watch function called,
         # so we can use build part without watch dependencies
@@ -76,6 +129,12 @@ class Worker:
         )
         # Build first - so we have complete site
         self._build()
+
+        # Check
+        if self.config.checks:
+            logger.info(
+                "Checks do not work in watch yet, so no future checks will be done"  # noqa
+            )
 
         # start
         for pipeline in self.config.pipes:
@@ -99,6 +158,12 @@ class Worker:
         )
         # Build first - so we have complete site
         self._build()
+
+        # Check
+        if self.config.checks:
+            logger.info(
+                "Checks do not work in serve yet, so no future checks will be done"  # noqa
+            )
 
         # Start HTTP server in background
         threading.Thread(

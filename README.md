@@ -1,4 +1,4 @@
-# StaticPipes - the unopinionated, flexible, and extendable static site website generator in Python
+# StaticPipes - the unopinionated static website generator in Python that checks the output for you
 
 Most static website generators have technologies, conventions and source code layout requirements that you have to 
 follow. 
@@ -9,6 +9,9 @@ Use only the pipelines you want and configure them as you need.
 If you are a python programmer and need something different, then write a python class that extends our base class and 
 write what you need.
 
+Finally, when your site is built we will check the output for you - after all you check your code with all kinds of linters, 
+so why not check your static website too?
+
 ## Install
 
 * `pip install staticpipes[allbuild]` - if you just want to build a website
@@ -17,7 +20,7 @@ write what you need.
 If you are developing the actual tool, check it out from git, create a virtual environment and run 
 `python3 -m pip install --upgrade pip && pip install -e .[allbuild,dev,staticpipesdev]`
 
-## Getting started
+## Getting started - build your site
 
 Configure this tool with a simple Python `site.py` in the root of your site. This copies files with these extensions 
 into the `_site` directory:
@@ -151,7 +154,7 @@ config = Config(
 Or write your own pipeline! For instance, if you want your robots.txt to block AI crawlers here's all you need:
 
 ```python
-from staticpipes.pipes.pipe_base.py import BasePipe
+from staticpipes.pipes.pipe_base import BasePipe
 
 class PipeNoAIRobots(BasePipe):
     def start_build(self, current_info) -> None:
@@ -164,6 +167,25 @@ config = Config(
     ],
 )
 ```
+## Getting started - check your website
+
+Finally let's add in some checks:
+
+```python
+from staticpipes.checks.html_tags import CheckHtmlTags
+from staticpipes.checks.internal_links import CheckInternalLinks
+
+config = Config(
+    checks=[
+        # Checks all img tags have alt attributes
+        CheckHtmlTags(),
+        # Check all internal links exist
+        CheckInternalLinks(),
+    ],
+)
+```
+
+When you build your site, you will now get a report of any problems.
 
 ## How it works
 
@@ -208,7 +230,13 @@ called.
 
 It's not possible to exclude any files during the prepare stage.
 
+### Checks
 
+After building, checks are called on the built website. These can check the site, and raise reports with any issues 
+they find. A check should extend the base class `staticpipes.check_base.BaseCheck`. On each check the methods 
+`start_check`, `check_file`, `end_check` are called. These methods should return a list of instances of the 
+class `staticpipes.check_report.CheckReport` with details of any problems found.
+ 
 ### Watch mode
 
 In watch mode, a normal build is done first. The `start_watch` method is then called on each pipeline. Then every time 
@@ -236,6 +264,7 @@ Just add this to the pipeline:
 If a pipeline does not overwrite the `file_changed_during_watch` method then it is considered not to support 
 watch mode and the user will see a warning when using watch mode.
 
+Currently checks are only done after the first build and are not rerun when the built site changes.
 
 ### Multiple processes for each source file
 
