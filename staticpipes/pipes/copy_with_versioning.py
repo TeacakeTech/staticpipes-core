@@ -31,6 +31,8 @@ class PipeCopyWithVersioning(BasePipe):
     - context_key - the key in the context that
     new filenames will be stored in
 
+    - directories - Only items in these directories and
+    their children will be copied.
     """
 
     def __init__(
@@ -38,6 +40,7 @@ class PipeCopyWithVersioning(BasePipe):
         extensions=["js", "css"],
         context_key="versioning_new_filenames",
         source_sub_directory=None,
+        directories: list = ["/"],
     ):
         self.extensions = extensions
         self.context_key = context_key
@@ -46,15 +49,22 @@ class PipeCopyWithVersioning(BasePipe):
             if source_sub_directory and not source_sub_directory.startswith("/")
             else source_sub_directory
         )
-        self.mapping = {}
+        self.mapping: dict[str, str] = {}
+        self.directories: list = directories
 
     def prepare_file(self, dir: str, filename: str, current_info: CurrentInfo) -> None:
         """"""
+        # Check Extensions
         if self.extensions and not staticpipes.utils.does_filename_have_extension(
             filename, self.extensions
         ):
             return
 
+        # Directories
+        if not staticpipes.utils.is_directory_in_list(dir, self.directories):
+            return
+
+        # Source Sub Dir then copy
         if self.source_sub_directory:
             test_dir = "/" + dir if not dir.startswith("/") else dir
             if not test_dir.startswith(self.source_sub_directory):
@@ -82,11 +92,17 @@ class PipeCopyWithVersioning(BasePipe):
 
     def build_file(self, dir: str, filename: str, current_info: CurrentInfo) -> None:
         """"""
+        # Check Extensions
         if self.extensions and not staticpipes.utils.does_filename_have_extension(
             filename, self.extensions
         ):
             return
 
+        # Directories
+        if not staticpipes.utils.is_directory_in_list(dir, self.directories):
+            return
+
+        # Source Sub Dir then copy
         if self.source_sub_directory:
             test_dir = "/" + dir if not dir.startswith("/") else dir
             if not test_dir.startswith(self.source_sub_directory):

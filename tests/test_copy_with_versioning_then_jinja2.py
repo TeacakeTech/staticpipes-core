@@ -59,6 +59,33 @@ def test_copy_with_versioning_then_jinja2_fixture():
     )
 
 
+def test_copy_with_versioning_with_bad_directory():
+    # setup
+    out_dir = tempfile.mkdtemp(prefix="staticpipes_tests_")
+    config = staticpipes.config.Config(
+        pipes=[
+            staticpipes.pipes.copy_with_versioning.PipeCopyWithVersioning(
+                extensions=["css", "js"],
+                # this directory is wrong, it does not exist
+                directories=["assets"],
+            )
+        ],
+    )
+    worker = staticpipes.worker.Worker(
+        config,
+        os.path.join(
+            os.path.dirname(os.path.realpath(__file__)),
+            "fixtures",
+            "copy_with_versioning_then_jinja2",
+        ),
+        out_dir,
+    )
+    # run
+    worker.build()
+    # test no files there
+    assert [] == os.listdir(out_dir)
+
+
 def test_watch_while_change_js_file(monkeypatch):
     monkeypatch.setattr(staticpipes.watcher.Watcher, "watch", lambda self: None)
     # setup
