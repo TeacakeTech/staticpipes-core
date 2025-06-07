@@ -11,11 +11,11 @@ def cli(config, source_dir, build_directory, log_level=logging.INFO):
 
     subparsers = parser.add_subparsers(dest="subparser_name")
 
-    build_parser = subparsers.add_parser("build")  # noqa
+    build_parser = subparsers.add_parser("build", aliases=["b"])  # noqa
 
-    watch_parser = subparsers.add_parser("watch")  # noqa
+    watch_parser = subparsers.add_parser("watch", aliases=["w"])  # noqa
 
-    serve_parser = subparsers.add_parser("serve")  # noqa
+    serve_parser = subparsers.add_parser("serve", aliases=["s"])  # noqa
     serve_parser.add_argument("-p", "--port", type=int)
     serve_parser.add_argument("-a", "--address")
 
@@ -32,15 +32,15 @@ def cli(config, source_dir, build_directory, log_level=logging.INFO):
     root_logger.addHandler(handler)
 
     # Do work
-    if args.subparser_name == "build":
+    if args.subparser_name == "build" or args.subparser_name == "b":
         worker = Worker(config, source_dir, build_directory)
         worker.build()
 
-    elif args.subparser_name == "watch":
+    elif args.subparser_name == "watch" or args.subparser_name == "w":
         worker = Worker(config, source_dir, build_directory)
         worker.watch()
 
-    elif args.subparser_name == "serve":
+    elif args.subparser_name == "serve" or args.subparser_name == "s":
         worker = Worker(config, source_dir, build_directory)
         worker.serve(
             server_address=args.address or "localhost", server_port=args.port or 8000
