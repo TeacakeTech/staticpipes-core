@@ -8,6 +8,7 @@ from staticpipes.source_directory import SourceDirectory
     [
         ("/site", "/", "index.html", "/site/index.html"),
         ("/site", "cats", "index.html", "/site/cats/index.html"),
+        ("/site", "/cats/", "index.html", "/site/cats/index.html"),
     ],
 )
 def test_get_full_filename(start_dir, dir, filename, expected):

@@ -1,5 +1,5 @@
 import html.parser
-from typing import Callable, Optional
+from typing import Optional
 
 import staticpipes.utils
 from staticpipes.check_base import BaseCheck
@@ -15,10 +15,9 @@ FIND_LINKS_IN = {
 
 class CheckInternalLinksHTMLParser(html.parser.HTMLParser):
 
-    def __init__(self, check_func: Callable):
+    def __init__(self):
         super().__init__()
         self.links: list = []
-        self._check_func: Callable = check_func
 
     def handle_starttag(self, tag, attrs):
         if tag.lower() in FIND_LINKS_IN:
@@ -27,9 +26,11 @@ class CheckInternalLinksHTMLParser(html.parser.HTMLParser):
                 k.lower(): v for k, v in attrs if k.lower() == find_data["attr"]
             }
             value = attrs_dict.get(find_data["attr"])
-            if value and self._check_func(value):
-                line, column = self.getpos()
-                self.links.append({"link": value, "line": line, "column": column})
+            if value:
+                value = staticpipes.utils.get_link_internal(value)
+                if value:
+                    line, column = self.getpos()
+                    self.links.append({"link": value, "line": line, "column": column})
 
 
 def _get_dirs_files_to_check(source_dir: str, souce_filename: str, link: str) -> list:
@@ -90,7 +91,7 @@ class CheckInternalLinks(BaseCheck):
         # Go
         check_reports: list = []
 
-        parser = CheckInternalLinksHTMLParser(staticpipes.utils.is_link_internal)
+        parser = CheckInternalLinksHTMLParser()
         parser.feed(self.build_directory.get_contents_as_str(dir, filename))
 
         for link in parser.links:

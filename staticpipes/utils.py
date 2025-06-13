@@ -1,3 +1,6 @@
+from typing import Optional
+
+
 def does_filename_have_extension(filename: str, extensions: list) -> bool:
     fn = filename.lower()
     for extension in extensions:
@@ -42,7 +45,11 @@ def is_directory_in_list(check_dir: str, directories: list) -> bool:
     return False
 
 
-def is_link_internal(link: str) -> bool:
-    if link.lower().startswith(("http://", "https://", "data:")):
-        return False
-    return True
+def get_link_internal(link: str) -> Optional[str]:
+    if link.lower().startswith(("http://", "https://", "data:", "#")):
+        return ""
+    if "?" in link:
+        link = link.split("?").pop(0)
+    if "#" in link:
+        link = link.split("#").pop(0)
+    return link

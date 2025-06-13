@@ -23,9 +23,7 @@ import staticpipes.worker
 )
 def test_check_internal_links_html_parser(html, links):
 
-    parser = staticpipes.checks.internal_links.CheckInternalLinksHTMLParser(
-        lambda x: True
-    )
+    parser = staticpipes.checks.internal_links.CheckInternalLinksHTMLParser()
     parser.feed(html)
     assert links == [i["link"] for i in parser.links]
 

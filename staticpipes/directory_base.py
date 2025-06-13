@@ -23,6 +23,8 @@ class BaseDirectory:
 
     def get_full_filename(self, dir: str, filename: str) -> str:
         if dir != "/":
+            if dir.startswith("/"):
+                dir = dir[1:]
             return os.path.join(self.dir, dir, filename)
         else:
             return os.path.join(self.dir, filename)
