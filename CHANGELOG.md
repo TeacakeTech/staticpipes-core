@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+
+- Added binary mode to PipeProcess via new binary_content parameter
+
 ### Fixed
 
 - CheckInternalLinks - stop various false positive alarms

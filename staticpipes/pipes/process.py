@@ -27,12 +27,22 @@ class PipeProcess(BasePipe):
     - processors - a list of instances of processors from the
     staticpipes.pipes.processors package
 
+    - binary_content - should we handle content as a binary?
+    Defaults to False, in which case it's handled as a string.
+
     """
 
-    def __init__(self, extensions=None, processors=None, directories: list = ["/"]):
+    def __init__(
+        self,
+        extensions=None,
+        processors=None,
+        directories: list = ["/"],
+        binary_content: bool = False,
+    ):
         self.extensions: list = extensions or []
         self.processors = processors
         self.directories: list = directories
+        self.binary_content: bool = binary_content
 
     def start_prepare(self, current_info: CurrentInfo) -> None:
         """"""
@@ -67,11 +77,14 @@ class PipeProcess(BasePipe):
         if not staticpipes.utils.is_directory_in_list(dir, self.directories):
             return
 
-        # TODO get as string or byte?
         process_current_info = ProcessCurrentInfo(
             dir,
             filename,
-            self.source_directory.get_contents_as_str(dir, filename),
+            (
+                self.source_directory.get_contents_as_bytes(dir, filename)
+                if self.binary_content
+                else self.source_directory.get_contents_as_str(dir, filename)
+            ),
             prepare=prepare,
             build=build,
             context=current_info.get_context().copy(),
