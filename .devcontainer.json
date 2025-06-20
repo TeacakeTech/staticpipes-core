@@ -1,0 +1,14 @@
+{
+	"name": "StaticPipes Dev Container",
+	"build": {
+		"dockerfile": "Dockerfile.devcontainer",
+		"context": "."
+	},
+	"customizations": {
+		"vscode": {
+			"extensions":["ms-python.python"]
+		}
+	},
+	"workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
+	"workspaceFolder": "/workspace"
+}

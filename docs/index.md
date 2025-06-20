@@ -5,7 +5,8 @@ title: Welcome
 
 # StaticPipes
 
-See [GitHub](https://github.com/StaticPipes/StaticPipes) or [PyPi](https://pypi.org/project/staticpipes/)
-
-Or [Python Docs](reference/staticpipes.html)
+* See [GitHub](https://github.com/StaticPipes/StaticPipes) for install, getting started
+* [PyPi](https://pypi.org/project/staticpipes/)
+* [Python Reference](reference/staticpipes.html)
+* [Develop StaticPipes](develop_staticpipes/)
 

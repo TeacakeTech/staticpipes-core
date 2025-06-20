@@ -1,0 +1,10 @@
+FROM python:3.9
+
+WORKDIR /workspace
+
+RUN /bin/bash -c "echo \"export PATH=\$PATH:/root/.local/bin/\" >> /root/.bashrc"
+
+COPY pyproject.toml .
+RUN pip3 install --user -e .[allbuild,dev,staticpipesdev]
+
+CMD ["bash"]
