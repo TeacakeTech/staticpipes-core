@@ -283,3 +283,39 @@ def test_jinja2_unknown_depends_then_watch_while_change_library(monkeypatch):
         "<!doctype html><html><head><title>Hello</title></head><body>Goodbye World</body></html>"  # noqa
         == contents
     )
+
+
+def test_jinja2_environment_options():
+    # setup
+    jinja2_environment = staticpipes.jinja2_environment.Jinja2Environment(
+        filters={"caps": lambda x: x.upper()}
+    )
+    in_dir = tempfile.mkdtemp(prefix="staticpipes_tests_")
+    shutil.copytree(
+        os.path.join(
+            os.path.dirname(os.path.realpath(__file__)),
+            "fixtures",
+            "jinja2_environment_options",
+        ),
+        os.path.join(in_dir, "in"),
+    )
+    out_dir = tempfile.mkdtemp(prefix="staticpipes_tests_")
+    config = staticpipes.config.Config(
+        pipes=[
+            PipeJinja2TestClass(
+                extensions=["html"], jinja2_environment=jinja2_environment
+            ),
+        ],
+        context={"var": "hello"},
+    )
+    worker = staticpipes.worker.Worker(
+        config,
+        os.path.join(in_dir, "in"),
+        out_dir,
+    )
+    # run
+    worker.build()
+    # test
+    with open(os.path.join(out_dir, "index.html")) as fp:
+        contents = fp.read()
+    assert "HELLO" in contents
