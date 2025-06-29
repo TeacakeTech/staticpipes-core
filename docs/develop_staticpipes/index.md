@@ -56,9 +56,9 @@ pytest tests/
 Run:
 
 ```
-black staticpipes tests
-isort staticpipes tests
-flake8 staticpipes tests
+black staticpipes tests docs.py
+isort staticpipes tests docs.py
+flake8 staticpipes tests docs.py
 mypy --install-types --non-interactive -p staticpipes
 ```
 
