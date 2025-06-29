@@ -15,6 +15,8 @@ jobs:
         python-version: ${{ matrix.python-version }}
         architecture: x64
         allow-prereleases: true
+    - run: sudo apt-get update
+    - run: sudo apt-get install -y tidy
     - run: pip install -e .[allbuild,dev,staticpipesdev]
     - run: py.test tests
     - run: python docs.py build
