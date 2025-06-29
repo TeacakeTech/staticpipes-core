@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 
 - Added `filters` option to `Jinja2Environment` https://github.com/StaticPipes/StaticPipes/issues/29
+- Added `context_key_record_class` option to `PipeCollectionRecordsProcess` https://github.com/StaticPipes/StaticPipes/issues/37
 
 ## [0.2.0] - 2025-06-15
 

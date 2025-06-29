@@ -4,6 +4,6 @@
         <title>{{ record_data["Title"] }}</title>
     </head>
     <body>
-        {{ record_data["Description"] }}
+        {{ record.get_data()["Description"] }}
     </body>
 </html>

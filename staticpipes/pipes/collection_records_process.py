@@ -24,6 +24,7 @@ class PipeCollectionRecordsProcess(BasePipe):
         output_filename_extension="html",
         context_key_record_id: str = "record_id",
         context_key_record_data: str = "record_data",
+        context_key_record_class: str = "record",
         filter_function: Optional[Callable[[BaseCollectionRecord], bool]] = None,
     ):
         self._collection_name = collection_name
@@ -32,6 +33,7 @@ class PipeCollectionRecordsProcess(BasePipe):
         self._output_filename_extension = output_filename_extension
         self._context_key_record_id = context_key_record_id
         self._context_key_record_data = context_key_record_data
+        self._context_key_record_class = context_key_record_class
         self._filter_function: Optional[Callable[[BaseCollectionRecord], bool]] = (
             filter_function
         )
@@ -55,6 +57,7 @@ class PipeCollectionRecordsProcess(BasePipe):
             this_context = current_info.get_context().copy()
             this_context[self._context_key_record_id] = record.get_id()
             this_context[self._context_key_record_data] = record.get_data()
+            this_context[self._context_key_record_class] = record
 
             process_current_info = ProcessCurrentInfo(
                 self._output_dir,
