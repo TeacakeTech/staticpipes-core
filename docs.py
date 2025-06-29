@@ -1,6 +1,9 @@
 import logging
 import os
 
+from staticpipes.checks.html_tags import CheckHtmlTags
+from staticpipes.checks.html_with_tidy import CheckHtmlWithTidy
+from staticpipes.checks.internal_links import CheckInternalLinks
 from staticpipes.config import Config
 from staticpipes.pipes.collection_records_process import PipeCollectionRecordsProcess
 from staticpipes.pipes.exclude_underscore_directories import (
@@ -37,6 +40,11 @@ config = Config(
                 ProcessJinja2(template="_templates/reference.html"),
             ],
         ),
+    ],
+    checks=[
+        CheckHtmlWithTidy(),
+        CheckHtmlTags(),
+        CheckInternalLinks(),
     ],
     context={},
 )
