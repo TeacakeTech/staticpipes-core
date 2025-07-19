@@ -1,35 +1,51 @@
-<!doctype html>
-<html>
-    <head>
-        <title>{{ title }} - StaticPipes Documentation</title>
-    </head>
-    <body>
 
-        <h1>{{ python_document["name"] }}</h1>
+{% extends "_templates/base.html" %}
 
-        {% if python_document["modules"] %}
-            <h2>Package</h2>
-            <ul>
-            {% for module in python_document["modules"] %}
-                <li><a href="{{ module.full_name }}.html">{{ module.module_name }} {% if module.is_package %}(Package){% endif %}</a></li>
-            {% endfor %}
-            </ul>
+{% block title %}{{ python_document["name"] }} - Python Reference{% endblock %}
+
+{% block navitems %}
+    <li class="nav_item"><a href="{{ base_url }}">&gt; Documentation</a></li>
+    <li class="nav_item"><a href="{{ base_url }}reference/staticpipes.html">&gt; Python Reference</a></li>
+    {% set path = namespace(path="") %}
+    {% for bit in python_document["name"].split(".") %}
+        {% if loop.index == 1 %}
+            {% set path.path = bit %}
+        {% else %}
+            {% set path.path = path.path + "." + bit %}
+            <li class="nav_item">
+                {% if not loop.last %}<a href="{{ base_url }}reference/{{ path.path }}.html">{% endif %}
+                    &gt; {{ bit }}
+                {% if not loop.last %}</a>{% endif %}
+            </li>
         {% endif %}
+    {% endfor %}
+{% endblock %}
 
-        {% if python_document["classes"] %}
-            {% for class in python_document["classes"] %}
-                <h2>Class: {{ class.name }}</h2>
+{% block content %}
+    <h2>{{ python_document["name"] }}</h2>
+
+    {% if python_document["modules"] %}
+        <h3>Modules</h3>
+        <ul>
+        {% for module in python_document["modules"] %}
+            <li><a href="{{ module.full_name }}.html">{{ module.module_name }} {% if module.is_package %}(Package){% endif %}</a></li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+
+    {% if python_document["classes"] %}
+        {% for class in python_document["classes"] %}
+            <h3>Class: {{ class.name }}</h3>
+            <div>
+                {{ (class.docstring or class.comments or "No Info.") | render_markdown | safe }}
+            </div>
+            {% for function in class.functions %}
+                <h4>Function: {{ function.name }}</h4>
                 <div>
-                    {{ class.docstring or class.comments or "No Info." }}
+                    {{ (function.docstring or function.comments or "No Info.") | render_markdown | safe }}
                 </div>
-                {% for function in class.functions %}
-                    <h3>Function: {{ function.name }}</h3>
-                    <div>
-                        {{ function.docstring or function.comments or "No Info." }}
-                    </div>
-                {% endfor %}
             {% endfor %}
-        {% endif %}
+        {% endfor %}
+    {% endif %}
 
-    </body>
-</html>
+{% endblock %}

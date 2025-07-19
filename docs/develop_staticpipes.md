@@ -2,12 +2,12 @@
 title: Develop StaticPipes
 ---
 
-# Develop StaticPipes
+## Develop StaticPipes
 
 If you want to develop the actual tool (instead of just using it to build a website), read on.
 
 
-## Dev Containers
+### Dev Containers
 
 You can just open a dev container to get an environment with all the features you need.
 
@@ -19,7 +19,7 @@ python docs.py s
 
 And go to [http://localhost:8000/](http://localhost:8000/)
 
-## Docker
+### Docker
 
 You can also open a Docker container to get an environment with all the features you need.
 
@@ -43,7 +43,7 @@ python docs.py s -a 0.0.0.0
 
 And go to [http://localhost:8000/](http://localhost:8000/)
 
-## Test
+### Test
 
 Run:
 
@@ -51,7 +51,7 @@ Run:
 pytest tests/
 ```
 
-## Lint
+### Lint
 
 Run:
 
@@ -62,3 +62,10 @@ flake8 staticpipes tests docs.py
 mypy --install-types --non-interactive -p staticpipes
 ```
 
+### Docs
+
+Run:
+
+```
+python docs.py serve
+```
