@@ -28,13 +28,13 @@ class Worker:
             check.config = self.config
             check.build_directory = self.build_directory
 
-    def build(self):
+    def build(self, run_checks=True):
         self.current_info = CurrentInfo(
             context=copy.copy(self.config.context), watch=False
         )
-        self._build()
+        self._build(run_checks=run_checks)
 
-    def _build(self):
+    def _build(self, run_checks=True):
         # Step 1: Prepare
         # start
         for pipeline in self.config.pipes:
@@ -72,7 +72,8 @@ class Worker:
         self.build_directory.remove_all_files_we_did_not_write()
 
         # Step 3: check
-        self._check()
+        if run_checks:
+            self._check()
 
     def _check(self):
         if not self.config.checks:

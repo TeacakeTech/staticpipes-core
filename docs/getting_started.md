@@ -1,26 +1,10 @@
-# StaticPipes - the unopinionated static website generator in Python that checks the output for you
+---
+title: Getting Started
+---
 
-Most static website generators have technologies, conventions and source code layout requirements that you have to 
-follow. 
+## Getting Started
 
-Instead this is a framework and a collection of pipes and processes to build a website from your source files. 
-Use only the pipes and processes you want and configure them as you need. 
-
-If you are a Python programmer and need something different, then write a Python class that extends our base class and 
-write what you need.
-
-Finally, when your site is built we will check the output for you - after all you check your code with all kinds of linters, 
-so why not check your static website too?
-
-## Install
-
-* `pip install staticpipes[allbuild]` - if you just want to build a website
-* `pip install staticpipes[allbuild,dev]` - if you want to develop a website
-
-If you are developing the actual tool, check it out from git, create a virtual environment and run 
-`python3 -m pip install --upgrade pip && pip install -e .[allbuild,dev,staticpipesdev]`
-
-## Getting started - build your site
+### Basic configuration
 
 Configure this tool with a simple Python `site.py` in the root of your site. This copies files with these extensions 
 into the `_site` directory:
@@ -48,11 +32,15 @@ if __name__ == "__main__":
     )
 ```
 
+### Run
+
 Then run with:
 
     python site.py build
     python site.py watch
     python site.py serve
+
+### Jinja2
 
 Use Jinja2 templates for html files:
 
@@ -70,6 +58,8 @@ config = Config(
 )
 ```
 
+### Assets directory
+
 If you like putting your CSS and JS in a `assets` directory in your source, you can do:
 
 ```python
@@ -84,9 +74,9 @@ config = Config(
 )
 ```
 
-(Now `assets/css/main.css` will appear in `css/main.css`)
+Now `assets/css/main.css` will appear in `css/main.css`
 
-Version your assets:
+### Version your assets
 
 ```python
 from staticpipes.pipes.copy_with_versioning import PipeCopyWithVersioning
@@ -99,8 +89,10 @@ config = Config(
 )
 ```
 
-(files like `js/main.ceba641cf86025b52dfc12a1b847b4d8.js` will be created, and that string will be available in Jinja2 
-variables so you can load them.)
+Files like `js/main.ceba641cf86025b52dfc12a1b847b4d8.js` will be created, and that string will be available in Jinja2 
+variables so you can load them.
+
+### Exclude
 
 Exclude library files like `_layouts/base.html` templates:
 
@@ -115,6 +107,8 @@ config = Config(
     ],
 )
 ```
+
+### Minify
 
 Minify your JS & CSS:
 
@@ -131,6 +125,8 @@ config = Config(
     ],
 )
 ```
+
+### Minify and Version
 
 Use the special Process pipeline to chain together processes, so the same source file goes through multiple steps 
 before being published. This minifies then versions JS & CSS, putting new filenames in the context for templates to use:
@@ -151,11 +147,12 @@ config = Config(
 )
 ```
 
-Or write your own pipeline! For instance, if you want your robots.txt to block AI crawlers here's all you need:
+### Write your own pipeline
+
+For instance, if you want your robots.txt to block AI crawlers here's all you need:
 
 ```python
-from staticpipes.pipe_base import BasePipe
-import requests
+from staticpipes.pipes.pipe_base import BasePipe
 
 class PipeNoAIRobots(BasePipe):
     def start_build(self, current_info) -> None:
@@ -169,7 +166,8 @@ config = Config(
     ],
 )
 ```
-## Getting started - check your website
+
+### Check your website
 
 Finally let's add in some checks:
 
@@ -188,11 +186,3 @@ config = Config(
 ```
 
 When you build your site, you will now get a report of any problems.
-
-## More information and feedback
-
-* Documentation in the `docs` directory
-* https://github.com/StaticPipes/StaticPipes
-
-
-
