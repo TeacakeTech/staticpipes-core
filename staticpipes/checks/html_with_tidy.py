@@ -50,7 +50,7 @@ class CheckHtmlWithTidy(BaseCheck):
 
         # Parse results
         out = []
-        results_parse = re.compile(r"^line (\d) column (\d)")
+        results_parse = re.compile(r"^line (\d+) column (\d+)")
         for result in results.split("\n"):
             if result:
                 match = results_parse.match(result)
