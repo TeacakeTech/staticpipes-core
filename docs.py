@@ -70,6 +70,8 @@ class ProcessMarkdownPages(BaseProcessor):
         process_current_info.context["breadcrumbs"] = breadcrumbs
 
 
+version = os.getenv("VERSION", "")
+
 config = Config(
     pipes=[
         PipeExcludeUnderscoreDirectories(),
@@ -107,23 +109,20 @@ config = Config(
         CheckHtmlTags(),
         CheckInternalLinks(),
     ],
-    context={"base_url": os.getenv("BASE_URL", "/")},
+    context={
+        "base_url": "/{}/".format(version) if version else "/",
+        "version": version if version else "dev",
+        "meta_robots": "index, follow" if version == "stable" else "noindex, nofollow",
+    },
 )
 
 
 if __name__ == "__main__":
     from staticpipes.cli import cli
 
-    base_url = os.getenv("BASE_URL", "/")
-    if base_url != "/":
-        output_dir = os.path.join(
-            os.path.dirname(os.path.realpath(__file__)), "_site", base_url.lstrip("/")
-        )
-    else:
-        output_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), "_site")
     cli(
         config,
         os.path.join(os.path.dirname(os.path.realpath(__file__)), "docs"),
-        output_dir,
+        os.path.join(os.path.dirname(os.path.realpath(__file__)), "_site"),
         log_level=logging.DEBUG,
     )

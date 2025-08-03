@@ -3,16 +3,14 @@
 {% block title %}{#  TODO should be able to use contxet var title but it's set wrong, see notes in docs.py #}{% endblock %}
 
 {% block navitems %}
-    {% if breadcrumbs %}
-        <li class="nav_item"><a href="{{ base_url }}">&gt; Documentation</a></li>
-        {% for url, text in breadcrumbs %}
-            <li class="nav_item">
-                {% if url %}<a href="{{ base_url }}{{ url }}">{% endif %}
-                    &gt; {{text }}
-                {% if url %}</a>{% endif %}
-            </li>
-        {% endfor %}
-    {% endif %}
+    <li class="nav_item"><a href="{{ base_url }}">&gt; Documentation ({{ version }})</a></li>
+    {% for url, text in breadcrumbs %}
+        <li class="nav_item">
+            {% if url %}<a href="{{ base_url }}{{ url }}">{% endif %}
+                &gt; {{text }}
+            {% if url %}</a>{% endif %}
+        </li>
+    {% endfor %}
 {% endblock %}
 
 {% block content %}

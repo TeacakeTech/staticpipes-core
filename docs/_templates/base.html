@@ -5,6 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>{% block title %}{% endblock %} - StaticPipes Documentation</title>
         <link href="{{ base_url }}css/main.css" rel="stylesheet"/>
+        <meta name="robots" content="{{ meta_robots }}">
     </head>
     <body>
         <header>
@@ -15,6 +16,7 @@
         <nav>
             <div class="content">
                 <ul class="nav_items">
+
                     {% block navitems %}{% endblock %}
                 </ul>
             </div>
