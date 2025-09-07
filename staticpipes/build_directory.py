@@ -14,10 +14,16 @@ class BuildDirectory(BaseDirectory):
     def prepare(self):
         os.makedirs(self.dir, exist_ok=True)
 
+    def _written_files_append(self, dir: str, name: str):
+        if dir != "/":
+            while dir.startswith("/"):
+                dir = dir[1:]
+        self.written_files.append((dir if dir else "/", name))
+
     def _get_filename_to_write(self, dir: str, name: str) -> str:
         """Also makes dirs."""
         if dir != "/":
-            if dir.startswith("/"):
+            while dir.startswith("/"):
                 dir = dir[1:]
             os.makedirs(os.path.join(self.dir, dir), exist_ok=True)
             return os.path.join(self.dir, dir, name)
@@ -30,7 +36,7 @@ class BuildDirectory(BaseDirectory):
             "wb" if isinstance(contents, bytes) else "w",
         ) as fp:
             fp.write(contents)
-        self.written_files.append((dir if dir else "/", name))
+        self._written_files_append(dir, name)
 
     def copy_in_file(self, dir: str, name: str, source_filepath: str):
         shutil.copy(
@@ -38,7 +44,7 @@ class BuildDirectory(BaseDirectory):
             self._get_filename_to_write(dir, name),
             follow_symlinks=True,
         )
-        self.written_files.append((dir if dir else "/", name))
+        self._written_files_append(dir, name)
 
     def is_equal_to_source_dir(self, directory: str) -> bool:
         return os.path.realpath(self.dir) == os.path.realpath(directory)
