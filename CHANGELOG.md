@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+
+- Added `output_mode` and `output_filename` options to `PipeCollectionRecordsProcess` https://github.com/StaticPipes/StaticPipes/issues/19
+
 ### Fixed
 
 - More robust handling of dir strings

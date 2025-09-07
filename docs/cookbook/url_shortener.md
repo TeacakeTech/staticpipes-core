@@ -52,6 +52,7 @@ config = Config(
         PipeCollectionRecordsProcess(
             collection_name="links",
             context_key_record_data="link",
+            output_mode="dir",
             output_dir="/",
             processors=[
                 ProcessJinja2(
@@ -76,7 +77,7 @@ if __name__ == "__main__":
 
 Run: `python site.py s`
 
-If you open [http://localhost:8000/python.html](http://localhost:8000/python.html) you should be redirected to the Python site.
+If you open [http://localhost:8000/python](http://localhost:8000/python) you should be redirected to the Python site.
 
 ### Add a interstitial page with a custom message for each URL
 
@@ -103,7 +104,7 @@ Edit the template called `template.html` to:
 
 Run: `python site.py s`
 
-If you open [http://localhost:8000/python.html](http://localhost:8000/python.html) you should see a page with a link and your custom message.
+If you open [http://localhost:8000/python](http://localhost:8000/python) you should see a page with a link and your custom message.
 
 ### Put all your URLs in a sub directory
 
@@ -113,5 +114,5 @@ Edit the Python file called `site.py` and for `PipeCollectionRecordsProcess` cha
 
 Run: `python site.py s`
 
-Now open [http://localhost:8000/urls/python.html](http://localhost:8000/urls/python.html).
+Now open [http://localhost:8000/urls/python](http://localhost:8000/urls/python).
 

@@ -59,6 +59,46 @@ def test_collection_csv():
     )
 
 
+def test_collection_csv_dir_mode():
+    # setup
+    out_dir = tempfile.mkdtemp(prefix="staticpipes_tests_")
+    config = staticpipes.config.Config(
+        pipes=[
+            staticpipes.pipes.load_collection_csv.PipeLoadCollectionCSV(
+                filename="data.csv"
+            ),
+            staticpipes.pipes.collection_records_process.PipeCollectionRecordsProcess(
+                collection_name="data",
+                output_mode="dir",
+                output_filename="info.html",
+                processors=[
+                    staticpipes.processes.jinja2.ProcessJinja2(
+                        template="_templates/record.html"
+                    )
+                ],
+            ),
+        ],
+    )
+    worker = staticpipes.worker.Worker(
+        config,
+        os.path.join(
+            os.path.dirname(os.path.realpath(__file__)), "fixtures", "collection_csv"
+        ),
+        out_dir,
+    )
+    # run
+    worker.build()
+    # test collection (this is done by test_collection_csv so we won't repeat)
+    # test output
+    with open(os.path.join(out_dir, "data", "cat", "info.html")) as fp:
+        contents = fp.read()
+    contents = "".join([i.strip() for i in contents.split("\n")])
+    assert (
+        "<!doctype html><html><head><title>Cat</title></head><body>Floofy</body></html>"  # noqa
+        == contents
+    )
+
+
 def test_pipe_collection_records_process_collection_with_filter_function():
     # setup
     out_dir = tempfile.mkdtemp(prefix="staticpipes_tests_")
