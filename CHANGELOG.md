@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Added `output_mode` and `output_filename` options to `PipeCollectionRecordsProcess` https://github.com/StaticPipes/StaticPipes/issues/19
 - Build command exits with sys.exit error codes if checks fail, so can use in CI https://github.com/StaticPipes/StaticPipes/issues/54
+- Add check command to CLI. Exits with sys.exit error codes if checks fail, so can use in CI https://github.com/StaticPipes/StaticPipes/issues/54
 
 ### Fixed
 

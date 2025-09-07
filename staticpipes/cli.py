@@ -16,6 +16,8 @@ def cli(config, source_dir, build_directory, log_level=logging.INFO):
         "--check", action=argparse.BooleanOptionalAction, default=True
     )
 
+    check_parser = subparsers.add_parser("check", aliases=["c"])  # noqa
+
     watch_parser = subparsers.add_parser("watch", aliases=["w"])  # noqa
 
     serve_parser = subparsers.add_parser("serve", aliases=["s"])  # noqa
@@ -38,6 +40,10 @@ def cli(config, source_dir, build_directory, log_level=logging.INFO):
     if args.subparser_name == "build" or args.subparser_name == "b":
         worker = Worker(config, source_dir, build_directory)
         worker.build(run_checks=args.check, sys_exit_after_checks=True)
+
+    elif args.subparser_name == "check" or args.subparser_name == "c":
+        worker = Worker(config, source_dir, build_directory)
+        worker.check(sys_exit_after_checks=True)
 
     elif args.subparser_name == "watch" or args.subparser_name == "w":
         worker = Worker(config, source_dir, build_directory)

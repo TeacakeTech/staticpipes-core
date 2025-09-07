@@ -35,6 +35,19 @@ class Worker:
         )
         self._build(run_checks=run_checks, sys_exit_after_checks=sys_exit_after_checks)
 
+    def check(self, sys_exit_after_checks=False):
+        if not self.config.checks:
+            logger.warn("No checks defined")
+            if sys_exit_after_checks:
+                sys.exit(1)
+            else:
+                return
+
+        self.current_info = CurrentInfo(
+            context=copy.copy(self.config.context), watch=False
+        )
+        self._build(run_checks=True, sys_exit_after_checks=sys_exit_after_checks)
+
     def _build(self, run_checks=True, sys_exit_after_checks=False):
         # Step 1: Prepare
         # start

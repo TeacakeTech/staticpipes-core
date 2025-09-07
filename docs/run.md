@@ -37,6 +37,10 @@ if __name__ == "__main__":
 
     python site.py build
 
+### Check
+
+    python site.py check
+
 ### Watch
 
     python site.py watch
