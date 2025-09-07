@@ -1,6 +1,7 @@
 import copy
 import logging
 import os
+import sys
 
 from .build_directory import BuildDirectory
 from .current_info import CurrentInfo
@@ -28,13 +29,13 @@ class Worker:
             check.config = self.config
             check.build_directory = self.build_directory
 
-    def build(self, run_checks=True):
+    def build(self, run_checks=True, sys_exit_after_checks=False):
         self.current_info = CurrentInfo(
             context=copy.copy(self.config.context), watch=False
         )
-        self._build(run_checks=run_checks)
+        self._build(run_checks=run_checks, sys_exit_after_checks=sys_exit_after_checks)
 
-    def _build(self, run_checks=True):
+    def _build(self, run_checks=True, sys_exit_after_checks=False):
         # Step 1: Prepare
         # start
         for pipeline in self.config.pipes:
@@ -73,9 +74,9 @@ class Worker:
 
         # Step 3: check
         if run_checks:
-            self._check()
+            self._check(sys_exit_after_checks=sys_exit_after_checks)
 
-    def _check(self):
+    def _check(self, sys_exit_after_checks=False):
         if not self.config.checks:
             logger.info("No checks defined")
             return
@@ -103,6 +104,8 @@ class Worker:
         # Log
         if len(self._check_reports) == 0:
             logger.info("Check Reports count: 0")
+            if sys_exit_after_checks:
+                sys.exit(0)
         else:
             logger.warn("Check Reports count: {}".format(len(self._check_reports)))
             for check_report in self._check_reports:
@@ -119,6 +122,8 @@ class Worker:
                     )
                 )
                 logger.warn(report)
+                if sys_exit_after_checks:
+                    sys.exit(1)
 
     def watch(self):
         # Only import this when watch function called,

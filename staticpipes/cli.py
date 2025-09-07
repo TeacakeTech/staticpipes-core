@@ -37,7 +37,7 @@ def cli(config, source_dir, build_directory, log_level=logging.INFO):
     # Do work
     if args.subparser_name == "build" or args.subparser_name == "b":
         worker = Worker(config, source_dir, build_directory)
-        worker.build(run_checks=args.check)
+        worker.build(run_checks=args.check, sys_exit_after_checks=True)
 
     elif args.subparser_name == "watch" or args.subparser_name == "w":
         worker = Worker(config, source_dir, build_directory)
