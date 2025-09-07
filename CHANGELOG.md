@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 
 - More robust handling of dir strings
+- Crash in `CheckHtmlWithTidy`
 
 ## [0.3.0] - 2025-06-15
 

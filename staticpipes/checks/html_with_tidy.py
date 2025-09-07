@@ -54,19 +54,20 @@ class CheckHtmlWithTidy(BaseCheck):
         for result in results.split("\n"):
             if result:
                 match = results_parse.match(result)
-                line: int = int(match[1])  # type: ignore
-                column: int = int(match[2])  # type: ignore
-                out.append(
-                    CheckReport(
-                        type="html_with_tidy",
-                        dir=dir,
-                        file=filename,
-                        message=result,
-                        from_check=self,
-                        line=line,
-                        column=column,
+                if match:
+                    line: int = int(match[1])  # type: ignore
+                    column: int = int(match[2])  # type: ignore
+                    out.append(
+                        CheckReport(
+                            type="html_with_tidy",
+                            dir=dir,
+                            file=filename,
+                            message=result,
+                            from_check=self,
+                            line=line,
+                            column=column,
+                        )
                     )
-                )
 
         # Remove temp file
         os.remove(name_f)
