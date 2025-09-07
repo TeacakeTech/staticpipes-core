@@ -34,6 +34,7 @@ so why not check your static website too?
     * [CSS](cookbook/css)
     * [JS](cookbook/js)
     * [robots.txt](cookbook/robotstxt)
+    * [URL Shortener](cookbook/url_shortener)
 * [Python Reference](reference/staticpipes.html)
     * [Pipes](reference/staticpipes.pipes.html)
     * [Processes](reference/staticpipes.processes.html)
