@@ -1,0 +1,10 @@
+<pre><code>{{ name }} (
+    {% for arg in arguments.args %}{% if arg != "self" %}
+        {%- set default = None -%}{%- if arguments.defaults -%}{%- set default = arguments.defaults[0 - loop.revindex] -%}{%- endif -%}
+        {{ arg }}
+        {%- if default -%}
+        ={{ default }}
+        {%- endif -%}
+        ,
+    {% endif %}{% endfor %})
+</code></pre>

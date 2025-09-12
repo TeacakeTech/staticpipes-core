@@ -66,18 +66,41 @@ class PipeLoadCollectionPythonDocs(BasePipe):
                     "docstring": inspect.getdoc(v),
                     "comments": inspect.getcomments(v),
                 }
+                try:
+                    full_arg_spec = inspect.getfullargspec(v)
+                    class_info["arguments"] = {
+                        "args": full_arg_spec.args,
+                        "varargs": full_arg_spec.varargs,
+                        "varkw": full_arg_spec.varkw,
+                        "defaults": full_arg_spec.defaults,
+                        "kwonlyargs": full_arg_spec.kwonlyargs,
+                        "kwonlydefaults": full_arg_spec.kwonlydefaults,
+                        "annotations": full_arg_spec.annotations,
+                    }
+                except Exception:
+                    pass
                 for class_k, class_v in inspect.getmembers(v):
                     if (
                         inspect.isfunction(class_v)
                         and not class_v.__name__.startswith("_")
                         and class_v.__module__ == modname
                     ):
+                        full_arg_spec = inspect.getfullargspec(class_v)
                         class_info["functions"].append(  # type: ignore
                             {
                                 "function": class_v,
                                 "name": class_v.__name__,
                                 "docstring": inspect.getdoc(class_v),
                                 "comments": inspect.getcomments(class_v),
+                                "arguments": {
+                                    "args": full_arg_spec.args,
+                                    "varargs": full_arg_spec.varargs,
+                                    "varkw": full_arg_spec.varkw,
+                                    "defaults": full_arg_spec.defaults,
+                                    "kwonlyargs": full_arg_spec.kwonlyargs,
+                                    "kwonlydefaults": full_arg_spec.kwonlydefaults,
+                                    "annotations": full_arg_spec.annotations,
+                                },
                             }
                         )
                 data["classes"].append(class_info)
