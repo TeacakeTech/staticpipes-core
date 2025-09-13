@@ -1,6 +1,6 @@
 {% extends "_templates/base.html" %}
 
-{% block title %}{#  TODO should be able to use contxet var title but it's set wrong, see notes in docs.py #}{% endblock %}
+{% block title %}{{ title }}{% endblock %}
 
 {% block navitems %}
     <li class="nav_item"><a href="{{ base_url }}">&gt; Documentation ({{ version }})</a></li>

@@ -23,7 +23,7 @@ class ProcessMarkdownYAMLToHTMLContext(BaseProcessor):
             data = yaml.safe_load(bits[1])
             markdown = bits[2]
             for k, v in data.items():
-                current_info.set_context(k, v)
+                process_current_info.context[k] = v
 
         md = MarkdownIt("commonmark")
         html = md.render(markdown)

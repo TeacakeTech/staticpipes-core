@@ -59,13 +59,7 @@ class ProcessMarkdownPages(BaseProcessor):
             breadcrumbs.append((path, dir))
 
         if source_filename != "index.md":
-            # It should be
-            # breadcrumbs.append((None, process_current_info.context["title"]))
-            # But ProcessMarkdownYAMLToHTMLContext uses current_info.set_context
-            # when I think it should use process_current_info.context
-            # Also, ProcessJinja2 only takes 1 context when it should take both
-            # Until that sorted, just do ...
-            breadcrumbs.append((None, current_info.get_context("title")))
+            breadcrumbs.append((None, process_current_info.context.get("title")))
 
         process_current_info.context["breadcrumbs"] = breadcrumbs
 

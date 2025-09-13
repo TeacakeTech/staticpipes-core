@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - More robust handling of dir strings
 - Crash in `CheckHtmlWithTidy`
+- `ProcessMarkdownYAMLToHTMLContext` - should set vars in process context, not context for whole site https://github.com/StaticPipes/StaticPipes/issues/32
 
 ### Changed / Deprecated
 
