@@ -49,8 +49,8 @@ jinja2_environment = Jinja2Environment()
 
 # use in config ...
 # PipeJinja2(jinja2_environment=jinja2_environment)
-# or
-# ProcessJinja2(jinja2_environment=jinja2_environment)
+# ProcessJinja2RenderSourceFile(jinja2_environment=jinja2_environment)
+# ProcessJinja2RenderContents(jinja2_environment=jinja2_environment)
 ```
 
 You can then change autoescape:

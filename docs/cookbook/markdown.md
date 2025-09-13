@@ -9,7 +9,7 @@ title: Markdown Cookbook
 
 ```python
 from staticpipes.pipes.process import PipeProcess
-from staticpipes.processes.jinja2 import ProcessJinja2
+from staticpipes.processes.jinja2_render_source_file import ProcessJinja2RenderSourceFile
 from staticpipes.processes.markdown_yaml_to_html_context import (
     ProcessMarkdownYAMLToHTMLContext,
 )
@@ -20,7 +20,7 @@ config = Config(
             extensions=["md"],
             processors=[
                 ProcessMarkdownYAMLToHTMLContext(),
-                ProcessJinja2(template="_templates/content.html"),
+                ProcessJinja2RenderSourceFile(template="_templates/content.html"),
             ],
         ),
     ],

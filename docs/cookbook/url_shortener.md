@@ -43,7 +43,7 @@ import os
 
 from staticpipes.pipes.load_collection_csv import PipeLoadCollectionCSV
 from staticpipes.pipes.collection_records_process import PipeCollectionRecordsProcess
-from staticpipes.processes.jinja2 import ProcessJinja2
+from staticpipes.processes.jinja2_render_source_file import ProcessJinja2RenderSourceFile
 from staticpipes.config import Config
 
 config = Config(
@@ -55,7 +55,7 @@ config = Config(
             output_mode="dir",
             output_dir="/",
             processors=[
-                ProcessJinja2(
+                ProcessJinja2RenderSourceFile(
                     template="template.html",
                 ),
             ],

@@ -39,7 +39,7 @@ The configuration should include (see [Getting Started](../getting_started) for 
 ```python
 from staticpipes.pipes.load_collection_csv import PipeLoadCollectionCSV
 from staticpipes.pipes.collection_records_process import PipeCollectionRecordsProcess
-from staticpipes.processes.jinja2 import ProcessJinja2
+from staticpipes.processes.jinja2_render_source_file import ProcessJinja2RenderSourceFile
 
 config = Config(
     pipes=[
@@ -47,7 +47,7 @@ config = Config(
         PipeCollectionRecordsProcess(
             collection_name="pets",
             processors=[
-                ProcessJinja2(
+                ProcessJinja2RenderSourceFile(
                     template="_templates/pet.html",
                 )
             ],

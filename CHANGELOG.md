@@ -13,11 +13,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add check command to CLI. Exits with sys.exit error codes if checks fail, so can use in CI https://github.com/StaticPipes/StaticPipes/issues/54
 - Added `arguments` to data collected in `PipeLoadCollectionPythonDocs` https://github.com/StaticPipes/StaticPipes/issues/26
 - Added `ProcessRemoveHTMLExtension` https://github.com/StaticPipes/StaticPipes/issues/19
+- Added `ProcessJinja2RenderSourceFile` (Same as old `ProcessJinja2`) and `ProcessJinja2RenderContents`
 
 ### Fixed
 
 - More robust handling of dir strings
 - Crash in `CheckHtmlWithTidy`
+
+### Changed / Deprecated
+
+- `staticpipes.processes.jinja2.ProcessJinja2` has been renamed to `staticpipes.processes.jinja2_render_source_file.ProcessJinja2RenderSourceFile`, 
+  but the old name still works.
 
 ## [0.3.0] - 2025-06-15
 
