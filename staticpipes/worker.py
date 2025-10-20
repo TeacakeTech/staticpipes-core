@@ -7,6 +7,7 @@ from .build_directory import BuildDirectory
 from .current_info import CurrentInfo
 from .exceptions import WatchFunctionalityNotImplementedException
 from .source_directory import SourceDirectory
+from .worker_storage import WorkerStorage
 
 logger = logging.getLogger(__name__)
 
@@ -19,6 +20,7 @@ class Worker:
         self.build_directory = BuildDirectory(build_directory)
         self.current_info = None
         self._check_reports: list = []
+        self._worker_storage = WorkerStorage()
 
         for pipeline in self.config.pipes:
             pipeline.config = self.config
@@ -49,43 +51,52 @@ class Worker:
         self._build(run_checks=True, sys_exit_after_checks=sys_exit_after_checks)
 
     def _build(self, run_checks=True, sys_exit_after_checks=False):
-        # Step 1: Prepare
-        # start
-        for pipeline in self.config.pipes:
-            pipeline.start_prepare(self.current_info)
-        # files
-        rpsd = os.path.realpath(self.source_directory.dir)
-        for root, dirs, files in os.walk(rpsd):
-            if not self.build_directory.is_equal_to_source_dir(root):
-                for file in files:
-                    relative_dir = root[len(rpsd) + 1 :]
-                    if not relative_dir:
-                        relative_dir = "/"
-                    self._prepare_file(relative_dir, file)
-        # end
-        for pipeline in self.config.pipes:
-            pipeline.end_prepare(self.current_info)
-
-        # Step 2: Build
+        # Step 1: Build
         self.build_directory.prepare()
         # start
-        for pipeline in self.config.pipes:
-            pipeline.start_build(self.current_info)
-        # files
-        rpsd = os.path.realpath(self.source_directory.dir)
-        for root, dirs, files in os.walk(rpsd):
-            if not self.build_directory.is_equal_to_source_dir(root):
-                for file in files:
-                    relative_dir = root[len(rpsd) + 1 :]
-                    if not relative_dir:
-                        relative_dir = "/"
-                    self._process_file(relative_dir, file)
-        # end
-        for pipeline in self.config.pipes:
-            pipeline.end_build(self.current_info)
+        for pass_number in self.config.get_pass_numbers():
+            logger.info("Processing Pass {} ...".format(pass_number))
+            # start build
+            self.current_info.reset_for_new_pass_for_new_file(
+                pass_number=pass_number,
+            )
+            for pipeline in self.config.get_pipes_in_pass(pass_number):
+                pipeline.start_build(self.current_info)
+            # files
+            rpsd = os.path.realpath(self.source_directory.dir)
+            for root, dirs, files in os.walk(rpsd):
+                if not self.build_directory.is_equal_to_source_dir(root):
+                    for file in files:
+                        dir: str = root[len(rpsd) + 1 :]
+                        if not dir:
+                            dir = "/"
+                        logger.info(
+                            "Processing Pass {} File {} {} ...".format(
+                                pass_number, dir, file
+                            )
+                        )
+                        self.current_info.reset_for_new_pass_for_new_file(
+                            pass_number=pass_number,
+                            current_file_excluded=self._worker_storage.is_file_excluded(
+                                dir, file
+                            ),
+                        )
+                        for pipeline in self.config.get_pipes_in_pass(pass_number):
+                            if self.current_info.current_file_excluded:
+                                pipeline.file_excluded_during_build(
+                                    dir, file, self.current_info
+                                )
+                            else:
+                                pipeline.build_file(dir, file, self.current_info)
+                        self._worker_storage.store_file_details(
+                            dir, file, self.current_info.current_file_excluded
+                        )
+            # end build
+            for pipeline in self.config.get_pipes_in_pass(pass_number):
+                pipeline.end_build(self.current_info)
         self.build_directory.remove_all_files_we_did_not_write()
 
-        # Step 3: check
+        # Step 2: check
         if run_checks:
             self._check(sys_exit_after_checks=sys_exit_after_checks)
 
@@ -154,8 +165,7 @@ class Worker:
             logger.info(
                 "Checks do not work in watch yet, so no future checks will be done"  # noqa
             )
-
-        # start
+        # start watching
         for pipeline in self.config.pipes:
             pipeline.start_watch(self.current_info)
         # Now watch
@@ -197,21 +207,6 @@ class Worker:
         logger.info("Watching ...")
         watcher.watch()
 
-    def _prepare_file(self, dir, filename):
-        logger.info("Preparing {} {} ...".format(dir, filename))
-        self.current_info.reset_for_new_file()
-        for pipeline in self.config.pipes:
-            pipeline.prepare_file(dir, filename, self.current_info)
-
-    def _process_file(self, dir, filename):
-        logger.info("Processing {} {} ...".format(dir, filename))
-        self.current_info.reset_for_new_file()
-        for pipeline in self.config.pipes:
-            if self.current_info.current_file_excluded:
-                pipeline.file_excluded_during_build(dir, filename, self.current_info)
-            else:
-                pipeline.build_file(dir, filename, self.current_info)
-
     def process_file_during_watch(self, dir, filename):
         # Check if we should process
         if self.build_directory.is_equal_to_source_dir(
@@ -221,28 +216,33 @@ class Worker:
         # Setup
         logger.info("Processing during watch {} {} ...".format(dir, filename))
         context_version: int = self.current_info.get_context_version()
-        # Call each pipe for file
-        self.current_info.reset_for_new_file()
-        for pipeline in self.config.pipes:
-            try:
-                if self.current_info.current_file_excluded:
-                    pipeline.file_changed_but_excluded_during_watch(
-                        dir, filename, self.current_info
+        # For this file, start passes
+        self.current_info.reset_for_new_pass_for_new_file()
+        for pass_number in self.config.get_pass_numbers():
+            self.current_info.reset_for_new_pass_for_same_file(pass_number=pass_number)
+            for pipeline in self.config.get_pipes_in_pass(pass_number):
+                # Call each pipe for file
+                try:
+                    if self.current_info.current_file_excluded:
+                        pipeline.file_changed_but_excluded_during_watch(
+                            dir, filename, self.current_info
+                        )
+                    else:
+                        pipeline.file_changed_during_watch(
+                            dir, filename, self.current_info
+                        )
+                except WatchFunctionalityNotImplementedException:
+                    logger.error(
+                        (
+                            "WATCH FEATURE NOT IMPLEMENTED IN PIPELINE {}, "
+                            + "YOU MAY HAVE TO BUILD MANUALLY"
+                        ).format(str(pipeline))
                     )
-                else:
-                    pipeline.file_changed_during_watch(dir, filename, self.current_info)
-            except WatchFunctionalityNotImplementedException:
-                logger.error(
-                    (
-                        "WATCH FEATURE NOT IMPLEMENTED IN PIPELINE {}, "
-                        + "YOU MAY HAVE TO BUILD MANUALLY"
-                    ).format(str(pipeline))
-                )
-        # If context changed, call each pipe for context
-        if context_version != self.current_info.get_context_version():
-            for pipeline in self.config.pipes:
-                pipeline.context_changed_during_watch(
-                    self.current_info,
-                    context_version,
-                    self.current_info.get_context_version(),
-                )
+            # If context changed, call each pipe for context
+            if context_version != self.current_info.get_context_version():
+                for pipeline in self.config.get_pipes_in_pass(pass_number):
+                    pipeline.context_changed_during_watch(
+                        self.current_info,
+                        context_version,
+                        self.current_info.get_context_version(),
+                    )

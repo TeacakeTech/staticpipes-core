@@ -14,12 +14,19 @@ class PipeLoadCollectionCSV(BasePipe):
     The first column of the CSV is used as the id of items in the collection.
     """
 
-    def __init__(self, directory=None, filename=None, collection_name="data"):
+    def __init__(
+        self, directory=None, filename=None, collection_name="data", pass_number=100
+    ):
         self._directory = directory
         self._filename = filename
         self._collection_name = collection_name
+        self._pass_number: int = pass_number
 
-    def start_prepare(self, current_info: CurrentInfo) -> None:
+    def get_pass_numbers(self) -> list:
+        """"""
+        return [self._pass_number]
+
+    def start_build(self, current_info: CurrentInfo) -> None:
         """"""
         collection = Collection()
 

@@ -38,34 +38,34 @@ class PipeProcess(BasePipe):
         processors=None,
         directories: list = ["/"],
         binary_content: bool = False,
+        pass_number: int = 1000,
     ):
         self.extensions: list = extensions or []
         self.processors = processors
         self.directories: list = directories
         self.binary_content: bool = binary_content
+        self._pass_number: int = pass_number
 
-    def start_prepare(self, current_info: CurrentInfo) -> None:
+    def get_pass_numbers(self) -> list:
+        """"""
+        return [self._pass_number]
+
+    def start_build(self, current_info: CurrentInfo) -> None:
         """"""
         for processor in self.processors:
             processor.config = self.config
             processor.source_directory = self.source_directory
             processor.build_directory = self.build_directory
 
-    def prepare_file(self, dir: str, filename: str, current_info: CurrentInfo) -> None:
-        """"""
-        self._file(dir, filename, current_info, prepare=True)
-
     def build_file(self, dir: str, filename: str, current_info: CurrentInfo) -> None:
         """"""
-        self._file(dir, filename, current_info, build=True)
+        self._file(dir, filename, current_info)
 
     def _file(
         self,
         dir: str,
         filename: str,
         current_info: CurrentInfo,
-        prepare: bool = False,
-        build: bool = False,
     ) -> None:
         # Check Extensions
         if self.extensions and not staticpipes.utils.does_filename_have_extension(
@@ -77,6 +77,7 @@ class PipeProcess(BasePipe):
         if not staticpipes.utils.is_directory_in_list(dir, self.directories):
             return
 
+        # Ok, start to process ...
         process_current_info = ProcessCurrentInfo(
             dir,
             filename,
@@ -85,8 +86,6 @@ class PipeProcess(BasePipe):
                 if self.binary_content
                 else self.source_directory.get_contents_as_str(dir, filename)
             ),
-            prepare=prepare,
-            build=build,
             context=current_info.get_context().copy(),
         )
 
@@ -94,12 +93,12 @@ class PipeProcess(BasePipe):
         for processor in self.processors:
             processor.process_file(dir, filename, process_current_info, current_info)
 
-        if build:
-            self.build_directory.write(
-                process_current_info.dir,
-                process_current_info.filename,
-                process_current_info.contents,
-            )
+        # Write
+        self.build_directory.write(
+            process_current_info.dir,
+            process_current_info.filename,
+            process_current_info.contents,
+        )
 
     def file_changed_during_watch(self, dir, filename, current_info):
         self.build_file(dir, filename, current_info)

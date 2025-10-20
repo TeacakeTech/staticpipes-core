@@ -28,7 +28,11 @@ class PipeCopy(BasePipe):
     """
 
     def __init__(
-        self, extensions=None, source_sub_directory=None, directories: list = ["/"]
+        self,
+        extensions=None,
+        source_sub_directory=None,
+        directories: list = ["/"],
+        pass_number=1000,
     ):
         self.extensions: list = extensions or []
         self.source_sub_directory = (
@@ -37,6 +41,11 @@ class PipeCopy(BasePipe):
             else source_sub_directory
         )
         self.directories: list = directories
+        self._pass_number: int = pass_number
+
+    def get_pass_numbers(self) -> list:
+        """"""
+        return [self._pass_number]
 
     def build_file(self, dir: str, filename: str, current_info: CurrentInfo) -> None:
         """"""

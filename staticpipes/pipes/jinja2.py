@@ -36,11 +36,17 @@ class PipeJinja2(BasePipe):
         extensions=["html"],
         watch_rebuild_all=False,
         jinja2_environment: Optional[Jinja2Environment] = None,
+        pass_number=1000,
     ):
         self.extensions = extensions
         self._jinja2_environment: Optional[Jinja2Environment] = jinja2_environment
         self._template_information: dict = {}
         self._watch_rebuild_all = watch_rebuild_all
+        self._pass_number: int = pass_number
+
+    def get_pass_numbers(self) -> list:
+        """"""
+        return [self._pass_number]
 
     def _actually_build_template(
         self, dir: str, filename: str, current_info: CurrentInfo

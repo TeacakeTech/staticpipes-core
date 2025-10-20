@@ -152,7 +152,8 @@ config = Config(
 For instance, if you want your robots.txt to block AI crawlers here's all you need:
 
 ```python
-from staticpipes.pipes.pipe_base import BasePipe
+from staticpipes.pipe_base import BasePipe
+import requests
 
 class PipeNoAIRobots(BasePipe):
     def start_build(self, current_info) -> None:

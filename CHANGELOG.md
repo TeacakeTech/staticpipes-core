@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+
+The API to Pipes has been changed in a backwards incompatible manner!
+Prepare stage removed and multiple build stages with different pass numbers introduced
+https://github.com/TeacakeTech/staticpipes-core/issues/55
+
 ### Removed
 
 - Dropped support for Python 3.9 as that isn't supported anymore.

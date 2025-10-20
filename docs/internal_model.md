@@ -16,13 +16,21 @@ the `staticpipes.pipe_base.BasePipe` class.
 
 ### Build stage
 
-During building, the `start_build` method is called on each pipeline. Methods are always called on each pipeline in the 
-order the pipes are passed to the config.
+During building, multiple passes are made. If one pipe needs to collect information and load it into the context 
+before another pipe uses that information to build something, make sure the first pipe has a lower pass number 
+than the second pipe.
 
-Then, the `build_file` method is called on each pipeline for each file in the source directory. The order of files in 
-the directory is not set and should not be relied on.
+The pipes control how many passes there are and which pipes are called in which pass by overriding the `get_pass_numbers` 
+method. This should return a list of ints, each int being a pass number that pipe should be called for. As a list 
+is returned, the same pipe can be run in multiple passes. Some pipes also allow passing parameters when 
+constructing them. Pass numbers are run in order, lowest first. 
 
-The `end_build` method is called on each pipeline.
+During each pass, each pipeline that wants to do work in that pass is called. The methods called are: 
+
+* the `start_build` method.
+* the `build_file` or `file_excluded_during_build` method is called for each file in the source 
+  directory. The order of files in the source directory is not set and should not be relied on.
+* the `end_build` method.
 
 A pipeline should deal with the file completely or not at all. Either it ignores it or it does something that ends 
 with a method on `self.build_directory` being called to write some content to the site. 
@@ -40,16 +48,6 @@ A context is maintained on `current_info` via `get_context`, `set_context` and o
 values that is initially set in the configuration object but pipes can read and modify. For example, an earlier 
 pipeline might version a CSS file at a particular location and store the location in the context. A later pipeline 
 might build Jinja2 templates with the context as temple variables so the html can actually load the CSS.
-
-### Prepare stage
-
-Before the build stage is started a prepare stage is done. `start_prepare` is called on each pipeline, then 
-`prepare_file` for each file, then `end_prepare`. This can be used to collect  info before building. For example, 
-see the `PipeCopyWithVersioning` pipeline that works out the filename for any file it will work with in the prepare 
-stage. This ensures information about the new file name is already in the context before a single build method is 
-called.
-
-It's not possible to exclude any files during the prepare stage.
 
 ### Checks
 
@@ -70,7 +68,7 @@ idea of dependencies. If the process of building source file A depends in some w
 when source file B changes then both files A and B must be rebuilt. 
 
 Dependencies are left up to each pipeline to handle. Generally the pipeline should build up dependency information 
-during the prepare or build stage and cache it for use during the watch stage. During prepare and build stage a flag 
+during the build stage and cache it for use during the watch stage. During build stage a flag 
 `current_info.watch` is set if watch will be called afterwards. This means pipes can avoid doing any extra work 
 tracking dependencies for the watch stage if it isn't going to be called.
 
@@ -112,7 +110,6 @@ for every file. The `process_current_info` parameter has directory, filename and
 be changed as needed. 
 
 At the end of calling all the processes, the file will be written to the site. 
-During the prepare stage, `process_file` is called but the results are not written to the build site.
 
 This has the limitation that one source file must produce exactly one destination file.
 
