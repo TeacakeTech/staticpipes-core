@@ -17,7 +17,9 @@ class PipeExcludeDotDirectories(BasePipe):
         """"""
         return [self._pass_number]
 
-    def build_file(self, dir: str, filename: str, current_info: CurrentInfo) -> None:
+    def build_source_file(
+        self, dir: str, filename: str, current_info: CurrentInfo
+    ) -> None:
         """"""
 
         exclude = False
@@ -29,6 +31,6 @@ class PipeExcludeDotDirectories(BasePipe):
         if exclude:
             current_info.current_file_excluded = True
 
-    def file_changed_during_watch(self, dir, filename, current_info):
+    def source_file_changed_during_watch(self, dir, filename, current_info):
         """"""
-        self.build_file(dir, filename, current_info)
+        self.build_source_file(dir, filename, current_info)

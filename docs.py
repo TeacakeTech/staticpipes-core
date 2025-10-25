@@ -33,7 +33,7 @@ jinja2_environment = Jinja2Environment(filters={"render_markdown": render_markdo
 
 class ProcessMarkdownPages(BaseProcessor):
 
-    def process_file(
+    def process_source_file(
         self,
         source_dir: str,
         source_filename: str,

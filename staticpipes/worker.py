@@ -83,11 +83,11 @@ class Worker:
                         )
                         for pipeline in self.config.get_pipes_in_pass(pass_number):
                             if self.current_info.current_file_excluded:
-                                pipeline.file_excluded_during_build(
+                                pipeline.source_file_excluded_during_build(
                                     dir, file, self.current_info
                                 )
                             else:
-                                pipeline.build_file(dir, file, self.current_info)
+                                pipeline.build_source_file(dir, file, self.current_info)
                         self._worker_storage.store_file_details(
                             dir, file, self.current_info.current_file_excluded
                         )
@@ -118,7 +118,7 @@ class Worker:
                 if not relative_dir:
                     relative_dir = "/"
                 for check in self.config.checks:
-                    for c_r in check.check_file(relative_dir, file):
+                    for c_r in check.check_build_file(relative_dir, file):
                         self._check_reports.append(c_r)
         # end
         for check in self.config.checks:
@@ -224,11 +224,11 @@ class Worker:
                 # Call each pipe for file
                 try:
                     if self.current_info.current_file_excluded:
-                        pipeline.file_changed_but_excluded_during_watch(
+                        pipeline.source_file_changed_but_excluded_during_watch(
                             dir, filename, self.current_info
                         )
                     else:
-                        pipeline.file_changed_during_watch(
+                        pipeline.source_file_changed_during_watch(
                             dir, filename, self.current_info
                         )
                 except WatchFunctionalityNotImplementedException:

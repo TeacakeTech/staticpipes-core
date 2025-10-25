@@ -12,7 +12,7 @@ class BaseProcessor:
         self.source_directory: SourceDirectory = None  # type: ignore
         self.build_directory: BuildDirectory = None  # type: ignore
 
-    def process_file(
+    def process_source_file(
         self,
         source_dir: str,
         source_filename: str,

@@ -12,7 +12,7 @@ class ProcessChangeExtension(BaseProcessor):
     def __init__(self, new_extension):
         self._new_extension = new_extension
 
-    def process_file(
+    def process_source_file(
         self, source_dir, source_filename, process_current_info, current_info
     ):
         """"""

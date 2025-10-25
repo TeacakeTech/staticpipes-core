@@ -28,7 +28,7 @@ constructing them. Pass numbers are run in order, lowest first.
 During each pass, each pipeline that wants to do work in that pass is called. The methods called are: 
 
 * the `start_build` method.
-* the `build_file` or `file_excluded_during_build` method is called for each file in the source 
+* the `build_source_file` or `source_file_excluded_during_build` method is called for each file in the source 
   directory. The order of files in the source directory is not set and should not be relied on.
 * the `end_build` method.
 
@@ -41,7 +41,7 @@ pipeline could write multiple files at different resolutions for every image in 
 A `current_info` object is passed to all methods. This contains information and can be used to set information.
 
 A pipeline can mark a file as excluded (by setting `current_info.current_file_excluded`), which means that later 
-pipes won't have `build_file` called for that file. However, they will have `file_excluded_during_build` called for 
+pipes won't have `build_source_file` called for that file. However, they will have `source_file_excluded_during_build` called for 
 each excluded file.
 
 A context is maintained on `current_info` via `get_context`, `set_context` and other methods. This is a dictionary of 
@@ -53,13 +53,13 @@ might build Jinja2 templates with the context as temple variables so the html ca
 
 After building, checks are called on the built website. These can check the site, and raise reports with any issues 
 they find. A check should extend the base class `staticpipes.check_base.BaseCheck`. On each check the methods 
-`start_check`, `check_file`, `end_check` are called. These methods should return a list of instances of the 
+`start_check`, `check_build_file`, `end_check` are called. These methods should return a list of instances of the 
 class `staticpipes.check_report.CheckReport` with details of any problems found.
 
 ### Watch mode
 
 In watch mode, a normal build is done first. The `start_watch` method is then called on each pipeline. Then every time 
-a file is changed, the `file_changed_during_watch` or `file_changed_but_excluded_during_watch` method is called for 
+a file is changed, the `source_file_changed_during_watch` or `source_file_changed_but_excluded_during_watch` method is called for 
 that file. The history of the context is tracked, and if the history changes the `context_changed_during_watch` method 
 is called. There is no `end_watch` method, as the watch stage is ended by the user forcibly quitting the program.
 
@@ -76,11 +76,11 @@ If a pipeline has no possible interactions with dependencies it can usually use 
 Just add this to the pipeline:
 
 ```python
-    def file_changed_during_watch(self, dir, filename, current_info):
-        self.build_file(dir, filename, current_info)
+    def source_file_changed_during_watch(self, dir, filename, current_info):
+        self.build_source_file(dir, filename, current_info)
 ```
 
-If a pipeline does not overwrite the `file_changed_during_watch` method then it is considered not to support 
+If a pipeline does not overwrite the `source_file_changed_during_watch` method then it is considered not to support 
 watch mode and the user will see a warning when using watch mode.
 
 Currently checks are only done after the first build and are not rerun when the built site changes.
@@ -105,7 +105,7 @@ config = Config(
 ```
 
 Again, processes are class instances and the same class instance is used all the time. They should extend the 
-`staticpipes.process_base.BaseProcessor` class. When that pipeline is called, the `process_file` method is called 
+`staticpipes.process_base.BaseProcessor` class. When that pipeline is called, the `process_source_file` method is called 
 for every file. The `process_current_info` parameter has directory, filename and contents attributes and these should 
 be changed as needed. 
 

@@ -47,7 +47,9 @@ class PipeCopy(BasePipe):
         """"""
         return [self._pass_number]
 
-    def build_file(self, dir: str, filename: str, current_info: CurrentInfo) -> None:
+    def build_source_file(
+        self, dir: str, filename: str, current_info: CurrentInfo
+    ) -> None:
         """"""
         # Check Extensions
         if self.extensions and not staticpipes.utils.does_filename_have_extension(
@@ -74,6 +76,6 @@ class PipeCopy(BasePipe):
             self.source_directory.get_full_filename(dir, filename),
         )
 
-    def file_changed_during_watch(self, dir, filename, current_info):
+    def source_file_changed_during_watch(self, dir, filename, current_info):
         """"""
-        self.build_file(dir, filename, current_info)
+        self.build_source_file(dir, filename, current_info)

@@ -57,7 +57,9 @@ class PipeProcess(BasePipe):
             processor.source_directory = self.source_directory
             processor.build_directory = self.build_directory
 
-    def build_file(self, dir: str, filename: str, current_info: CurrentInfo) -> None:
+    def build_source_file(
+        self, dir: str, filename: str, current_info: CurrentInfo
+    ) -> None:
         """"""
         self._file(dir, filename, current_info)
 
@@ -91,7 +93,9 @@ class PipeProcess(BasePipe):
 
         # TODO something about excluding files
         for processor in self.processors:
-            processor.process_file(dir, filename, process_current_info, current_info)
+            processor.process_source_file(
+                dir, filename, process_current_info, current_info
+            )
 
         # Write
         self.build_directory.write(
@@ -100,5 +104,5 @@ class PipeProcess(BasePipe):
             process_current_info.contents,
         )
 
-    def file_changed_during_watch(self, dir, filename, current_info):
-        self.build_file(dir, filename, current_info)
+    def source_file_changed_during_watch(self, dir, filename, current_info):
+        self.build_source_file(dir, filename, current_info)

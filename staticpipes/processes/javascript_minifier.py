@@ -6,7 +6,7 @@ from staticpipes.process_base import BaseProcessor
 class ProcessJavascriptMinifier(BaseProcessor):
     """Minifies JS."""
 
-    def process_file(
+    def process_source_file(
         self, source_dir, source_filename, process_current_info, current_info
     ):
         """"""

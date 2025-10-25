@@ -99,7 +99,9 @@ class PipeJinja2(BasePipe):
                     "referenced_templates"
                 ] = referenced_templates
 
-    def build_file(self, dir: str, filename: str, current_info: CurrentInfo) -> None:
+    def build_source_file(
+        self, dir: str, filename: str, current_info: CurrentInfo
+    ) -> None:
         """"""
         if not staticpipes.utils.does_filename_have_extension(
             filename, self.extensions
@@ -111,7 +113,7 @@ class PipeJinja2(BasePipe):
         if current_info.watch:
             self._update_template_information(dir, filename, False)
 
-    def file_excluded_during_build(
+    def source_file_excluded_during_build(
         self, dir: str, filename: str, current_info: CurrentInfo
     ) -> None:
         """"""
@@ -123,11 +125,13 @@ class PipeJinja2(BasePipe):
         if current_info.watch:
             self._update_template_information(dir, filename, True)
 
-    def file_changed_during_watch(self, dir, filename, current_info):
+    def source_file_changed_during_watch(self, dir, filename, current_info):
         """"""
         self._template_changed_during_watch(dir, filename, current_info, False)
 
-    def file_changed_but_excluded_during_watch(self, dir, filename, current_info):
+    def source_file_changed_but_excluded_during_watch(
+        self, dir, filename, current_info
+    ):
         """"""
         self._template_changed_during_watch(dir, filename, current_info, True)
 

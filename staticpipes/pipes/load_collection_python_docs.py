@@ -119,7 +119,7 @@ class PipeLoadCollectionPythonDocs(BasePipe):
             if not collection.get_record(module["full_name"]):
                 self._build_modname(module["full_name"], collection)
 
-    def file_changed_during_watch(self, dir, filename, current_info):
+    def source_file_changed_during_watch(self, dir, filename, current_info):
         """This pipeline supports watch mode.
         Well, changes to the source files do nothing to it's work
         so there is nothing to do here."""

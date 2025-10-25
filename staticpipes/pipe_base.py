@@ -28,12 +28,14 @@ class BasePipe:
         """Called as we start the build stage in each pass."""
         pass
 
-    def build_file(self, dir: str, filename: str, current_info: CurrentInfo) -> None:
+    def build_source_file(
+        self, dir: str, filename: str, current_info: CurrentInfo
+    ) -> None:
         """Called once for every pass and every file in the build stage,
         unless an earlier pipeline has excluded this file."""
         pass
 
-    def file_excluded_during_build(
+    def source_file_excluded_during_build(
         self, dir: str, filename: str, current_info: CurrentInfo
     ) -> None:
         """Called once for every pass and every file in the build stage
@@ -51,12 +53,14 @@ class BasePipe:
         """
         pass
 
-    def file_changed_during_watch(self, dir, filename, current_info):
+    def source_file_changed_during_watch(self, dir, filename, current_info):
         """Called once for every file as it changes during the watch stage,
         unless an earlier pipeline has excluded this file."""
         raise WatchFunctionalityNotImplementedException("Watch not implemented")
 
-    def file_changed_but_excluded_during_watch(self, dir, filename, current_info):
+    def source_file_changed_but_excluded_during_watch(
+        self, dir, filename, current_info
+    ):
         """Called once for every file as it changes during the watch stage,
         if an earlier pipeline has excluded this file."""
         pass

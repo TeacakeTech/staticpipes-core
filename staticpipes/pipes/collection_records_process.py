@@ -112,7 +112,7 @@ class PipeCollectionRecordsProcess(BasePipe):
 
             # TODO something about excluding files
             for processor in self._processors:
-                processor.process_file(
+                processor.process_source_file(
                     self._output_dir,
                     record.get_id() + "." + self._output_filename_extension,
                     process_current_info,

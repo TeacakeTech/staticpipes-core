@@ -11,7 +11,7 @@ class ProcessMarkdownYAMLToHTMLContext(BaseProcessor):
     Optional YAML should be in a block at the top marked with "---".
     """
 
-    def process_file(
+    def process_source_file(
         self, source_dir, source_filename, process_current_info, current_info
     ):
         """"""

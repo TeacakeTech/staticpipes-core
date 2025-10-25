@@ -12,7 +12,7 @@ class BaseCheck:
         """Called as we start the check stage."""
         return []
 
-    def check_file(self, dir: str, filename: str) -> list:
+    def check_build_file(self, dir: str, filename: str) -> list:
         """Called once for every file in the check stage."""
         return []
 

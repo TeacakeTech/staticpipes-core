@@ -9,8 +9,21 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 
 The API to Pipes has been changed in a backwards incompatible manner!
+
 Prepare stage removed and multiple build stages with different pass numbers introduced
 https://github.com/TeacakeTech/staticpipes-core/issues/55
+
+`BasePipe` Methods renamed to be clearer:
+- `build_file` to `build_source_file`
+- `file_excluded_during_build` to `source_file_excluded_during_build`
+- `file_changed_during_watch` to `source_file_changed_during_watch`
+- `file_changed_but_excluded_during_watch` to `source_file_changed_but_excluded_during_watch`
+
+`BaseProcessor` Methods renamed to be clearer:
+- `process_file` to `process_source_file`
+
+`BaseCheck` Methods renamed to be clearer:
+- `check_file` to `check_build_file`
 
 ### Removed
 

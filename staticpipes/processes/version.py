@@ -18,7 +18,7 @@ class ProcessVersion(BaseProcessor):
     ):
         self.context_key = context_key
 
-    def process_file(
+    def process_source_file(
         self, source_dir, source_filename, process_current_info, current_info
     ):
         """"""
