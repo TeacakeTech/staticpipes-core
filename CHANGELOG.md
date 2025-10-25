@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Dropped support for Python 3.9 as that isn't supported anymore.
 
+### Fixed
+
+- PipeLoadCollectionPythonDocs doesn't raise a false alert during watch stage
+
 ## [0.4.0] - 2025-09-14
 
 ### Added
