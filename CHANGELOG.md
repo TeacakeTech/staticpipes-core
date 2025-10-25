@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.5.0] - 2025-10-25
+
 ### Changed
 
 The API to Pipes has been changed in a backwards incompatible manner!
