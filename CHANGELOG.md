@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Removed
+
+- Dropped support for Python 3.9 as that isn't supported anymore.
+
 ## [0.4.0] - 2025-09-14
 
 ### Added
