@@ -10,6 +10,10 @@ class ProcessVersion(BaseProcessor):
 
     The new filename is put in the context so later pipes
     (eg Jinja2 templates) can use it.
+
+    This should be the last process in the list of processes -
+    if any processes change the filename aferwards the value
+    in the context will be wrong.
     """
 
     def __init__(
