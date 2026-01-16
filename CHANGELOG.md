@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-01-16
+
 ### Added
 
 * Pipe PipeCopyWithVersioning and process ProcessVersion have new parameter, versioning_mode
