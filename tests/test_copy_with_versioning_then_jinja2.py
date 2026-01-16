@@ -6,16 +6,19 @@ import staticpipes.build_directory
 import staticpipes.config
 import staticpipes.pipes.copy_with_versioning
 import staticpipes.pipes.jinja2
+import staticpipes.watcher
 import staticpipes.worker
 
 
-def test_copy_with_versioning_then_jinja2_fixture():
+def test_copy_with_versioning_then_jinja2_fixture_in_filename_mode():
     # setup
     out_dir = tempfile.mkdtemp(prefix="staticpipes_tests_")
     config = staticpipes.config.Config(
         pipes=[
             staticpipes.pipes.copy_with_versioning.PipeCopyWithVersioning(
-                extensions=["css", "js"], context_key="where_my_files"
+                extensions=["css", "js"],
+                context_key="where_my_files",
+                versioning_mode=staticpipes.pipes.copy_with_versioning.VersioningModeInFileName(),  # noqa
             ),
             staticpipes.pipes.jinja2.PipeJinja2(extensions=["html"]),
         ],
@@ -55,6 +58,57 @@ def test_copy_with_versioning_then_jinja2_fixture():
     contents = "".join([i.strip() for i in contents.split("\n")])
     assert (
         """<!doctype html><html><head><link href="/styles.main.73229b70fe5f1ad4bf6e6ef249287ad4.css" rel="stylesheet"/></head><body><script src="/js/main.ceba641cf86025b52dfc12a1b847b4d8.js"></script></body></html>"""  # noqa
+        == contents
+    )
+
+
+def test_copy_with_versioning_then_jinja2_fixture_in_get_mode():
+    # setup
+    out_dir = tempfile.mkdtemp(prefix="staticpipes_tests_")
+    config = staticpipes.config.Config(
+        pipes=[
+            staticpipes.pipes.copy_with_versioning.PipeCopyWithVersioning(
+                extensions=["css", "js"],
+                context_key="where_my_files",
+            ),
+            staticpipes.pipes.jinja2.PipeJinja2(extensions=["html"]),
+        ],
+    )
+    worker = staticpipes.worker.Worker(
+        config,
+        os.path.join(
+            os.path.dirname(os.path.realpath(__file__)),
+            "fixtures",
+            "copy_with_versioning_then_jinja2",
+        ),
+        out_dir,
+    )
+    # run
+    worker.build()
+    # test original file there
+    assert os.path.exists(os.path.join(out_dir, "styles.main.css"))
+    assert os.path.exists(os.path.join(out_dir, "js", "main.js"))
+    # test file with hash not there
+    assert not os.path.exists(
+        os.path.join(out_dir, "styles.main.73229b70fe5f1ad4bf6e6ef249287ad4.css")
+    )
+    assert not os.path.exists(
+        os.path.join(out_dir, "js", "main.ceba641cf86025b52dfc12a1b847b4d8.js")
+    )
+    # test details in context for later pipes to use
+    assert {
+        "where_my_files": {
+            "/styles.main.css": "/styles.main.css?version=73229b70fe5f1ad4bf6e6ef249287ad4",  # noqa
+            "/js/main.js": "/js/main.js?version=ceba641cf86025b52dfc12a1b847b4d8",
+        }
+    } == worker.current_info.get_context()
+    # test HTML
+    assert os.path.exists(os.path.join(out_dir, "index.html"))
+    with open(os.path.join(out_dir, "index.html")) as fp:
+        contents = fp.read()
+    contents = "".join([i.strip() for i in contents.split("\n")])
+    assert (
+        """<!doctype html><html><head><link href="/styles.main.css?version=73229b70fe5f1ad4bf6e6ef249287ad4" rel="stylesheet"/></head><body><script src="/js/main.js?version=ceba641cf86025b52dfc12a1b847b4d8"></script></body></html>"""  # noqa
         == contents
     )
 
@@ -102,7 +156,9 @@ def test_watch_while_change_js_file(monkeypatch):
     config = staticpipes.config.Config(
         pipes=[
             staticpipes.pipes.copy_with_versioning.PipeCopyWithVersioning(
-                extensions=["css", "js"], context_key="where_my_files"
+                extensions=["css", "js"],
+                context_key="where_my_files",
+                versioning_mode=staticpipes.pipes.copy_with_versioning.VersioningModeInFileName(),  # noqa
             ),
             staticpipes.pipes.jinja2.PipeJinja2(extensions=["html"]),
         ],

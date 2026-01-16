@@ -6,6 +6,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+
+* Pipe PipeCopyWithVersioning and process ProcessVersion have new parameter, versioning_mode
+
+### Changed
+
+* Pipe PipeCopyWithVersioning and process ProcessVersion default to versioning_mode VersioningModeInGetParameter() 
+  which is a change from previous behavior. Use VersioningModeInFileName() for previous behavior.
+
 ## [0.5.0] - 2025-10-25
 
 ### Changed

@@ -59,7 +59,9 @@ def test_source_sub_directory_copy_with_versioning(source_sub_directory):
     config = staticpipes.config.Config(
         pipes=[
             staticpipes.pipes.copy_with_versioning.PipeCopyWithVersioning(
-                extensions=["js"], source_sub_directory=source_sub_directory
+                extensions=["js"],
+                source_sub_directory=source_sub_directory,
+                versioning_mode=staticpipes.pipes.copy_with_versioning.VersioningModeInFileName(),  # noqa
             )
         ],
     )

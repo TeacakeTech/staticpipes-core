@@ -47,8 +47,7 @@ config = Config(
 )
 ```
 
-Files like `css/main.ceba641cf86025b52dfc12a1b847b4d8.js` will be created, and that string will be available in context 
-variables so you can load them. 
+Files like `css/main.css` will still be created, but in the context variables the string `css/main.css?version=ceba641cf86025b52dfc12a1b847b4d8` will be available.
 
 For example, in a Jinja2 template:
 
@@ -56,7 +55,7 @@ For example, in a Jinja2 template:
 <link href="{{ versioning_new_filenames['/css/main.css'] }}" rel="stylesheet"/>
 ```
 
-You can now get your webserver to tell web browsers to cache anything in the `css` folder. Users get the benifit of caching, but if you ever change your CSS the filename will change and users will see a new version on the next page load.
+You can now get your web server to tell web browsers to cache anything in the `css` folder. Users get the benefit of caching, but if you ever change your CSS the link will change and users will see the new version on the next page load.
 
 ### Minify
 

@@ -1,8 +1,47 @@
+import abc
 import hashlib
 
 import staticpipes.utils
 from staticpipes.current_info import CurrentInfo
 from staticpipes.pipe_base import BasePipe
+
+
+class VersioningMode(abc.ABC):
+    """Abstract class, every versioning mode should inherit from this class."""
+
+    pass
+
+
+class VersioningModeInGetParameter(VersioningMode):
+    """
+    The version information is put in the get parameter.
+
+    eg /js/main.js becomes /js/main.js?version=ceba641cf86025b52dfc12a1b847b4d8
+
+    This way, if a client somehow has an older link
+    (eg /js/main.js?version=73229b70fe5f1ad4bf6e6ef249287ad4 )
+    the file will still load and not be a 404.
+    The client may have an older link because:
+    * A new version is deployed in the middle of loading contents.
+    * The old link is cached somewhere, maybe the HTML could be cached.
+    * The old link is used on an external website, say a social media preview image.
+    """
+
+    pass
+
+
+class VersioningModeInFileName(VersioningMode):
+    """
+    The version information is put in the filename.
+
+    eg /js/main.js becomes /js/main.b1cee5ed8ca8405563a5be2227ddab36.js
+
+    This way, if a client somehow has an older link
+    (eg /js/main.73229b70fe5f1ad4bf6e6ef249287ad4.js )
+    they will get a 404.
+    """
+
+    pass
 
 
 class PipeCopyWithVersioning(BasePipe):
@@ -33,6 +72,9 @@ class PipeCopyWithVersioning(BasePipe):
 
     - directories - Only items in these directories and
     their children will be copied.
+
+    - versioning_mode - one of VersioningModeInGetParameter() (the default)
+    or VersioningModeInFileName()
     """
 
     def __init__(
@@ -42,6 +84,7 @@ class PipeCopyWithVersioning(BasePipe):
         source_sub_directory=None,
         directories: list = ["/"],
         pass_number=100,
+        versioning_mode: VersioningMode | None = None,
     ):
         self.extensions = extensions
         self.context_key = context_key
@@ -52,6 +95,9 @@ class PipeCopyWithVersioning(BasePipe):
         )
         self.directories: list = directories
         self._pass_number: int = pass_number
+        self._versioning_mode: VersioningMode = (
+            versioning_mode or VersioningModeInGetParameter()
+        )
 
     def get_pass_numbers(self) -> list:
         """"""
@@ -82,18 +128,26 @@ class PipeCopyWithVersioning(BasePipe):
 
         # Make new filename
         contents = self.source_directory.get_contents_as_bytes(dir, filename)
+        contents_hash = hashlib.md5(contents).hexdigest()
 
-        hash = hashlib.md5(contents).hexdigest()
-        filename_bits = filename.split(".")
-        filename_extension = filename_bits.pop()
-        new_filename = ".".join(filename_bits) + "." + hash + "." + filename_extension
+        if isinstance(self._versioning_mode, VersioningModeInFileName):
+            filename_bits = filename.split(".")
+            filename_extension = filename_bits.pop()
+            new_filename = (
+                ".".join(filename_bits) + "." + contents_hash + "." + filename_extension
+            )
+            new_filename_append = ""
+        else:
+            new_filename = filename
+            new_filename_append = "?version=" + contents_hash
 
         current_info.set_context(
             [
                 self.context_key,
                 staticpipes.utils.make_path_from_dir_and_filename(out_dir, filename),
             ],
-            staticpipes.utils.make_path_from_dir_and_filename(out_dir, new_filename),
+            staticpipes.utils.make_path_from_dir_and_filename(out_dir, new_filename)
+            + new_filename_append,
         )
 
         # Copy File
