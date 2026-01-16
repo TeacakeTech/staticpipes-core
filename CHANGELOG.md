@@ -68,7 +68,7 @@ https://github.com/TeacakeTech/staticpipes-core/issues/55
 - `staticpipes.processes.jinja2.ProcessJinja2` has been renamed to `staticpipes.processes.jinja2_render_source_file.ProcessJinja2RenderSourceFile`, 
   but the old name still works.
 
-## [0.3.0] - 2025-06-15
+## [0.3.0] - 2025-08-03
 
 ### Added
 
