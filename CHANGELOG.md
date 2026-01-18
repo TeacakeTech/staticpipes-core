@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed
+
+* Only the first check report was being written out to logs; now all are
+
 ## [0.6.0] - 2026-01-16
 
 ### Added

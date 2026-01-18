@@ -146,8 +146,8 @@ class Worker:
                     )
                 )
                 logger.warn(report)
-                if sys_exit_after_checks:
-                    sys.exit(1)
+            if sys_exit_after_checks:
+                sys.exit(1)
 
     def watch(self):
         # Only import this when watch function called,
