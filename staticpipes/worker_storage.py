@@ -11,14 +11,12 @@ class WorkerStorage:
 
     def _create_tables(self) -> None:
         with closing(self._connection.cursor()) as cur:
-            cur.execute(
-                """CREATE TABLE source_file (
+            cur.execute("""CREATE TABLE source_file (
                 dir_name TEXT,
                 file_name TEXT,
                 excluded INT,
                 PRIMARY KEY(dir_name, file_name)
-                )"""
-            )
+                )""")
 
     def store_file_details(self, dir_name, file_name, excluded: bool) -> None:
         with closing(self._connection.cursor()) as cur:
