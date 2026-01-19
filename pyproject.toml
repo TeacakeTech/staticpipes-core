@@ -10,6 +10,10 @@ requires-python = ">=3.10"
 dependencies = [
 ]
 
+[tool.setuptools.package-data]
+"staticpipes.bundle_python_docs.source" = ["*.css"]
+
+
 [project.optional-dependencies]
 allbuild=[
     # For JS Minification
