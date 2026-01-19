@@ -93,7 +93,7 @@ config = Config(
             context_key_record_data="python_document",
             processors=[
                 ProcessJinja2(
-                    template="_templates/reference.html",
+                    template="python_docs:reference.html",
                     jinja2_environment=jinja2_environment,
                 ),
             ],

@@ -11,7 +11,7 @@ dependencies = [
 ]
 
 [tool.setuptools.package-data]
-"staticpipes.bundle_python_docs.source" = ["*.css"]
+"staticpipes.bundle_python_docs.source" = ["*.css", "*.html"]
 
 
 [project.optional-dependencies]
