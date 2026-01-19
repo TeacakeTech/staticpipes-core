@@ -66,18 +66,6 @@ nav {
     padding: 0 5px;
 }
 
-code {
-    border: 1px solid var(--main-highlight-color);
-    padding: 2px;
-}
-
-pre > code {
-    display: block;
-    border: 1px solid var(--main-highlight-color);
-    width: 100%;
-    padding: 10px;
-}
-
 footer {
     margin: 80px 0;
     font-size: 80%;

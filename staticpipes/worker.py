@@ -14,10 +14,20 @@ logger = logging.getLogger(__name__)
 
 class Worker:
 
-    def __init__(self, config, source_dir, build_directory):
+    def __init__(
+        self,
+        config,
+        source_dir,
+        build_directory,
+        secondary_source_directories: dict | None = None,
+    ):
         self.config = config
         self.source_directory = SourceDirectory(source_dir)
         self.build_directory = BuildDirectory(build_directory)
+        self.secondary_source_directories = {}
+        if isinstance(secondary_source_directories, dict):
+            for name, directory in secondary_source_directories.items():
+                self.secondary_source_directories[name] = SourceDirectory(directory)
         self.current_info = None
         self._check_reports: list = []
         self._worker_storage = WorkerStorage()
@@ -26,6 +36,7 @@ class Worker:
             pipeline.config = self.config
             pipeline.source_directory = self.source_directory
             pipeline.build_directory = self.build_directory
+            pipeline.secondary_source_directories = self.secondary_source_directories
 
         for check in self.config.checks:
             check.config = self.config

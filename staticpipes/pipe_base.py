@@ -10,6 +10,7 @@ class BasePipe:
     def __init__(self):
         self.config: Config = None  # type: ignore
         self.source_directory: SourceDirectory = None  # type: ignore
+        self.secondary_source_directories: dict = None
         self.build_directory: BuildDirectory = None  # type: ignore
 
     def get_pass_numbers(self) -> list:
