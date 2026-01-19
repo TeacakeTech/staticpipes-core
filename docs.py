@@ -3,6 +3,7 @@ import os
 
 from markdown_it import MarkdownIt
 
+from staticpipes.bundle_python_docs.source import DIRECTORY as PYTHON_DOCS_DIRECTORY
 from staticpipes.checks.html_tags import CheckHtmlTags
 from staticpipes.checks.html_with_tidy import CheckHtmlWithTidy
 from staticpipes.checks.internal_links import CheckInternalLinks
@@ -10,6 +11,7 @@ from staticpipes.config import Config
 from staticpipes.jinja2_environment import Jinja2Environment
 from staticpipes.pipes.collection_records_process import PipeCollectionRecordsProcess
 from staticpipes.pipes.copy import PipeCopy
+from staticpipes.pipes.copy_from_secondary_source import PipeCopyFromSecondarySource
 from staticpipes.pipes.exclude_underscore_directories import (
     PipeExcludeUnderscoreDirectories,
 )
@@ -21,8 +23,6 @@ from staticpipes.processes.jinja2 import ProcessJinja2
 from staticpipes.processes.markdown_yaml_to_html_context import (
     ProcessMarkdownYAMLToHTMLContext,
 )
-from staticpipes.pipes.copy_from_secondary_source import PipeCopyFromSecondarySource
-from staticpipes.bundle_python_docs.source import DIRECTORY as PYTHON_DOCS_DIRECTORY
 
 
 def render_markdown(content):
@@ -104,7 +104,7 @@ config = Config(
             source_directory="/",
             source_filename="python_docs.css",
             destination_directory="css",
-        )
+        ),
     ],
     checks=[
         CheckHtmlWithTidy(),
@@ -127,5 +127,5 @@ if __name__ == "__main__":
         os.path.join(os.path.dirname(os.path.realpath(__file__)), "docs"),
         os.path.join(os.path.dirname(os.path.realpath(__file__)), "_site"),
         log_level=logging.DEBUG,
-        secondary_source_directories={"python_docs":PYTHON_DOCS_DIRECTORY}
+        secondary_source_directories={"python_docs": PYTHON_DOCS_DIRECTORY},
     )
