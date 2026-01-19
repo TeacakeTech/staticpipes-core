@@ -5,7 +5,7 @@ from staticpipes.pipe_base import BasePipe
 
 class PipeCopy(BasePipe):
     """
-    A pipline that just copies files from the source directory
+    A pipeline that just copies files from the source directory
     to the build site (unless already excluded).
     The simplest pipeline you can get!
 
