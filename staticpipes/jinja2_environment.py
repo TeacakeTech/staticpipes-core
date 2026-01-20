@@ -16,7 +16,7 @@ class Jinja2Environment:
         self, source_directory: SourceDirectory, secondary_source_directories: dict = {}
     ) -> jinja2.Environment:
         if not self._jinja2_environment:
-            loaders = [jinja2.FileSystemLoader(source_directory.dir)]
+            loaders: list = [jinja2.FileSystemLoader(source_directory.dir)]
             if secondary_source_directories:
                 loaders.append(
                     jinja2.PrefixLoader(

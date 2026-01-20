@@ -28,7 +28,7 @@ class Worker:
         if isinstance(secondary_source_directories, dict):
             for name, directory in secondary_source_directories.items():
                 self.secondary_source_directories[name] = SourceDirectory(directory)
-        self.current_info = None
+        self.current_info: CurrentInfo | None = None
         self._check_reports: list = []
         self._worker_storage = WorkerStorage()
 
