@@ -1,10 +1,9 @@
 from staticpipes.pipe_bundle_base import BasePipeBundle
-from staticpipes.pipes.collection_records_process import PipeCollectionRecordsProcess
+from staticpipes.pipes.copy_from_secondary_source import PipeCopyFromSecondarySource
 from staticpipes.pipes.load_collection_python_docs import PipeLoadCollectionPythonDocs
-from staticpipes.processes.jinja2 import ProcessJinja2
 
 
-class PipeBundlePythonDocs(BasePipeBundle):
+class BundlePythonDocs(BasePipeBundle):
     """ """
 
     def __init__(
@@ -14,19 +13,15 @@ class PipeBundlePythonDocs(BasePipeBundle):
     ):
         super().__init__(pass_number)
         self._module_names = module_names
-        self._pipes = [
+        self._pipes: list = [
+            PipeCopyFromSecondarySource(
+                secondary_source_name="python_docs",
+                source_directory="/",
+                source_filename="python_docs.css",
+                destination_directory="css",
+            ),
             PipeLoadCollectionPythonDocs(
                 module_names=module_names,
                 collection_name="python_docs",
-            ),
-            PipeCollectionRecordsProcess(
-                collection_name="python_docs",
-                output_dir="reference",
-                context_key_record_data="python_document",
-                processors=[
-                    ProcessJinja2(
-                        template="_templates/reference.html",
-                    ),
-                ],
             ),
         ]
