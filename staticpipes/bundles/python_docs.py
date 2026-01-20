@@ -1,15 +1,15 @@
 from staticpipes.pipe_bundle_base import BasePipeBundle
+from staticpipes.pipes.collection_records_process import PipeCollectionRecordsProcess
 from staticpipes.pipes.copy_from_secondary_source import PipeCopyFromSecondarySource
 from staticpipes.pipes.load_collection_python_docs import PipeLoadCollectionPythonDocs
+from staticpipes.processes.jinja2 import ProcessJinja2
 
 
 class BundlePythonDocs(BasePipeBundle):
     """ """
 
     def __init__(
-        self,
-        module_names: list = [],
-        pass_number=1000,
+        self, module_names: list = [], pass_number=1000, jinja2_environment=None
     ):
         super().__init__(pass_number)
         self._module_names = module_names
@@ -23,5 +23,16 @@ class BundlePythonDocs(BasePipeBundle):
             PipeLoadCollectionPythonDocs(
                 module_names=module_names,
                 collection_name="python_docs",
+            ),
+            PipeCollectionRecordsProcess(
+                collection_name="python_docs",
+                output_dir="reference",
+                context_key_record_data="python_document",
+                processors=[
+                    ProcessJinja2(
+                        template="python_docs:reference.html",
+                        jinja2_environment=jinja2_environment,
+                    ),
+                ],
             ),
         ]

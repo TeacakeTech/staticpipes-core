@@ -12,7 +12,6 @@ from staticpipes.checks.html_with_tidy import CheckHtmlWithTidy
 from staticpipes.checks.internal_links import CheckInternalLinks
 from staticpipes.config import Config
 from staticpipes.jinja2_environment import Jinja2Environment
-from staticpipes.pipes.collection_records_process import PipeCollectionRecordsProcess
 from staticpipes.pipes.copy import PipeCopy
 from staticpipes.pipes.exclude_underscore_directories import (
     PipeExcludeUnderscoreDirectories,
@@ -84,17 +83,8 @@ config = Config(
                 ),
             ],
         ),
-        BundlePythonDocs(module_names=["staticpipes"]),
-        PipeCollectionRecordsProcess(
-            collection_name="python_docs",
-            output_dir="reference",
-            context_key_record_data="python_document",
-            processors=[
-                ProcessJinja2(
-                    template="python_docs:reference.html",
-                    jinja2_environment=jinja2_environment,
-                ),
-            ],
+        BundlePythonDocs(
+            module_names=["staticpipes"], jinja2_environment=jinja2_environment
         ),
         PipeCopy(extensions=["css"]),
     ],
