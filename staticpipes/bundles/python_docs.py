@@ -2,7 +2,9 @@ from staticpipes.pipe_bundle_base import BasePipeBundle
 from staticpipes.pipes.collection_records_process import PipeCollectionRecordsProcess
 from staticpipes.pipes.copy_from_secondary_source import PipeCopyFromSecondarySource
 from staticpipes.pipes.load_collection_python_docs import PipeLoadCollectionPythonDocs
-from staticpipes.processes.jinja2 import ProcessJinja2
+from staticpipes.processes.jinja2_render_source_file import (
+    ProcessJinja2RenderSourceFile,
+)
 
 
 class BundlePythonDocs(BasePipeBundle):
@@ -29,7 +31,7 @@ class BundlePythonDocs(BasePipeBundle):
                 output_dir="reference",
                 context_key_record_data="python_document",
                 processors=[
-                    ProcessJinja2(
+                    ProcessJinja2RenderSourceFile(
                         template="python_docs:reference.html",
                         jinja2_environment=jinja2_environment,
                     ),
