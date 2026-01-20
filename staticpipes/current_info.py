@@ -7,11 +7,11 @@ class CurrentInfo:
         self._context_history: list = []
         self.pass_number = 1
 
-    def reset_for_new_pass_for_new_file(
-        self, pass_number=1, current_file_excluded=False
-    ):
-        self.current_file_excluded = current_file_excluded
+    def set_pass_number(self, pass_number: int):
         self.pass_number = pass_number
+
+    def set_current_file_excluded(self, current_file_excluded: bool):
+        self.current_file_excluded = current_file_excluded
 
     def reset_for_new_pass_for_same_file(self, pass_number=1):
         self.pass_number = pass_number

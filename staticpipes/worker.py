@@ -62,48 +62,43 @@ class Worker:
         self._build(run_checks=True, sys_exit_after_checks=sys_exit_after_checks)
 
     def _build(self, run_checks=True, sys_exit_after_checks=False):
-        # Step 1: Build
+        # Prepare ...
         self.build_directory.prepare()
-        # start
+        # List files into storage
+        rpsd = os.path.realpath(self.source_directory.dir)
+        for root, dirs, files in os.walk(rpsd):
+            if not self.build_directory.is_equal_to_source_dir(root):
+                for file in files:
+                    dir: str = root[len(rpsd) + 1 :]
+                    if not dir:
+                        dir = "/"
+                    self._worker_storage.store_file_details(dir, file)
+        # For each pass
         for pass_number in self.config.get_pass_numbers():
+            self.current_info.set_pass_number(pass_number)
             logger.info("Processing Pass {} ...".format(pass_number))
-            # start build
-            self.current_info.reset_for_new_pass_for_new_file(
-                pass_number=pass_number,
-            )
+            # For each pass in this pipe
             for pipeline in self.config.get_pipes_in_pass(pass_number):
+                logger.info("Processing Pipe {} ...".format(pipeline))
+                # start build
                 pipeline.start_build(self.current_info)
-            # files
-            rpsd = os.path.realpath(self.source_directory.dir)
-            for root, dirs, files in os.walk(rpsd):
-                if not self.build_directory.is_equal_to_source_dir(root):
-                    for file in files:
-                        dir: str = root[len(rpsd) + 1 :]
-                        if not dir:
-                            dir = "/"
-                        logger.info(
-                            "Processing Pass {} File {} {} ...".format(
-                                pass_number, dir, file
-                            )
+                # files
+                for dir, file, excluded in self._worker_storage.get_source_files():
+                    logger.info(
+                        "Processing Pass {} File {} {} ...".format(
+                            pass_number, dir, file
                         )
-                        self.current_info.reset_for_new_pass_for_new_file(
-                            pass_number=pass_number,
-                            current_file_excluded=self._worker_storage.is_file_excluded(
-                                dir, file
-                            ),
+                    )
+                    self.current_info.set_current_file_excluded(excluded)
+                    if excluded:
+                        pipeline.source_file_excluded_during_build(
+                            dir, file, self.current_info
                         )
-                        for pipeline in self.config.get_pipes_in_pass(pass_number):
-                            if self.current_info.current_file_excluded:
-                                pipeline.source_file_excluded_during_build(
-                                    dir, file, self.current_info
-                                )
-                            else:
-                                pipeline.build_source_file(dir, file, self.current_info)
-                        self._worker_storage.store_file_details(
-                            dir, file, self.current_info.current_file_excluded
-                        )
-            # end build
-            for pipeline in self.config.get_pipes_in_pass(pass_number):
+                    else:
+                        pipeline.build_source_file(dir, file, self.current_info)
+                        if self.current_info.current_file_excluded:
+                            self._worker_storage.exclude_file(dir, file)
+                # end build
                 pipeline.end_build(self.current_info)
         self.build_directory.remove_all_files_we_did_not_write()
 
@@ -228,9 +223,9 @@ class Worker:
         logger.info("Processing during watch {} {} ...".format(dir, filename))
         context_version: int = self.current_info.get_context_version()
         # For this file, start passes
-        self.current_info.reset_for_new_pass_for_new_file()
+        self.current_info.set_current_file_excluded(False)
         for pass_number in self.config.get_pass_numbers():
-            self.current_info.reset_for_new_pass_for_same_file(pass_number=pass_number)
+            self.current_info.set_pass_number(pass_number)
             for pipeline in self.config.get_pipes_in_pass(pass_number):
                 # Call each pipe for file
                 try:
@@ -249,7 +244,11 @@ class Worker:
                             + "YOU MAY HAVE TO BUILD MANUALLY"
                         ).format(str(pipeline))
                     )
-            # If context changed, call each pipe for context
+                # TODO Should save back to worker storage if excluded?
+                #  But that is not used for anything in watch yet.
+            # TODO not sure when this should be called - once per pass?
+            #  once at end of pass?
+            #  If context changed, call each pipe for context
             if context_version != self.current_info.get_context_version():
                 for pipeline in self.config.get_pipes_in_pass(pass_number):
                     pipeline.context_changed_during_watch(
