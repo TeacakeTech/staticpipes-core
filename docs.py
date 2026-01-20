@@ -3,7 +3,9 @@ import os
 
 from markdown_it import MarkdownIt
 
-from staticpipes.bundle_python_docs.source import DIRECTORY as PYTHON_DOCS_DIRECTORY
+from staticpipes.bundles.secondary_sources.python_docs import (
+    DIRECTORY as BUNDLE_SECONDARY_SOURCE_PYTHON_DOCS_DIRECTORY,
+)
 from staticpipes.checks.html_tags import CheckHtmlTags
 from staticpipes.checks.html_with_tidy import CheckHtmlWithTidy
 from staticpipes.checks.internal_links import CheckInternalLinks
@@ -127,5 +129,7 @@ if __name__ == "__main__":
         os.path.join(os.path.dirname(os.path.realpath(__file__)), "docs"),
         os.path.join(os.path.dirname(os.path.realpath(__file__)), "_site"),
         log_level=logging.DEBUG,
-        secondary_source_directories={"python_docs": PYTHON_DOCS_DIRECTORY},
+        secondary_source_directories={
+            "python_docs": BUNDLE_SECONDARY_SOURCE_PYTHON_DOCS_DIRECTORY
+        },
     )

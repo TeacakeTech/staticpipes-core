@@ -1,8 +1,7 @@
 from staticpipes.pipe_bundle_base import BasePipeBundle
+from staticpipes.pipes.collection_records_process import PipeCollectionRecordsProcess
+from staticpipes.pipes.load_collection_python_docs import PipeLoadCollectionPythonDocs
 from staticpipes.processes.jinja2 import ProcessJinja2
-
-from .collection_records_process import PipeCollectionRecordsProcess
-from .load_collection_python_docs import PipeLoadCollectionPythonDocs
 
 
 class PipeBundlePythonDocs(BasePipeBundle):
