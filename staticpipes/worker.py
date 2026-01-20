@@ -74,9 +74,13 @@ class Worker:
                         dir = "/"
                     self._worker_storage.store_file_details(dir, file)
         # For each pass
-        for pass_number in self.config.get_pass_numbers():
+        for idx, pass_number in enumerate(self.config.get_pass_numbers()):
             self.current_info.set_pass_number(pass_number)
-            logger.info("Processing Pass {} ...".format(pass_number))
+            logger.info(
+                "Processing Pass {}/{} (Number: {}) ...".format(
+                    idx + 1, len(self.config.get_pass_numbers()), pass_number
+                )
+            )
             # For each pass in this pipe
             for pipeline in self.config.get_pipes_in_pass(pass_number):
                 logger.info("Processing Pipe {} ...".format(pipeline))
@@ -84,17 +88,16 @@ class Worker:
                 pipeline.start_build(self.current_info)
                 # files
                 for dir, file, excluded in self._worker_storage.get_source_files():
-                    logger.info(
-                        "Processing Pass {} File {} {} ...".format(
-                            pass_number, dir, file
-                        )
-                    )
                     self.current_info.set_current_file_excluded(excluded)
                     if excluded:
+                        logger.debug(
+                            "Processing Excluded File {} {} ...".format(dir, file)
+                        )
                         pipeline.source_file_excluded_during_build(
                             dir, file, self.current_info
                         )
                     else:
+                        logger.debug("Processing File {} {} ...".format(dir, file))
                         pipeline.build_source_file(dir, file, self.current_info)
                         if self.current_info.current_file_excluded:
                             self._worker_storage.exclude_file(dir, file)
