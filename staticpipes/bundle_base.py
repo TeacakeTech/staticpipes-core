@@ -1,4 +1,7 @@
+from .build_directory import BuildDirectory
+from .config import Config
 from .pipe_and_group_of_pipes_base import BasePipeAndGroupOfPipes
+from .source_directory import SourceDirectory
 
 
 class BaseBundle(BasePipeAndGroupOfPipes):
@@ -9,17 +12,24 @@ class BaseBundle(BasePipeAndGroupOfPipes):
         super().__init__()
         self._pipes: list = None
         self._secondary_source_directory_paths = {}
-        self._get_pipes_has_been_called_before: bool = False
+
+    def setup_for_worker(
+        self,
+        config: Config,
+        source_directory: SourceDirectory,
+        secondary_source_directories: dict,
+        build_directory: BuildDirectory,
+    ) -> None:
+        super().setup_for_worker(
+            config, source_directory, secondary_source_directories, build_directory
+        )
+        for pipe in self._pipes:
+            pipe.setup_for_worker(
+                config, source_directory, secondary_source_directories, build_directory
+            )
 
     def get_pipes(self) -> list:
         """"""
-        if not self._get_pipes_has_been_called_before:
-            for pipe in self._pipes:
-                pipe.config = self.config
-                pipe.source_directory = self.source_directory
-                pipe.secondary_source_directories = self.secondary_source_directories
-                pipe.build_directory = self.build_directory
-            self._get_pipes_has_been_called_before = True
         return self._pipes
 
     def get_secondary_source_directory_paths(self) -> dict:

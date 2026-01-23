@@ -42,11 +42,13 @@ class Worker:
                 ) in pipe_or_bundle.get_secondary_source_directory_paths().items():
                     self.secondary_source_directories[k] = SourceDirectory(v)
 
-        for pipeline in self.config.pipes:
-            pipeline.config = self.config
-            pipeline.source_directory = self.source_directory
-            pipeline.build_directory = self.build_directory
-            pipeline.secondary_source_directories = self.secondary_source_directories
+        for pipe_or_bundle in self.config.pipes:
+            pipe_or_bundle.setup_for_worker(
+                self.config,
+                self.source_directory,
+                self.secondary_source_directories,
+                self.build_directory,
+            )
 
         for check in self.config.checks:
             check.config = self.config
