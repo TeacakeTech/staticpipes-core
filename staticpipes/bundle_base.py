@@ -1,4 +1,4 @@
-from .pipe_and_group_of_pipes import BasePipeAndGroupOfPipes
+from .pipe_and_group_of_pipes_base import BasePipeAndGroupOfPipes
 
 
 class BaseBundle(BasePipeAndGroupOfPipes):

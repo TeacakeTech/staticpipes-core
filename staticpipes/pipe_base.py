@@ -1,6 +1,6 @@
 from .current_info import CurrentInfo
 from .exceptions import WatchFunctionalityNotImplementedException
-from .pipe_and_group_of_pipes import BasePipeAndGroupOfPipes
+from .pipe_and_group_of_pipes_base import BasePipeAndGroupOfPipes
 
 
 class BasePipe(BasePipeAndGroupOfPipes):
