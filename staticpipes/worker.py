@@ -4,6 +4,7 @@ import os
 import sys
 
 from .build_directory import BuildDirectory
+from .bundle_base import BaseBundle
 from .current_info import CurrentInfo
 from .exceptions import WatchFunctionalityNotImplementedException
 from .source_directory import SourceDirectory
@@ -31,6 +32,15 @@ class Worker:
         self.current_info: CurrentInfo | None = None
         self._check_reports: list = []
         self._worker_storage = WorkerStorage()
+
+        # Look for extra Secondary Source Dirs from Bundles
+        for pipe_or_bundle in self.config.pipes:
+            if isinstance(pipe_or_bundle, BaseBundle):
+                for (
+                    k,
+                    v,
+                ) in pipe_or_bundle.get_secondary_source_directory_paths().items():
+                    self.secondary_source_directories[k] = SourceDirectory(v)
 
         for pipeline in self.config.pipes:
             pipeline.config = self.config
@@ -82,32 +92,37 @@ class Worker:
                 )
             )
             # For each pass in this pipe
-            for pipeline in self.config.get_pipes_in_pass(pass_number):
-                logger.info("Processing Pipe {} ...".format(pipeline))
-                # start build
-                pipeline.start_build(self.current_info)
-                # files
-                for dir, file, excluded in self._worker_storage.get_source_files():
-                    self.current_info.set_current_file_excluded(excluded)
-                    if excluded:
-                        logger.debug(
-                            "Processing Excluded File {} {} ...".format(dir, file)
-                        )
-                        pipeline.source_file_excluded_during_build(
-                            dir, file, self.current_info
-                        )
-                    else:
-                        logger.debug("Processing File {} {} ...".format(dir, file))
-                        pipeline.build_source_file(dir, file, self.current_info)
-                        if self.current_info.current_file_excluded:
-                            self._worker_storage.exclude_file(dir, file)
-                # end build
-                pipeline.end_build(self.current_info)
+            for pipe_or_bundle in self.config.get_pipes_in_pass(pass_number):
+                if isinstance(pipe_or_bundle, BaseBundle):
+                    logger.info("Processing Bundle {} ...".format(pipe_or_bundle))
+                    for pipe in pipe_or_bundle.get_pipes():
+                        self._build_pipe(pipe)
+                else:
+                    self._build_pipe(pipe_or_bundle)
+
         self.build_directory.remove_all_files_we_did_not_write()
 
         # Step 2: check
         if run_checks:
             self._check(sys_exit_after_checks=sys_exit_after_checks)
+
+    def _build_pipe(self, pipe):
+        logger.info("Processing Pipe {} ...".format(pipe))
+        # start build
+        pipe.start_build(self.current_info)
+        # files
+        for dir, file, excluded in self._worker_storage.get_source_files():
+            self.current_info.set_current_file_excluded(excluded)
+            if excluded:
+                logger.debug("Processing Excluded File {} {} ...".format(dir, file))
+                pipe.source_file_excluded_during_build(dir, file, self.current_info)
+            else:
+                logger.debug("Processing File {} {} ...".format(dir, file))
+                pipe.build_source_file(dir, file, self.current_info)
+                if self.current_info.current_file_excluded:
+                    self._worker_storage.exclude_file(dir, file)
+        # end build
+        pipe.end_build(self.current_info)
 
     def _check(self, sys_exit_after_checks=False):
         if not self.config.checks:
@@ -229,24 +244,13 @@ class Worker:
         self.current_info.set_current_file_excluded(False)
         for pass_number in self.config.get_pass_numbers():
             self.current_info.set_pass_number(pass_number)
-            for pipeline in self.config.get_pipes_in_pass(pass_number):
+            for pipe_or_bundle in self.config.get_pipes_in_pass(pass_number):
                 # Call each pipe for file
-                try:
-                    if self.current_info.current_file_excluded:
-                        pipeline.source_file_changed_but_excluded_during_watch(
-                            dir, filename, self.current_info
-                        )
-                    else:
-                        pipeline.source_file_changed_during_watch(
-                            dir, filename, self.current_info
-                        )
-                except WatchFunctionalityNotImplementedException:
-                    logger.error(
-                        (
-                            "WATCH FEATURE NOT IMPLEMENTED IN PIPELINE {}, "
-                            + "YOU MAY HAVE TO BUILD MANUALLY"
-                        ).format(str(pipeline))
-                    )
+                if isinstance(pipe_or_bundle, BaseBundle):
+                    for pipe in pipe_or_bundle.get_pipes():
+                        self._process_file_during_watch_pipe(dir, filename, pipe)
+                else:
+                    self._process_file_during_watch_pipe(dir, filename, pipe_or_bundle)
                 # TODO Should save back to worker storage if excluded?
                 #  But that is not used for anything in watch yet.
             # TODO not sure when this should be called - once per pass?
@@ -259,3 +263,19 @@ class Worker:
                         context_version,
                         self.current_info.get_context_version(),
                     )
+
+    def _process_file_during_watch_pipe(self, dir, filename, pipe):
+        try:
+            if self.current_info.current_file_excluded:
+                pipe.source_file_changed_but_excluded_during_watch(
+                    dir, filename, self.current_info
+                )
+            else:
+                pipe.source_file_changed_during_watch(dir, filename, self.current_info)
+        except WatchFunctionalityNotImplementedException:
+            logger.error(
+                (
+                    "WATCH FEATURE NOT IMPLEMENTED IN PIPELINE {}, "
+                    + "YOU MAY HAVE TO BUILD MANUALLY"
+                ).format(str(pipe))
+            )
