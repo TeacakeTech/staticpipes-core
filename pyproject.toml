@@ -12,6 +12,7 @@ dependencies = [
 
 [tool.setuptools.package-data]
 "staticpipes.bundles.secondary_sources" = ["*/*.css", "*/*.html"]
+"staticpipes" = ["py.typed"]
 
 
 [project.optional-dependencies]
