@@ -23,16 +23,10 @@ class PipeLoadCollectionPythonDocs(BasePipe):
         self,
         module_names: list = [],
         collection_name: str = "python_docs",
-        pass_number=100,
     ):
         self._module_names = module_names
         # TODO if no module names passed, error! Make param required too
         self._collection_name = collection_name
-        self._pass_number: int = pass_number
-
-    def get_pass_numbers(self) -> list:
-        """"""
-        return [self._pass_number]
 
     def start_build(self, current_info: CurrentInfo) -> None:
         """"""

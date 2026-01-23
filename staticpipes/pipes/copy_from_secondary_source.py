@@ -15,18 +15,12 @@ class PipeCopyFromSecondarySource(BasePipe):
         source_filename: str,
         destination_directory: str | None = None,
         destination_filename: str | None = None,
-        pass_number=1000,
     ):
         self._secondary_source_name = secondary_source_name
         self._source_directory = source_directory
         self._source_filename = source_filename
         self._destination_directory = destination_directory or source_directory
         self._destination_filename = destination_filename or source_filename
-        self._pass_number: int = pass_number
-
-    def get_pass_numbers(self) -> list:
-        """"""
-        return [self._pass_number]
 
     def start_build(self, current_info: CurrentInfo) -> None:
         self.build_directory.copy_in_file(

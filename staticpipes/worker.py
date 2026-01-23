@@ -83,26 +83,17 @@ class Worker:
                     if not dir:
                         dir = "/"
                     self._worker_storage.store_file_details(dir, file)
-        # For each pass
-        for idx, pass_number in enumerate(self.config.get_pass_numbers()):
-            self.current_info.set_pass_number(pass_number)
-            logger.info(
-                "Processing Pass {}/{} (Number: {}) ...".format(
-                    idx + 1, len(self.config.get_pass_numbers()), pass_number
-                )
-            )
-            # For each pass in this pipe
-            for pipe_or_bundle in self.config.get_pipes_in_pass(pass_number):
-                if isinstance(pipe_or_bundle, BaseBundle):
-                    logger.info("Processing Bundle {} ...".format(pipe_or_bundle))
-                    for pipe in pipe_or_bundle.get_pipes():
-                        self._build_pipe(pipe)
-                else:
-                    self._build_pipe(pipe_or_bundle)
-
+        # For each pipe or pipe-grouping, process
+        for pipe_or_bundle in self.config.get_pipes():
+            if isinstance(pipe_or_bundle, BaseBundle):
+                logger.info("Processing Bundle {} ...".format(pipe_or_bundle))
+                for pipe in pipe_or_bundle.get_pipes():
+                    self._build_pipe(pipe)
+            else:
+                self._build_pipe(pipe_or_bundle)
+        # Tidy up
         self.build_directory.remove_all_files_we_did_not_write()
-
-        # Step 2: check
+        # Check
         if run_checks:
             self._check(sys_exit_after_checks=sys_exit_after_checks)
 
@@ -240,25 +231,27 @@ class Worker:
         # Setup
         logger.info("Processing during watch {} {} ...".format(dir, filename))
         context_version: int = self.current_info.get_context_version()
-        # For this file, start passes
+        # For this file, start processing
         self.current_info.set_current_file_excluded(False)
-        for pass_number in self.config.get_pass_numbers():
-            self.current_info.set_pass_number(pass_number)
-            for pipe_or_bundle in self.config.get_pipes_in_pass(pass_number):
-                # Call each pipe for file
+        for pipe_or_bundle in self.config.get_pipes():
+            # Call each pipe for file
+            if isinstance(pipe_or_bundle, BaseBundle):
+                for pipe in pipe_or_bundle.get_pipes():
+                    self._process_file_during_watch_pipe(dir, filename, pipe)
+            else:
+                self._process_file_during_watch_pipe(dir, filename, pipe_or_bundle)
+            # TODO Should save back to worker storage if excluded?
+            #  But that is not used for anything in watch yet.
+        # TODO not sure when this should be called - once per pass?
+        #  once at end of pass?
+        #  If context changed, call each pipe for context
+        if context_version != self.current_info.get_context_version():
+            for pipe_or_bundle in self.config.get_pipes():
                 if isinstance(pipe_or_bundle, BaseBundle):
-                    for pipe in pipe_or_bundle.get_pipes():
-                        self._process_file_during_watch_pipe(dir, filename, pipe)
+                    pass
+                    # TODO
                 else:
-                    self._process_file_during_watch_pipe(dir, filename, pipe_or_bundle)
-                # TODO Should save back to worker storage if excluded?
-                #  But that is not used for anything in watch yet.
-            # TODO not sure when this should be called - once per pass?
-            #  once at end of pass?
-            #  If context changed, call each pipe for context
-            if context_version != self.current_info.get_context_version():
-                for pipeline in self.config.get_pipes_in_pass(pass_number):
-                    pipeline.context_changed_during_watch(
+                    pipe_or_bundle.context_changed_during_watch(
                         self.current_info,
                         context_version,
                         self.current_info.get_context_version(),

@@ -55,7 +55,6 @@ class PipeCollectionRecordsProcess(BasePipe):
         context_key_record_data: str = "record_data",
         context_key_record_class: str = "record",
         filter_function: Optional[Callable[[BaseCollectionRecord], bool]] = None,
-        pass_number=1000,
     ):
         self._collection_name = collection_name
         self._processors = processors
@@ -69,11 +68,6 @@ class PipeCollectionRecordsProcess(BasePipe):
         self._filter_function: Optional[Callable[[BaseCollectionRecord], bool]] = (
             filter_function
         )
-        self._pass_number: int = pass_number
-
-    def get_pass_numbers(self) -> list:
-        """"""
-        return [self._pass_number]
 
     def start_build(self, current_info: CurrentInfo) -> None:
         """"""

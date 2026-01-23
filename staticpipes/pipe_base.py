@@ -8,18 +8,6 @@ class BasePipe(BasePipeAndGroupOfPipes):
     def __init__(self):
         super().__init__()
 
-    def get_pass_numbers(self) -> list:
-        """Returns a list of pass numbers that this worker wants to run in.
-
-        The pipes that come with staticpipes default to these pass numbers:
-        - 100 for anything that excludes files or loads data into the context
-        - 1000 for anything else
-        When writing your own pipelines, you may want to copy that convention.
-        (But also, all the pipes that come with staticpipes can have their
-        pass numbers changed.)
-        """
-        return [1000]
-
     def start_build(self, current_info: CurrentInfo) -> None:
         """Called as we start the build stage in each pass."""
         pass

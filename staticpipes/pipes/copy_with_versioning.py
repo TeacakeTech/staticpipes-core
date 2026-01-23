@@ -83,7 +83,6 @@ class PipeCopyWithVersioning(BasePipe):
         context_key="versioning_new_filenames",
         source_sub_directory=None,
         directories: list = ["/"],
-        pass_number=100,
         versioning_mode: VersioningMode | None = None,
     ):
         self.extensions = extensions
@@ -94,14 +93,9 @@ class PipeCopyWithVersioning(BasePipe):
             else source_sub_directory
         )
         self.directories: list = directories
-        self._pass_number: int = pass_number
         self._versioning_mode: VersioningMode = (
             versioning_mode or VersioningModeInGetParameter()
         )
-
-    def get_pass_numbers(self) -> list:
-        """"""
-        return [self._pass_number]
 
     def build_source_file(
         self, dir: str, filename: str, current_info: CurrentInfo

@@ -11,18 +11,6 @@ class BaseBundle(BasePipeAndGroupOfPipes):
         self._secondary_source_directory_paths = {}
         self._get_pipes_has_been_called_before: bool = False
 
-    def get_pass_numbers(self) -> list:
-        """Returns a list of pass numbers that this worker wants to run in.
-
-        The pipes that come with staticpipes default to these pass numbers:
-        - 100 for anything that excludes files or loads data into the context
-        - 1000 for anything else
-        When writing your own pipelines, you may want to copy that convention.
-        (But also, all the pipes that come with staticpipes can have their
-        pass numbers changed.)
-        """
-        return [1000]
-
     def get_pipes(self) -> list:
         """"""
         if not self._get_pipes_has_been_called_before:
