@@ -18,7 +18,7 @@ class CollectionRecord(BaseCollectionRecord):
 
 class Collection(BaseCollection):
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._records: list = []
 
     def add_record(self, record: BaseCollectionRecord) -> None:

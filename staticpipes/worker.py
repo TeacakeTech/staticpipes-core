@@ -29,7 +29,7 @@ class Worker:
         if isinstance(secondary_source_directories, dict):
             for name, directory in secondary_source_directories.items():
                 self.secondary_source_directories[name] = SourceDirectory(directory)
-        self.current_info: CurrentInfo | None = None
+        self.current_info: CurrentInfo = None  # type: ignore
         self._check_reports: list = []
         self._worker_storage = WorkerStorage()
 
@@ -73,7 +73,7 @@ class Worker:
         )
         self._build(run_checks=True, sys_exit_after_checks=sys_exit_after_checks)
 
-    def _build(self, run_checks=True, sys_exit_after_checks=False):
+    def _build(self, run_checks=True, sys_exit_after_checks=False) -> None:
         # Prepare ...
         self.build_directory.prepare()
         # List files into storage
@@ -99,7 +99,7 @@ class Worker:
         if run_checks:
             self._check(sys_exit_after_checks=sys_exit_after_checks)
 
-    def _build_pipe(self, pipe):
+    def _build_pipe(self, pipe) -> None:
         logger.info("Processing Pipe {} ...".format(pipe))
         # start build
         pipe.start_build(self.current_info)
@@ -117,12 +117,12 @@ class Worker:
         # end build
         pipe.end_build(self.current_info)
 
-    def _check(self, sys_exit_after_checks=False):
+    def _check(self, sys_exit_after_checks: bool = False) -> None:
         if not self.config.checks:
             logger.info("No checks defined")
             return
 
-        self._check_reports: list = []
+        self._check_reports = []
         # start
         for check in self.config.checks:
             for c_r in check.start_check():
@@ -224,7 +224,7 @@ class Worker:
         logger.info("Watching ...")
         watcher.watch()
 
-    def process_file_during_watch(self, dir, filename):
+    def process_file_during_watch(self, dir: str, filename: str) -> None:
         # Check if we should process
         if self.build_directory.is_equal_to_source_dir(
             os.path.join(self.source_directory.dir, dir)
@@ -259,7 +259,7 @@ class Worker:
                         self.current_info.get_context_version(),
                     )
 
-    def _process_file_during_watch_pipe(self, dir, filename, pipe):
+    def _process_file_during_watch_pipe(self, dir: str, filename: str, pipe) -> None:
         try:
             if self.current_info.current_file_excluded:
                 pipe.source_file_changed_but_excluded_during_watch(

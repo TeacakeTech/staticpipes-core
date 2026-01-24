@@ -8,10 +8,10 @@ class BaseBundle(BasePipeAndGroupOfPipes):
 
     def __init__(
         self,
-    ):
+    ) -> None:
         super().__init__()
-        self._pipes: list = None
-        self._secondary_source_directory_paths = {}
+        self._pipes: list = None  # type: ignore
+        self._secondary_source_directory_paths: dict[str, str] = None  # type: ignore
 
     def setup_for_worker(
         self,

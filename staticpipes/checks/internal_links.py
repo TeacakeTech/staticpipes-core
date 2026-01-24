@@ -15,7 +15,7 @@ FIND_LINKS_IN = {
 
 class CheckInternalLinksHTMLParser(html.parser.HTMLParser):
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.links: list = []
 
