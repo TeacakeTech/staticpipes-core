@@ -8,6 +8,15 @@ class BasePipe(BasePipeAndGroupOfPipes):
     def __init__(self):
         super().__init__()
 
+    # TODO actually use this, or is it not worth it?
+    def has_source_file_work(self) -> bool:
+        for function_name in ["build_source_file", "source_file_excluded_during_build"]:
+            if getattr(self.__class__, function_name) != getattr(
+                BasePipe, function_name
+            ):
+                return True
+        return False
+
     def start_build(self, current_info: CurrentInfo) -> None:
         """Called as we start the build stage in each pass."""
         pass
