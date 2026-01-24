@@ -183,8 +183,12 @@ class Worker:
                 "Checks do not work in watch yet, so no future checks will be done"  # noqa
             )
         # start watching
-        for pipeline in self.config.pipes:
-            pipeline.start_watch(self.current_info)
+        for pipe_or_bundle in self.config.pipes:
+            if isinstance(pipe_or_bundle, BaseBundle):
+                for pipe in pipe_or_bundle.get_pipes():
+                    pipe.start_watch(self.current_info)
+            else:
+                pipe_or_bundle.start_watch(self.current_info)
         # Now watch
         watcher = Watcher(self)
         logger.info("Watching ...")
