@@ -73,3 +73,9 @@ class PipeCopy(BasePipe):
     def source_file_changed_during_watch(self, dir, filename, current_info):
         """"""
         self.build_source_file(dir, filename, current_info)
+
+    def get_description_for_logs(self) -> str:
+        """"""
+        return "Copy (Extensions {}, Source Subdirectory {}, Directories {})".format(
+            self.extensions, self.source_sub_directory, self.directories
+        )

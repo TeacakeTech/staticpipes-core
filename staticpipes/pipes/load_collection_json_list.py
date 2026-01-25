@@ -41,3 +41,9 @@ class PipeLoadCollectionJSONList(BasePipe):
         current_info.set_context(["collection", self._collection_name], collection)
 
     # TODO reload on watch
+
+    def get_description_for_logs(self) -> str:
+        """"""
+        return "Load Collection JSON List (Dir {}, Filename {}, Collection {})".format(
+            self._directory, self._filename, self._collection_name
+        )

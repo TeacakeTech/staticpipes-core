@@ -34,3 +34,17 @@ class PipeCopyFromSecondarySource(BasePipe):
     def source_file_changed_during_watch(self, dir, filename, current_info):
         """"""
         pass
+
+    def get_description_for_logs(self) -> str:
+        """"""
+        return (
+            "Copy From Secondary Source "
+            + "(Secondary Source {}, Source Dir {}, Source filename {}, "
+            + "Destination Dir {}, Destination filename {}"
+        ).format(
+            self._secondary_source_name,
+            self._source_directory,
+            self._source_filename,
+            self._destination_directory,
+            self._destination_filename,
+        )

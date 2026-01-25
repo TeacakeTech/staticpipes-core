@@ -100,7 +100,7 @@ class Worker:
             self._check(sys_exit_after_checks=sys_exit_after_checks)
 
     def _build_pipe(self, pipe) -> None:
-        logger.info("Processing Pipe {} ...".format(pipe))
+        logger.info("Processing Pipe {} ...".format(pipe.get_description_for_logs()))
         # start build
         pipe.start_build(self.current_info)
         # files
