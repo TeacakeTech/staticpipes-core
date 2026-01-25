@@ -278,7 +278,7 @@ class Worker:
         except WatchFunctionalityNotImplementedException:
             logger.error(
                 (
-                    "WATCH FEATURE NOT IMPLEMENTED IN PIPELINE {}, "
-                    + "YOU MAY HAVE TO BUILD MANUALLY"
-                ).format(str(pipe))
+                    "WATCH FEATURE NOT IMPLEMENTED IN PIPE, "
+                    + "YOU MAY HAVE TO BUILD MANUALLY: {}"
+                ).format(pipe.get_description_for_logs())
             )
