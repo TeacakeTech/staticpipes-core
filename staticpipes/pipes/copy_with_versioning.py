@@ -85,14 +85,14 @@ class PipeCopyWithVersioning(BasePipe):
         directories: list = ["/"],
         versioning_mode: VersioningMode | None = None,
     ):
-        self.extensions = extensions
-        self.context_key = context_key
-        self.source_sub_directory = (
+        self._extensions = extensions
+        self._context_key = context_key
+        self._source_sub_directory = (
             "/" + source_sub_directory
             if source_sub_directory and not source_sub_directory.startswith("/")
             else source_sub_directory
         )
-        self.directories: list = directories
+        self._directories: list = directories
         self._versioning_mode: VersioningMode = (
             versioning_mode or VersioningModeInGetParameter()
         )
@@ -102,21 +102,21 @@ class PipeCopyWithVersioning(BasePipe):
     ) -> None:
         """"""
         # Check Extensions
-        if self.extensions and not staticpipes.utils.does_filename_have_extension(
-            filename, self.extensions
+        if self._extensions and not staticpipes.utils.does_filename_have_extension(
+            filename, self._extensions
         ):
             return
 
         # Directories
-        if not staticpipes.utils.is_directory_in_list(dir, self.directories):
+        if not staticpipes.utils.is_directory_in_list(dir, self._directories):
             return
 
         # Source Sub Dir then copy
-        if self.source_sub_directory:
+        if self._source_sub_directory:
             test_dir = "/" + dir if not dir.startswith("/") else dir
-            if not test_dir.startswith(self.source_sub_directory):
+            if not test_dir.startswith(self._source_sub_directory):
                 return
-            out_dir = dir[len(self.source_sub_directory) :]
+            out_dir = dir[len(self._source_sub_directory) :]
         else:
             out_dir = dir
 
@@ -137,7 +137,7 @@ class PipeCopyWithVersioning(BasePipe):
 
         current_info.set_context(
             [
-                self.context_key,
+                self._context_key,
                 staticpipes.utils.make_path_from_dir_and_filename(out_dir, filename),
             ],
             staticpipes.utils.make_path_from_dir_and_filename(out_dir, new_filename)
@@ -157,4 +157,4 @@ class PipeCopyWithVersioning(BasePipe):
 
     def get_description_for_logs(self) -> str:
         """"""
-        return "Copy With Versioning (extensions {})".format(self.extensions)
+        return "Copy With Versioning (extensions {})".format(self._extensions)

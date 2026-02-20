@@ -37,7 +37,7 @@ class PipeJinja2(BasePipe):
         watch_rebuild_all: bool = False,
         jinja2_environment: Optional[Jinja2Environment] = None,
     ):
-        self.extensions = extensions
+        self._extensions = extensions
         self._jinja2_environment: Optional[Jinja2Environment] = jinja2_environment
         self._template_information: dict = {}
         self._watch_rebuild_all = watch_rebuild_all
@@ -100,7 +100,7 @@ class PipeJinja2(BasePipe):
     ) -> None:
         """"""
         if not staticpipes.utils.does_filename_have_extension(
-            filename, self.extensions
+            filename, self._extensions
         ):
             return
 
@@ -114,7 +114,7 @@ class PipeJinja2(BasePipe):
     ) -> None:
         """"""
         if not staticpipes.utils.does_filename_have_extension(
-            filename, self.extensions
+            filename, self._extensions
         ):
             return
 
@@ -135,7 +135,7 @@ class PipeJinja2(BasePipe):
         self, dir: str, filename: str, current_info, file_excluded: bool
     ):
         if not staticpipes.utils.does_filename_have_extension(
-            filename, self.extensions
+            filename, self._extensions
         ):
             return
 
@@ -191,4 +191,4 @@ class PipeJinja2(BasePipe):
 
     def get_description_for_logs(self) -> str:
         """"""
-        return "Jinja2 (Extensions {})".format(self.extensions)
+        return "Jinja2 (Extensions {})".format(self._extensions)

@@ -5,7 +5,11 @@ from contextlib import contextmanager
 class BaseDirectory:
 
     def __init__(self, dir: str):
-        self.dir = dir
+        self._dir = dir
+
+    @property
+    def dir(self) -> str:
+        return os.path.realpath(self._dir)
 
     @contextmanager
     def get_contents_as_filepointer(self, dir, filename, mode=""):
@@ -25,9 +29,9 @@ class BaseDirectory:
         if dir != "/":
             if dir.startswith("/"):
                 dir = dir[1:]
-            return os.path.join(self.dir, dir, filename)
+            return os.path.join(self._dir, dir, filename)
         else:
-            return os.path.join(self.dir, filename)
+            return os.path.join(self._dir, filename)
 
     def has_file(self, dir, filename) -> bool:
         return os.path.exists(self.get_full_filename(dir, filename))

@@ -34,7 +34,7 @@ class ProcessVersion(BaseProcessor):
         context_key="versioning_new_filenames",
         versioning_mode: VersioningMode | None = None,
     ):
-        self.context_key = context_key
+        self._context_key = context_key
         self._versioning_mode: VersioningMode = (
             versioning_mode or VersioningModeInGetParameter()
         )
@@ -64,7 +64,7 @@ class ProcessVersion(BaseProcessor):
 
         current_info.set_context(
             [
-                self.context_key,
+                self._context_key,
                 staticpipes.utils.make_path_from_dir_and_filename(
                     process_current_info.dir, process_current_info.filename
                 ),

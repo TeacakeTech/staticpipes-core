@@ -54,7 +54,7 @@ def test_copy_fixture_with_extensions_with_correct_directories_in_filename_mode(
         "versioning_new_filenames": {
             "/js/main.js": "/js/main.b1cee5ed8ca8405563a5be2227ddab36.js",
         }
-    } == worker.current_info.get_context()
+    } == worker._current_info.get_context()
 
 
 def test_copy_fixture_with_extensions_with_correct_directories_in_get_mode():
@@ -97,7 +97,7 @@ def test_copy_fixture_with_extensions_with_correct_directories_in_get_mode():
         "versioning_new_filenames": {
             "/js/main.js": "/js/main.js?version=b1cee5ed8ca8405563a5be2227ddab36",
         }
-    } == worker.current_info.get_context()
+    } == worker._current_info.get_context()
 
 
 def test_copy_fixture_with_extensions_with_wrong_directories():
@@ -132,4 +132,4 @@ def test_copy_fixture_with_extensions_with_wrong_directories():
     )
     assert not os.path.exists(os.path.join(out_dir, "js", "main.js"))
 
-    assert {} == worker.current_info.get_context()
+    assert {} == worker._current_info.get_context()

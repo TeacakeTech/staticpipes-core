@@ -13,14 +13,14 @@ class PipeJavascriptMinifier(BasePipe):
     """
 
     def __init__(self, extensions: list = ["js"]):
-        self.extensions = extensions
+        self._extensions = extensions
 
     def build_source_file(
         self, dir: str, filename: str, current_info: CurrentInfo
     ) -> None:
         """"""
-        if self.extensions and not staticpipes.utils.does_filename_have_extension(
-            filename, self.extensions
+        if self._extensions and not staticpipes.utils.does_filename_have_extension(
+            filename, self._extensions
         ):
             return
 
@@ -36,4 +36,4 @@ class PipeJavascriptMinifier(BasePipe):
 
     def get_description_for_logs(self) -> str:
         """"""
-        return "Javascript Minifier (Extensions {})".format(self.extensions)
+        return "Javascript Minifier (Extensions {})".format(self._extensions)

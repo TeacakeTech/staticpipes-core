@@ -15,21 +15,33 @@ class CheckReport:
         line: Optional[int] = None,
         column: Optional[int] = None,
     ):
-        self.type: str = type
-        self.dir: str = dir
-        self.file: str = file
-        self.message: str = message
-        self.generator_class: str = from_check.__class__.__name__
-        self.line: Optional[int] = line
-        self.column: Optional[int] = column
+        self._type: str = type
+        self._dir: str = dir
+        self._file: str = file
+        self._message: str = message
+        self._generator_class: str = from_check.__class__.__name__
+        self._line: Optional[int] = line
+        self._column: Optional[int] = column
 
     def json(self):
         return {
-            "type": self.type,
-            "dir": self.dir,
-            "file": self.file,
-            "message": self.message,
-            "generator": {"class": self.generator_class},
-            "line": self.line,
-            "column": self.column,
+            "type": self._type,
+            "dir": self._dir,
+            "file": self._file,
+            "message": self._message,
+            "generator": {"class": self._generator_class},
+            "line": self._line,
+            "column": self._column,
         }
+
+    def get_description_for_logs(self) -> str:
+        return (
+            "Report: \n"
+            + "  type      : {} from generator {}\n".format(
+                self._type, self._generator_class
+            )
+            + "  dir       : {}\n".format(self._dir)
+            + "  file      : {}\n".format(self._file)
+            + "  message   : {}\n".format(self._message)
+            + "  line, col : {}, {}".format(self._line, self._column)
+        )

@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Log messages are clearer about which pipe is running with new `get_description_for_logs` function.
 * `PipeLoadCollectionCSV`, parameter `filename` now defaults to `data.csv` ( similar to `PipeLoadCollectionJSONList`).
 * `PipeLoadCollectionPythonDocs`, parameter `module_names` is now required.
+* More private variables in classes are now marked with `_`.
 
 ### Removed
 

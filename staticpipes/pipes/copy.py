@@ -33,34 +33,34 @@ class PipeCopy(BasePipe):
         source_sub_directory=None,
         directories: list = ["/"],
     ):
-        self.extensions: list = extensions or []
-        self.source_sub_directory = (
+        self._extensions: list = extensions or []
+        self._source_sub_directory = (
             "/" + source_sub_directory
             if source_sub_directory and not source_sub_directory.startswith("/")
             else source_sub_directory
         )
-        self.directories: list = directories
+        self._directories: list = directories
 
     def build_source_file(
         self, dir: str, filename: str, current_info: CurrentInfo
     ) -> None:
         """"""
         # Check Extensions
-        if self.extensions and not staticpipes.utils.does_filename_have_extension(
-            filename, self.extensions
+        if self._extensions and not staticpipes.utils.does_filename_have_extension(
+            filename, self._extensions
         ):
             return
 
         # Directories
-        if not staticpipes.utils.is_directory_in_list(dir, self.directories):
+        if not staticpipes.utils.is_directory_in_list(dir, self._directories):
             return
 
         # Source Sub Dir then copy
-        if self.source_sub_directory:
+        if self._source_sub_directory:
             test_dir = "/" + dir if not dir.startswith("/") else dir
-            if not test_dir.startswith(self.source_sub_directory):
+            if not test_dir.startswith(self._source_sub_directory):
                 return
-            out_dir = dir[len(self.source_sub_directory) :]
+            out_dir = dir[len(self._source_sub_directory) :]
         else:
             out_dir = dir
 
@@ -77,5 +77,5 @@ class PipeCopy(BasePipe):
     def get_description_for_logs(self) -> str:
         """"""
         return "Copy (Extensions {}, Source Subdirectory {}, Directories {})".format(
-            self.extensions, self.source_sub_directory, self.directories
+            self._extensions, self._source_sub_directory, self._directories
         )

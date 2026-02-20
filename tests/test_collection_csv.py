@@ -38,7 +38,7 @@ def test_collection_csv():
     # run
     worker.build()
     # test collection
-    collection = worker.current_info.get_context()["collection"]["data"]
+    collection = worker._current_info.get_context()["collection"]["data"]
     assert len(collection.get_records()) == 2
     assert collection.get_records()[0].get_id() == "cat"
     assert collection.get_records()[0].get_data() == {

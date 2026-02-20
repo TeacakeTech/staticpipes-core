@@ -10,8 +10,8 @@ from .worker import Worker
 class Watcher(watchdog.events.FileSystemEventHandler):
 
     def __init__(self, worker: Worker):
-        self.worker = worker
-        self.ignore_extensions = [
+        self._worker = worker
+        self._ignore_extensions = [
             # Pycharm
             "~",
             # Vi:
@@ -28,7 +28,7 @@ class Watcher(watchdog.events.FileSystemEventHandler):
         # TODO
 
     def on_modified(self, event):
-        for ext in self.ignore_extensions:
+        for ext in self._ignore_extensions:
             if event.src_path.endswith(ext):
                 return
         if isinstance(event, watchdog.events.DirModifiedEvent) or isinstance(
@@ -37,15 +37,15 @@ class Watcher(watchdog.events.FileSystemEventHandler):
             return
         # print("on_modified " + str(event))
 
-        rpsd = os.path.realpath(self.worker.source_directory.dir)
+        rpsd = os.path.realpath(self._worker._source_directory.dir)
 
         relative_fn = event.src_path[len(rpsd) + 1 :]
         if "/" in relative_fn:
             bits = relative_fn.split("/")
             fn = bits.pop()
-            self.worker.process_file_during_watch("/".join(bits), fn)
+            self._worker.process_file_during_watch("/".join(bits), fn)
         else:
-            self.worker.process_file_during_watch("", relative_fn)
+            self._worker.process_file_during_watch("", relative_fn)
 
     def on_moved(self, event):
         pass
@@ -54,7 +54,7 @@ class Watcher(watchdog.events.FileSystemEventHandler):
 
     def watch(self):
         observer = Observer()
-        observer.schedule(self, self.worker.source_directory.dir, recursive=True)
+        observer.schedule(self, self._worker._source_directory.dir, recursive=True)
         observer.start()
         try:
             while True:

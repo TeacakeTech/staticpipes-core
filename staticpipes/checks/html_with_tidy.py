@@ -19,12 +19,12 @@ class CheckHtmlWithTidy(BaseCheck):
         self,
         extensions: Optional[list] = None,
     ):
-        self.extensions: list = extensions or ["html"]
+        self._extensions: list = extensions or ["html"]
 
     def check_build_file(self, dir: str, filename: str) -> list:
         # Check Extensions
-        if self.extensions and not staticpipes.utils.does_filename_have_extension(
-            filename, self.extensions
+        if self._extensions and not staticpipes.utils.does_filename_have_extension(
+            filename, self._extensions
         ):
             return []
 

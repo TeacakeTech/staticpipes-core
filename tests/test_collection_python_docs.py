@@ -30,14 +30,14 @@ def test_collection_python_docs():
     # run
     worker.build()
     # test staticpipes
-    record = worker.current_info.get_context("collection")["python_docs"].get_record(
+    record = worker._current_info.get_context("collection")["python_docs"].get_record(
         "staticpipes"
     )
     assert record is not None
     assert [i for i in record.get_data()["modules"] if i["module_name"] == "pipes"]
 
     # test staticpipes.base_pipe
-    record = worker.current_info.get_context("collection")["python_docs"].get_record(
+    record = worker._current_info.get_context("collection")["python_docs"].get_record(
         "staticpipes.pipe_base"
     )
     assert record is not None
@@ -45,7 +45,7 @@ def test_collection_python_docs():
     assert not record.get_data()["modules"]
 
     # test staticpipes.pipes.python_document_process
-    record = worker.current_info.get_context("collection")["python_docs"].get_record(
+    record = worker._current_info.get_context("collection")["python_docs"].get_record(
         "staticpipes.pipes.load_collection_python_docs"
     )
     assert record is not None

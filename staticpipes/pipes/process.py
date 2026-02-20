@@ -39,14 +39,14 @@ class PipeProcess(BasePipe):
         directories: list = ["/"],
         binary_content: bool = False,
     ):
-        self.extensions: list = extensions or []
-        self.processors = processors
-        self.directories: list = directories
-        self.binary_content: bool = binary_content
+        self._extensions: list = extensions or []
+        self._processors = processors
+        self._directories: list = directories
+        self._binary_content: bool = binary_content
 
     def start_build(self, current_info: CurrentInfo) -> None:
         """"""
-        for processor in self.processors:
+        for processor in self._processors:
             processor.config = self.config
             processor.source_directory = self.source_directory
             processor.secondary_source_directories = self.secondary_source_directories
@@ -65,13 +65,13 @@ class PipeProcess(BasePipe):
         current_info: CurrentInfo,
     ) -> None:
         # Check Extensions
-        if self.extensions and not staticpipes.utils.does_filename_have_extension(
-            filename, self.extensions
+        if self._extensions and not staticpipes.utils.does_filename_have_extension(
+            filename, self._extensions
         ):
             return
 
         # Directories
-        if not staticpipes.utils.is_directory_in_list(dir, self.directories):
+        if not staticpipes.utils.is_directory_in_list(dir, self._directories):
             return
 
         # Ok, start to process ...
@@ -80,14 +80,14 @@ class PipeProcess(BasePipe):
             filename,
             (
                 self.source_directory.get_contents_as_bytes(dir, filename)
-                if self.binary_content
+                if self._binary_content
                 else self.source_directory.get_contents_as_str(dir, filename)
             ),
             context=current_info.get_context().copy(),
         )
 
         # TODO something about excluding files
-        for processor in self.processors:
+        for processor in self._processors:
             processor.process_source_file(
                 dir, filename, process_current_info, current_info
             )

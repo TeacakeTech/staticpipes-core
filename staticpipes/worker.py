@@ -23,19 +23,19 @@ class Worker:
         build_directory: str,
         secondary_source_directories: dict | None = None,
     ):
-        self.config: Config = config
-        self.source_directory: SourceDirectory = SourceDirectory(source_dir)
-        self.build_directory: BuildDirectory = BuildDirectory(build_directory)
+        self._config: Config = config
+        self._source_directory: SourceDirectory = SourceDirectory(source_dir)
+        self._build_directory: BuildDirectory = BuildDirectory(build_directory)
         self.secondary_source_directories: dict = {}
         if isinstance(secondary_source_directories, dict):
             for name, directory in secondary_source_directories.items():
                 self.secondary_source_directories[name] = SourceDirectory(directory)
-        self.current_info: CurrentInfo = None  # type: ignore
+        self._current_info: CurrentInfo = None  # type: ignore
         self._check_reports: list = []
         self._worker_storage = WorkerStorage()
 
         # Look for extra Secondary Source Dirs from Bundles
-        for pipe_or_bundle in self.config.pipes:
+        for pipe_or_bundle in self._config.pipes:
             if isinstance(pipe_or_bundle, BaseBundle):
                 for (
                     k,
@@ -43,34 +43,34 @@ class Worker:
                 ) in pipe_or_bundle.get_secondary_source_directory_paths().items():
                     self.secondary_source_directories[k] = SourceDirectory(v)
 
-        for pipe_or_bundle in self.config.pipes:
+        for pipe_or_bundle in self._config.pipes:
             pipe_or_bundle.setup_for_worker(
-                self.config,
-                self.source_directory,
+                self._config,
+                self._source_directory,
                 self.secondary_source_directories,
-                self.build_directory,
+                self._build_directory,
             )
 
-        for check in self.config.checks:
-            check.config = self.config
-            check.build_directory = self.build_directory
+        for check in self._config.checks:
+            check.config = self._config
+            check.build_directory = self._build_directory
 
     def build(self, run_checks=True, sys_exit_after_checks=False):
-        self.current_info = CurrentInfo(
-            context=copy.copy(self.config.context), watch=False
+        self._current_info = CurrentInfo(
+            context=copy.copy(self._config.context), watch=False
         )
         self._build(run_checks=run_checks, sys_exit_after_checks=sys_exit_after_checks)
 
     def check(self, sys_exit_after_checks=False):
-        if not self.config.checks:
+        if not self._config.checks:
             logger.warn("No checks defined")
             if sys_exit_after_checks:
                 sys.exit(1)
             else:
                 return
 
-        self.current_info = CurrentInfo(
-            context=copy.copy(self.config.context), watch=False
+        self._current_info = CurrentInfo(
+            context=copy.copy(self._config.context), watch=False
         )
         self._build(run_checks=True, sys_exit_after_checks=sys_exit_after_checks)
 
@@ -78,18 +78,18 @@ class Worker:
         self, run_checks: bool = True, sys_exit_after_checks: bool = False
     ) -> None:
         # Prepare ...
-        self.build_directory.prepare()
+        self._build_directory.prepare()
         # List files into storage
-        rpsd = os.path.realpath(self.source_directory.dir)
-        for root, dirs, files in os.walk(rpsd):
-            if not self.build_directory.is_equal_to_source_dir(root):
+        real_path_source_dir = self._source_directory.dir
+        for root, dirs, files in os.walk(real_path_source_dir):
+            if not self._build_directory.is_equal_to_source_dir(root):
                 for file in files:
-                    dir: str = root[len(rpsd) + 1 :]
+                    dir: str = root[len(real_path_source_dir) + 1 :]
                     if not dir:
                         dir = "/"
                     self._worker_storage.store_file_details(dir, file)
         # For each pipe or pipe-grouping, process
-        for pipe_or_bundle in self.config.get_pipes():
+        for pipe_or_bundle in self._config.get_pipes():
             if isinstance(pipe_or_bundle, BaseBundle):
                 logger.info(
                     "Processing Bundle {} ...".format(
@@ -101,7 +101,7 @@ class Worker:
             else:
                 self._build_pipe(pipe_or_bundle)
         # Tidy up
-        self.build_directory.remove_all_files_we_did_not_write()
+        self._build_directory.remove_all_files_we_did_not_write()
         # Check
         if run_checks:
             self._check(sys_exit_after_checks=sys_exit_after_checks)
@@ -109,42 +109,42 @@ class Worker:
     def _build_pipe(self, pipe) -> None:
         logger.info("Processing Pipe {} ...".format(pipe.get_description_for_logs()))
         # start build
-        pipe.start_build(self.current_info)
+        pipe.start_build(self._current_info)
         # files
         for dir, file, excluded in self._worker_storage.get_source_files():
-            self.current_info.set_current_file_excluded(excluded)
+            self._current_info.set_current_file_excluded(excluded)
             if excluded:
                 logger.debug("Processing Excluded File {} {} ...".format(dir, file))
-                pipe.source_file_excluded_during_build(dir, file, self.current_info)
+                pipe.source_file_excluded_during_build(dir, file, self._current_info)
             else:
                 logger.debug("Processing File {} {} ...".format(dir, file))
-                pipe.build_source_file(dir, file, self.current_info)
-                if self.current_info.current_file_excluded:
+                pipe.build_source_file(dir, file, self._current_info)
+                if self._current_info.current_file_excluded:
                     self._worker_storage.exclude_file(dir, file)
         # end build
-        pipe.end_build(self.current_info)
+        pipe.end_build(self._current_info)
 
     def _check(self, sys_exit_after_checks: bool = False) -> None:
-        if not self.config.checks:
+        if not self._config.checks:
             logger.info("No checks defined")
             return
 
         # start
-        for check in self.config.checks:
+        for check in self._config.checks:
             for c_r in check.start_check():
                 self._check_reports.append(c_r)
         # files
-        rpbd = os.path.realpath(self.build_directory.dir)
-        for root, dirs, files in os.walk(rpbd):
+        real_path_source_dir = self._build_directory.dir
+        for root, dirs, files in os.walk(real_path_source_dir):
             for file in files:
-                relative_dir = root[len(rpbd) + 1 :]
+                relative_dir = root[len(real_path_source_dir) + 1 :]
                 if not relative_dir:
                     relative_dir = "/"
-                for check in self.config.checks:
+                for check in self._config.checks:
                     for c_r in check.check_build_file(relative_dir, file):
                         self._check_reports.append(c_r)
         # end
-        for check in self.config.checks:
+        for check in self._config.checks:
             for c_r in check.end_check():
                 self._check_reports.append(c_r)
 
@@ -156,19 +156,7 @@ class Worker:
         else:
             logger.warn("Check Reports count: {}".format(len(self._check_reports)))
             for check_report in self._check_reports:
-                report = (
-                    "Report: \n"
-                    + "  type      : {} from generator {}\n".format(
-                        check_report.type, check_report.generator_class
-                    )
-                    + "  dir       : {}\n".format(check_report.dir)
-                    + "  file      : {}\n".format(check_report.file)
-                    + "  message   : {}\n".format(check_report.message)
-                    + "  line, col : {}, {}".format(
-                        check_report.line, check_report.column
-                    )
-                )
-                logger.warn(report)
+                logger.warn(check_report.get_description_for_logs())
             if sys_exit_after_checks:
                 sys.exit(1)
 
@@ -177,24 +165,24 @@ class Worker:
         # so we can use build part without watch dependencies
         from .watcher import Watcher
 
-        self.current_info = CurrentInfo(
-            context=copy.copy(self.config.context), watch=True
+        self._current_info = CurrentInfo(
+            context=copy.copy(self._config.context), watch=True
         )
         # Build first - so we have complete site
         self._build()
 
         # Check
-        if self.config.checks:
+        if self._config.checks:
             logger.info(
                 "Checks do not work in watch yet, so no future checks will be done"  # noqa
             )
         # start watching
-        for pipe_or_bundle in self.config.pipes:
+        for pipe_or_bundle in self._config.pipes:
             if isinstance(pipe_or_bundle, BaseBundle):
                 for pipe in pipe_or_bundle.get_pipes():
-                    pipe.start_watch(self.current_info)
+                    pipe.start_watch(self._current_info)
             else:
-                pipe_or_bundle.start_watch(self.current_info)
+                pipe_or_bundle.start_watch(self._current_info)
         # Now watch
         watcher = Watcher(self)
         logger.info("Watching ...")
@@ -209,30 +197,31 @@ class Worker:
         from .serve import server
         from .watcher import Watcher
 
-        self.current_info = CurrentInfo(
-            context=copy.copy(self.config.context), watch=True
+        self._current_info = CurrentInfo(
+            context=copy.copy(self._config.context), watch=True
         )
         # Build first - so we have complete site
         self._build()
 
         # Check
-        if self.config.checks:
+        if self._config.checks:
             logger.info(
                 "Checks do not work in serve yet, so no future checks will be done"  # noqa
             )
 
         # Start HTTP server in background
         threading.Thread(
-            target=server, args=(self.build_directory.dir, server_address, server_port)
+            target=server,
+            args=(self._build_directory.dir, server_address, server_port),
         ).start()
 
         # start watching
-        for pipe_or_bundle in self.config.pipes:
+        for pipe_or_bundle in self._config.pipes:
             if isinstance(pipe_or_bundle, BaseBundle):
                 for pipe in pipe_or_bundle.get_pipes():
-                    pipe.start_watch(self.current_info)
+                    pipe.start_watch(self._current_info)
             else:
-                pipe_or_bundle.start_watch(self.current_info)
+                pipe_or_bundle.start_watch(self._current_info)
         # Now watch
         watcher = Watcher(self)
         logger.info("Watching ...")
@@ -240,16 +229,16 @@ class Worker:
 
     def process_file_during_watch(self, dir: str, filename: str) -> None:
         # Check if we should process
-        if self.build_directory.is_equal_to_source_dir(
-            os.path.join(self.source_directory.dir, dir)
+        if self._build_directory.is_equal_to_source_dir(
+            os.path.join(self._source_directory.dir, dir)
         ):
             return
         # Setup
         logger.info("Processing during watch {} {} ...".format(dir, filename))
-        context_version: int = self.current_info.get_context_version()
+        context_version: int = self._current_info.get_context_version()
         # For this file, start processing
-        self.current_info.set_current_file_excluded(False)
-        for pipe_or_bundle in self.config.get_pipes():
+        self._current_info.set_current_file_excluded(False)
+        for pipe_or_bundle in self._config.get_pipes():
             # Call each pipe for file
             if isinstance(pipe_or_bundle, BaseBundle):
                 for pipe in pipe_or_bundle.get_pipes():
@@ -259,30 +248,30 @@ class Worker:
             # TODO Should save back to worker storage if excluded?
             #  But that is not used for anything in watch yet.
         #  If context changed, call each pipe for context
-        if context_version != self.current_info.get_context_version():
-            for pipe_or_bundle in self.config.get_pipes():
+        if context_version != self._current_info.get_context_version():
+            for pipe_or_bundle in self._config.get_pipes():
                 if isinstance(pipe_or_bundle, BaseBundle):
                     for pipe in pipe_or_bundle.get_pipes():
                         pipe.context_changed_during_watch(
-                            self.current_info,
+                            self._current_info,
                             context_version,
-                            self.current_info.get_context_version(),
+                            self._current_info.get_context_version(),
                         )
                 else:
                     pipe_or_bundle.context_changed_during_watch(
-                        self.current_info,
+                        self._current_info,
                         context_version,
-                        self.current_info.get_context_version(),
+                        self._current_info.get_context_version(),
                     )
 
     def _process_file_during_watch_pipe(self, dir: str, filename: str, pipe) -> None:
         try:
-            if self.current_info.current_file_excluded:
+            if self._current_info.current_file_excluded:
                 pipe.source_file_changed_but_excluded_during_watch(
-                    dir, filename, self.current_info
+                    dir, filename, self._current_info
                 )
             else:
-                pipe.source_file_changed_during_watch(dir, filename, self.current_info)
+                pipe.source_file_changed_during_watch(dir, filename, self._current_info)
         except WatchFunctionalityNotImplementedException:
             logger.error(
                 (
