@@ -5,7 +5,13 @@ import sys
 from .worker import Worker
 
 
-def cli(config, source_dir, build_directory, log_level=logging.INFO):
+def cli(
+    config,
+    source_dir,
+    build_directory,
+    log_level=logging.INFO,
+    secondary_source_directories: dict | None = None,
+):
     # CLI options
     parser = argparse.ArgumentParser()
 
@@ -38,19 +44,39 @@ def cli(config, source_dir, build_directory, log_level=logging.INFO):
 
     # Do work
     if args.subparser_name == "build" or args.subparser_name == "b":
-        worker = Worker(config, source_dir, build_directory)
+        worker = Worker(
+            config,
+            source_dir,
+            build_directory,
+            secondary_source_directories=secondary_source_directories,
+        )
         worker.build(run_checks=args.check, sys_exit_after_checks=True)
 
     elif args.subparser_name == "check" or args.subparser_name == "c":
-        worker = Worker(config, source_dir, build_directory)
+        worker = Worker(
+            config,
+            source_dir,
+            build_directory,
+            secondary_source_directories=secondary_source_directories,
+        )
         worker.check(sys_exit_after_checks=True)
 
     elif args.subparser_name == "watch" or args.subparser_name == "w":
-        worker = Worker(config, source_dir, build_directory)
+        worker = Worker(
+            config,
+            source_dir,
+            build_directory,
+            secondary_source_directories=secondary_source_directories,
+        )
         worker.watch()
 
     elif args.subparser_name == "serve" or args.subparser_name == "s":
-        worker = Worker(config, source_dir, build_directory)
+        worker = Worker(
+            config,
+            source_dir,
+            build_directory,
+            secondary_source_directories=secondary_source_directories,
+        )
         worker.serve(
             server_address=args.address or "localhost", server_port=args.port or 8000
         )

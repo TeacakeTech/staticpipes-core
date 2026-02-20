@@ -14,11 +14,22 @@ Instances of pipe classes are created and passed to the config. The same instanc
 if a pipeline wants to store information early on to use later, it can do. Pipes classes should extend 
 the `staticpipes.pipe_base.BasePipe` class.
 
+### Bundles
+
+Bundles are a collection of Pipes. They allow functionality to be reused with less configuration needed in each site - 
+the configuration can happen once in the bundle, then each site can just use the bundle.
+
+Instances of bundle classes are created and passed to the config, along with pipes. The same instance is used 
+throughout. This means if a bundle wants to store information early on to use later, it can do. 
+Bundle classes should extend the `staticpipes.bundle_base.BaseBundle` class
+
 ### Build stage
 
-During building, one pass is made. All pipes are called in the order they are given to the config. If one pipe needs to 
+During building, one pass is made. All pipes and bundles are called in the order they are given to the config. If one pipe needs to 
 collect information and load it into the context before another pipe uses that information to build something, make 
 sure the first pipe is listed before the second pipe.
+
+For each bundle, every pipe in that bundle is called in order.
 
 For each pipe, the methods called are: 
 

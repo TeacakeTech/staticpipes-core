@@ -1,20 +1,12 @@
-from .build_directory import BuildDirectory
-from .config import Config
 from .current_info import CurrentInfo
 from .exceptions import WatchFunctionalityNotImplementedException
-from .source_directory import SourceDirectory
+from .pipe_and_group_of_pipes_base import BasePipeAndGroupOfPipes
 
 
-class BasePipe:
+class BasePipe(BasePipeAndGroupOfPipes):
 
     def __init__(self) -> None:
-        self.config: Config = None  # type: ignore
-        self.source_directory: SourceDirectory = None  # type: ignore
-        self.build_directory: BuildDirectory = None  # type: ignore
-
-    def get_description_for_logs(self) -> str:
-        """Returns a string describing this pipe, for use in the logs."""
-        return str(self)
+        super().__init__()
 
     def start_build(self, current_info: CurrentInfo) -> None:
         """Called as we start the build stage."""

@@ -38,7 +38,7 @@
             <h3>Class: {{ class.name }}</h3>
             {% if "arguments" in class %}
                 {% with name=class.name, arguments=class.arguments %}
-                    {% include "_templates/reference_arguments.html" %}
+                    {% include "bundle_python_docs:reference_arguments.html" %}
                 {% endwith %}
             {% endif %}
             <div>
@@ -47,7 +47,7 @@
             {% for function in class.functions %}
                 <h4>Function: {{ function.name }}</h4>
                 {% with name=function.name, arguments=function.arguments %}
-                    {% include "_templates/reference_arguments.html" %}
+                    {% include "bundle_python_docs:reference_arguments.html" %}
                 {% endwith %}
                 <div>
                     {{ (function.docstring or function.comments or "No Info.") | render_markdown | safe }}

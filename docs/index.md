@@ -38,6 +38,7 @@ so why not check your static website too?
 * [Python Reference](reference/staticpipes.html)
     * [Pipes](reference/staticpipes.pipes.html)
     * [Processes](reference/staticpipes.processes.html)
+    * [Bundles](reference/staticpipes.bundles.html)
     * [Checks](reference/staticpipes.checks.html)
     * [Everything](reference/staticpipes.html)
 * [Internal Model](internal_model)

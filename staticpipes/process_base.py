@@ -10,6 +10,7 @@ class BaseProcessor:
     def __init__(self) -> None:
         self.config: Config = None  # type: ignore
         self.source_directory: SourceDirectory = None  # type: ignore
+        self.secondary_source_directories: dict = None  # type: ignore
         self.build_directory: BuildDirectory = None  # type: ignore
 
     def process_source_file(

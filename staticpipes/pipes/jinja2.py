@@ -50,7 +50,8 @@ class PipeJinja2(BasePipe):
         if not self._jinja2_environment:
             self._jinja2_environment = Jinja2Environment()
         template = self._jinja2_environment.get(
-            source_directory=self.source_directory
+            source_directory=self.source_directory,
+            secondary_source_directories=self.secondary_source_directories,
         ).get_template(os.path.join(dir, filename))
         contents = template.render(current_info.get_context())
         self.build_directory.write(dir, filename, contents)
@@ -69,7 +70,8 @@ class PipeJinja2(BasePipe):
             if not self._jinja2_environment:
                 self._jinja2_environment = Jinja2Environment()
             ast = self._jinja2_environment.get(
-                source_directory=self.source_directory
+                source_directory=self.source_directory,
+                secondary_source_directories=self.secondary_source_directories,
             ).parse(
                 source=self.source_directory.get_contents_as_str(dir, filename),
                 filename=os.path.join(dir, filename),

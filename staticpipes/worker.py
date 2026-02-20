@@ -4,6 +4,7 @@ import os
 import sys
 
 from .build_directory import BuildDirectory
+from .bundle_base import BaseBundle
 from .config import Config
 from .current_info import CurrentInfo
 from .exceptions import WatchFunctionalityNotImplementedException
@@ -15,18 +16,40 @@ logger = logging.getLogger(__name__)
 
 class Worker:
 
-    def __init__(self, config: Config, source_dir: str, build_directory: str):
+    def __init__(
+        self,
+        config: Config,
+        source_dir: str,
+        build_directory: str,
+        secondary_source_directories: dict | None = None,
+    ):
         self.config: Config = config
         self.source_directory: SourceDirectory = SourceDirectory(source_dir)
         self.build_directory: BuildDirectory = BuildDirectory(build_directory)
+        self.secondary_source_directories: dict = {}
+        if isinstance(secondary_source_directories, dict):
+            for name, directory in secondary_source_directories.items():
+                self.secondary_source_directories[name] = SourceDirectory(directory)
         self.current_info: CurrentInfo = None  # type: ignore
         self._check_reports: list = []
         self._worker_storage = WorkerStorage()
 
-        for pipeline in self.config.pipes:
-            pipeline.config = self.config
-            pipeline.source_directory = self.source_directory
-            pipeline.build_directory = self.build_directory
+        # Look for extra Secondary Source Dirs from Bundles
+        for pipe_or_bundle in self.config.pipes:
+            if isinstance(pipe_or_bundle, BaseBundle):
+                for (
+                    k,
+                    v,
+                ) in pipe_or_bundle.get_secondary_source_directory_paths().items():
+                    self.secondary_source_directories[k] = SourceDirectory(v)
+
+        for pipe_or_bundle in self.config.pipes:
+            pipe_or_bundle.setup_for_worker(
+                self.config,
+                self.source_directory,
+                self.secondary_source_directories,
+                self.build_directory,
+            )
 
         for check in self.config.checks:
             check.config = self.config
@@ -64,8 +87,17 @@ class Worker:
                         dir = "/"
                     self._worker_storage.store_file_details(dir, file)
         # For each pipe or pipe-grouping, process
-        for pipe in self.config.get_pipes():
-            self._build_pipe(pipe)
+        for pipe_or_bundle in self.config.get_pipes():
+            if isinstance(pipe_or_bundle, BaseBundle):
+                logger.info(
+                    "Processing Bundle {} ...".format(
+                        pipe_or_bundle.get_description_for_logs()
+                    )
+                )
+                for pipe in pipe_or_bundle.get_pipes():
+                    self._build_pipe(pipe)
+            else:
+                self._build_pipe(pipe_or_bundle)
         # Tidy up
         self.build_directory.remove_all_files_we_did_not_write()
 
@@ -157,8 +189,12 @@ class Worker:
                 "Checks do not work in watch yet, so no future checks will be done"  # noqa
             )
         # start watching
-        for pipeline in self.config.pipes:
-            pipeline.start_watch(self.current_info)
+        for pipe_or_bundle in self.config.pipes:
+            if isinstance(pipe_or_bundle, BaseBundle):
+                for pipe in pipe_or_bundle.get_pipes():
+                    pipe.start_watch(self.current_info)
+            else:
+                pipe_or_bundle.start_watch(self.current_info)
         # Now watch
         watcher = Watcher(self)
         logger.info("Watching ...")
@@ -191,8 +227,12 @@ class Worker:
         ).start()
 
         # start watching
-        for pipeline in self.config.pipes:
-            pipeline.start_watch(self.current_info)
+        for pipe_or_bundle in self.config.pipes:
+            if isinstance(pipe_or_bundle, BaseBundle):
+                for pipe in pipe_or_bundle.get_pipes():
+                    pipe.start_watch(self.current_info)
+            else:
+                pipe_or_bundle.start_watch(self.current_info)
         # Now watch
         watcher = Watcher(self)
         logger.info("Watching ...")
@@ -209,19 +249,31 @@ class Worker:
         context_version: int = self.current_info.get_context_version()
         # For this file, start processing
         self.current_info.set_current_file_excluded(False)
-        for pipe in self.config.get_pipes():
+        for pipe_or_bundle in self.config.get_pipes():
             # Call each pipe for file
-            self._process_file_during_watch_pipe(dir, filename, pipe)
+            if isinstance(pipe_or_bundle, BaseBundle):
+                for pipe in pipe_or_bundle.get_pipes():
+                    self._process_file_during_watch_pipe(dir, filename, pipe)
+            else:
+                self._process_file_during_watch_pipe(dir, filename, pipe_or_bundle)
             # TODO Should save back to worker storage if excluded?
             #  But that is not used for anything in watch yet.
         #  If context changed, call each pipe for context
         if context_version != self.current_info.get_context_version():
-            for pipe in self.config.get_pipes():
-                pipe.context_changed_during_watch(
-                    self.current_info,
-                    context_version,
-                    self.current_info.get_context_version(),
-                )
+            for pipe_or_bundle in self.config.get_pipes():
+                if isinstance(pipe_or_bundle, BaseBundle):
+                    for pipe in pipe_or_bundle.get_pipes():
+                        pipe.context_changed_during_watch(
+                            self.current_info,
+                            context_version,
+                            self.current_info.get_context_version(),
+                        )
+                else:
+                    pipe_or_bundle.context_changed_during_watch(
+                        self.current_info,
+                        context_version,
+                        self.current_info.get_context_version(),
+                    )
 
     def _process_file_during_watch_pipe(self, dir: str, filename: str, pipe) -> None:
         try:

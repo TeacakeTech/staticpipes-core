@@ -3,17 +3,16 @@ import os
 
 from markdown_it import MarkdownIt
 
+from staticpipes.bundles.python_docs import BundlePythonDocs
 from staticpipes.checks.html_tags import CheckHtmlTags
 from staticpipes.checks.html_with_tidy import CheckHtmlWithTidy
 from staticpipes.checks.internal_links import CheckInternalLinks
 from staticpipes.config import Config
 from staticpipes.jinja2_environment import Jinja2Environment
-from staticpipes.pipes.collection_records_process import PipeCollectionRecordsProcess
 from staticpipes.pipes.copy import PipeCopy
 from staticpipes.pipes.exclude_underscore_directories import (
     PipeExcludeUnderscoreDirectories,
 )
-from staticpipes.pipes.load_collection_python_docs import PipeLoadCollectionPythonDocs
 from staticpipes.pipes.process import PipeProcess
 from staticpipes.process_base import BaseProcessor
 from staticpipes.processes.change_extension import ProcessChangeExtension
@@ -81,20 +80,8 @@ config = Config(
                 ),
             ],
         ),
-        PipeLoadCollectionPythonDocs(
-            collection_name="python_docs",
-            module_names=["staticpipes"],
-        ),
-        PipeCollectionRecordsProcess(
-            collection_name="python_docs",
-            output_dir="reference",
-            context_key_record_data="python_document",
-            processors=[
-                ProcessJinja2(
-                    template="_templates/reference.html",
-                    jinja2_environment=jinja2_environment,
-                ),
-            ],
+        BundlePythonDocs(
+            module_names=["staticpipes"], jinja2_environment=jinja2_environment
         ),
         PipeCopy(extensions=["css"]),
     ],

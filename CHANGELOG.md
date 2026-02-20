@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+
+* Secondary Source Directories, used by Jinja2 and the new pipe `PipeCopyFromSecondarySource`.
+* Bundles, collections of pipes and the new bundle `BundlePythonDocs`
+
 ### Changed
 
 * Each pipe now runs completely before the next pipe is called. This replaces pass numbers as a simpler system.

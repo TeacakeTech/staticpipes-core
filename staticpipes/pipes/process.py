@@ -49,6 +49,7 @@ class PipeProcess(BasePipe):
         for processor in self.processors:
             processor.config = self.config
             processor.source_directory = self.source_directory
+            processor.secondary_source_directories = self.secondary_source_directories
             processor.build_directory = self.build_directory
 
     def build_source_file(
