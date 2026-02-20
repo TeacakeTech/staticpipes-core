@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Each pipe now runs completely before the next pipe is called. This replaces pass numbers as a simpler system.
 * Log messages are clearer about which pipe is running with new `get_description_for_logs` function.
 * `PipeLoadCollectionCSV`, parameter `filename` now defaults to `data.csv` ( similar to `PipeLoadCollectionJSONList`).
+* `PipeLoadCollectionPythonDocs`, parameter `module_names` is now required.
 
 ### Removed
 
@@ -25,6 +26,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 * Only the first check report was being written out to logs; now all are
 * `Jinja2Environment` now doesn't have problems around mutable dicts in `filters` parameter.
+* `PipeLoadCollectionPythonDocs` now doesn't have problems around mutable lists in `module_names` parameter.
 
 ## [0.6.0] - 2026-01-16
 

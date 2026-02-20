@@ -21,11 +21,11 @@ class PipeLoadCollectionPythonDocs(BasePipe):
 
     def __init__(
         self,
-        module_names: list = [],
+        module_names: list,
         collection_name: str = "python_docs",
     ):
-        self._module_names = module_names
-        self._collection_name = collection_name
+        self._module_names: list = module_names
+        self._collection_name: str = collection_name
 
     def start_build(self, current_info: CurrentInfo) -> None:
         """"""
