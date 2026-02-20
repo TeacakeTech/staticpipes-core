@@ -6,7 +6,7 @@ title: Internal Model
 
 This page describes the internal model of StaticPipes, and how pipes, processes, checks and more are called.
 
-This is useful if you want to write your own procssing tools.
+This is useful if you want to write your own processing tools.
 
 ### Pipes
 
@@ -30,7 +30,7 @@ For each pipe, the methods called are:
 A pipeline should deal with the file completely or not at all. Either it ignores it or it does something that ends 
 with a method on `self.build_directory` being called to write some content to the site. 
 
-A pipeline can write zero to many files to the site for a single source file. For instance, a image processing 
+A pipeline can write zero to many files to the site for a single source file. For instance, an image processing 
 pipeline could write multiple files at different resolutions for every image in the source.
 
 A `current_info` object is passed to all methods. This contains information and can be used to set information.
