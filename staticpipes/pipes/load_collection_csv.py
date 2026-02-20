@@ -41,3 +41,9 @@ class PipeLoadCollectionCSV(BasePipe):
                 collection.add_record(CollectionRecord(id=row[0], data=data))
 
     # TODO reload on watch
+
+    def get_description_for_logs(self) -> str:
+        """"""
+        return "Load Collection CSV (Dir {}, Filename {}, Collection {})".format(
+            self._directory, self._filename, self._collection_name
+        )

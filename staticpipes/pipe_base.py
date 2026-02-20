@@ -12,6 +12,10 @@ class BasePipe:
         self.source_directory: SourceDirectory = None  # type: ignore
         self.build_directory: BuildDirectory = None  # type: ignore
 
+    def get_description_for_logs(self) -> str:
+        """Returns a string describing this pipe, for use in the logs."""
+        return str(self)
+
     def start_build(self, current_info: CurrentInfo) -> None:
         """Called as we start the build stage."""
         pass

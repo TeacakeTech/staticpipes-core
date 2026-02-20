@@ -118,3 +118,9 @@ class PipeLoadCollectionPythonDocs(BasePipe):
         Well, changes to the source files do nothing to it's work
         so there is nothing to do here."""
         pass
+
+    def get_description_for_logs(self) -> str:
+        """"""
+        return "Load Collection Python Docs (Modules {}, Collection {})".format(
+            self._module_names, self._collection_name
+        )

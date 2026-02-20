@@ -186,3 +186,7 @@ class PipeJinja2(BasePipe):
             if not template_info["file_excluded"]:
                 d, f = staticpipes.utils.make_dir_and_filename_from_path(template_path)
                 self._actually_build_template(d, f, current_info)
+
+    def get_description_for_logs(self) -> str:
+        """"""
+        return "Jinja2 (Extensions {})".format(self.extensions)

@@ -73,7 +73,7 @@ class Worker:
             self._check(sys_exit_after_checks=sys_exit_after_checks)
 
     def _build_pipe(self, pipe) -> None:
-        logger.info("Processing Pipe {} ...".format(str(pipe)))
+        logger.info("Processing Pipe {} ...".format(pipe.get_description_for_logs()))
         # start build
         pipe.start_build(self.current_info)
         # files
@@ -235,5 +235,5 @@ class Worker:
                 (
                     "WATCH FEATURE NOT IMPLEMENTED IN PIPE, "
                     + "YOU MAY HAVE TO BUILD MANUALLY: {}"
-                ).format(str(pipe))
+                ).format(pipe.get_description_for_logs())
             )

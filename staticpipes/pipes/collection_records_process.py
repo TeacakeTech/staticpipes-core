@@ -118,3 +118,9 @@ class PipeCollectionRecordsProcess(BasePipe):
                 process_current_info.filename,
                 process_current_info.contents,
             )
+
+    def get_description_for_logs(self) -> str:
+        """"""
+        return "Collection Records Process (Collection {})".format(
+            self._collection_name
+        )
