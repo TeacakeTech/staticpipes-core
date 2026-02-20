@@ -5,16 +5,9 @@ class CurrentInfo:
         self.watch: bool = watch
         self.current_file_excluded: bool = False
         self._context_history: list = []
-        self.pass_number = 1
 
-    def reset_for_new_pass_for_new_file(
-        self, pass_number=1, current_file_excluded=False
-    ):
+    def set_current_file_excluded(self, current_file_excluded: bool):
         self.current_file_excluded = current_file_excluded
-        self.pass_number = pass_number
-
-    def reset_for_new_pass_for_same_file(self, pass_number=1):
-        self.pass_number = pass_number
 
     def get_context(self, key=None):
         if isinstance(key, str):

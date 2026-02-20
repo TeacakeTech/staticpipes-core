@@ -12,11 +12,5 @@ class Config:
         for check in checks:
             check.config = self
 
-    def get_pass_numbers(self) -> list:
-        pass_numbers = []
-        for pipeline in self.pipes:
-            pass_numbers.extend(pipeline.get_pass_numbers())
-        return sorted(list(set(pass_numbers)))
-
-    def get_pipes_in_pass(self, pass_number: int):
-        return [p for p in self.pipes if pass_number in p.get_pass_numbers()]
+    def get_pipes(self):
+        return self.pipes

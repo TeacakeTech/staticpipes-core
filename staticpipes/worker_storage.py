@@ -18,7 +18,7 @@ class WorkerStorage:
                 PRIMARY KEY(dir_name, file_name)
                 )""")
 
-    def store_file_details(self, dir_name, file_name, excluded: bool) -> None:
+    def store_file_details(self, dir_name, file_name, excluded: bool = False) -> None:
         with closing(self._connection.cursor()) as cur:
             cur.execute(
                 """INSERT OR REPLACE INTO source_file
@@ -27,6 +27,21 @@ class WorkerStorage:
                 [dir_name, file_name, 1 if excluded else 0],
             )
             self._connection.commit()
+
+    def exclude_file(self, dir_name, file_name) -> None:
+        with closing(self._connection.cursor()) as cur:
+            cur.execute(
+                """UPDATE source_file SET excluded = 1
+                WHERE dir_name = ? AND file_name = ?""",
+                [dir_name, file_name],
+            )
+            self._connection.commit()
+
+    def get_source_files(self):
+        with closing(self._connection.cursor()) as cur:
+            cur.execute("""SELECT dir_name, file_name, excluded FROM source_file
+            ORDER BY dir_name ASC, file_name ASC""")
+            return [(c[0], c[1], bool(c[2])) for c in cur.fetchall()]
 
     def is_file_excluded(self, dir_name, file_name) -> bool:
         with closing(self._connection.cursor()) as cur:

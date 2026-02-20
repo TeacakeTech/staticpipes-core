@@ -51,54 +51,44 @@ class Worker:
         self._build(run_checks=True, sys_exit_after_checks=sys_exit_after_checks)
 
     def _build(self, run_checks=True, sys_exit_after_checks=False):
-        # Step 1: Build
+        # Prepare ...
         self.build_directory.prepare()
-        # start
-        for pass_number in self.config.get_pass_numbers():
-            logger.info("Processing Pass {} ...".format(pass_number))
-            # start build
-            self.current_info.reset_for_new_pass_for_new_file(
-                pass_number=pass_number,
-            )
-            for pipeline in self.config.get_pipes_in_pass(pass_number):
-                pipeline.start_build(self.current_info)
-            # files
-            rpsd = os.path.realpath(self.source_directory.dir)
-            for root, dirs, files in os.walk(rpsd):
-                if not self.build_directory.is_equal_to_source_dir(root):
-                    for file in files:
-                        dir: str = root[len(rpsd) + 1 :]
-                        if not dir:
-                            dir = "/"
-                        logger.info(
-                            "Processing Pass {} File {} {} ...".format(
-                                pass_number, dir, file
-                            )
-                        )
-                        self.current_info.reset_for_new_pass_for_new_file(
-                            pass_number=pass_number,
-                            current_file_excluded=self._worker_storage.is_file_excluded(
-                                dir, file
-                            ),
-                        )
-                        for pipeline in self.config.get_pipes_in_pass(pass_number):
-                            if self.current_info.current_file_excluded:
-                                pipeline.source_file_excluded_during_build(
-                                    dir, file, self.current_info
-                                )
-                            else:
-                                pipeline.build_source_file(dir, file, self.current_info)
-                        self._worker_storage.store_file_details(
-                            dir, file, self.current_info.current_file_excluded
-                        )
-            # end build
-            for pipeline in self.config.get_pipes_in_pass(pass_number):
-                pipeline.end_build(self.current_info)
+        # List files into storage
+        rpsd = os.path.realpath(self.source_directory.dir)
+        for root, dirs, files in os.walk(rpsd):
+            if not self.build_directory.is_equal_to_source_dir(root):
+                for file in files:
+                    dir: str = root[len(rpsd) + 1 :]
+                    if not dir:
+                        dir = "/"
+                    self._worker_storage.store_file_details(dir, file)
+        # For each pipe or pipe-grouping, process
+        for pipe in self.config.get_pipes():
+            self._build_pipe(pipe)
+        # Tidy up
         self.build_directory.remove_all_files_we_did_not_write()
 
         # Step 2: check
         if run_checks:
             self._check(sys_exit_after_checks=sys_exit_after_checks)
+
+    def _build_pipe(self, pipe) -> None:
+        logger.info("Processing Pipe {} ...".format(str(pipe)))
+        # start build
+        pipe.start_build(self.current_info)
+        # files
+        for dir, file, excluded in self._worker_storage.get_source_files():
+            self.current_info.set_current_file_excluded(excluded)
+            if excluded:
+                logger.debug("Processing Excluded File {} {} ...".format(dir, file))
+                pipe.source_file_excluded_during_build(dir, file, self.current_info)
+            else:
+                logger.debug("Processing File {} {} ...".format(dir, file))
+                pipe.build_source_file(dir, file, self.current_info)
+                if self.current_info.current_file_excluded:
+                    self._worker_storage.exclude_file(dir, file)
+        # end build
+        pipe.end_build(self.current_info)
 
     def _check(self, sys_exit_after_checks=False):
         if not self.config.checks:
@@ -216,33 +206,34 @@ class Worker:
         # Setup
         logger.info("Processing during watch {} {} ...".format(dir, filename))
         context_version: int = self.current_info.get_context_version()
-        # For this file, start passes
-        self.current_info.reset_for_new_pass_for_new_file()
-        for pass_number in self.config.get_pass_numbers():
-            self.current_info.reset_for_new_pass_for_same_file(pass_number=pass_number)
-            for pipeline in self.config.get_pipes_in_pass(pass_number):
-                # Call each pipe for file
-                try:
-                    if self.current_info.current_file_excluded:
-                        pipeline.source_file_changed_but_excluded_during_watch(
-                            dir, filename, self.current_info
-                        )
-                    else:
-                        pipeline.source_file_changed_during_watch(
-                            dir, filename, self.current_info
-                        )
-                except WatchFunctionalityNotImplementedException:
-                    logger.error(
-                        (
-                            "WATCH FEATURE NOT IMPLEMENTED IN PIPELINE {}, "
-                            + "YOU MAY HAVE TO BUILD MANUALLY"
-                        ).format(str(pipeline))
-                    )
-            # If context changed, call each pipe for context
-            if context_version != self.current_info.get_context_version():
-                for pipeline in self.config.get_pipes_in_pass(pass_number):
-                    pipeline.context_changed_during_watch(
-                        self.current_info,
-                        context_version,
-                        self.current_info.get_context_version(),
-                    )
+        # For this file, start processing
+        self.current_info.set_current_file_excluded(False)
+        for pipe in self.config.get_pipes():
+            # Call each pipe for file
+            self._process_file_during_watch_pipe(dir, filename, pipe)
+            # TODO Should save back to worker storage if excluded?
+            #  But that is not used for anything in watch yet.
+        #  If context changed, call each pipe for context
+        if context_version != self.current_info.get_context_version():
+            for pipe in self.config.get_pipes():
+                pipe.context_changed_during_watch(
+                    self.current_info,
+                    context_version,
+                    self.current_info.get_context_version(),
+                )
+
+    def _process_file_during_watch_pipe(self, dir: str, filename: str, pipe) -> None:
+        try:
+            if self.current_info.current_file_excluded:
+                pipe.source_file_changed_but_excluded_during_watch(
+                    dir, filename, self.current_info
+                )
+            else:
+                pipe.source_file_changed_during_watch(dir, filename, self.current_info)
+        except WatchFunctionalityNotImplementedException:
+            logger.error(
+                (
+                    "WATCH FEATURE NOT IMPLEMENTED IN PIPE, "
+                    + "YOU MAY HAVE TO BUILD MANUALLY: {}"
+                ).format(str(pipe))
+            )

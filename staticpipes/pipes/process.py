@@ -38,17 +38,11 @@ class PipeProcess(BasePipe):
         processors=None,
         directories: list = ["/"],
         binary_content: bool = False,
-        pass_number: int = 1000,
     ):
         self.extensions: list = extensions or []
         self.processors = processors
         self.directories: list = directories
         self.binary_content: bool = binary_content
-        self._pass_number: int = pass_number
-
-    def get_pass_numbers(self) -> list:
-        """"""
-        return [self._pass_number]
 
     def start_build(self, current_info: CurrentInfo) -> None:
         """"""

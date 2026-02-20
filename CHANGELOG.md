@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+
+* Each pipe now runs completely before the next pipe is called. This replaces pass numbers as a simpler system.
+
+### Removed
+
+* Removes pass numbers in favour of simpler system of running one pipe completely at a time
+
 ### Fixed
 
 * Only the first check report was being written out to logs; now all are

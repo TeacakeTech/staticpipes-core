@@ -10,13 +10,6 @@ class PipeExcludeUnderscoreDirectories(BasePipe):
     Use to exclude any library files eg template layouts in a "_layouts" directory.
     """
 
-    def __init__(self, pass_number=100):
-        self._pass_number: int = pass_number
-
-    def get_pass_numbers(self) -> list:
-        """"""
-        return [self._pass_number]
-
     def build_source_file(
         self, dir: str, filename: str, current_info: CurrentInfo
     ) -> None:

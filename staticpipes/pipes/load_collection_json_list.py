@@ -19,16 +19,10 @@ class PipeLoadCollectionJSONList(BasePipe):
         directory="",
         filename="data.json",
         collection_name="data",
-        pass_number=100,
     ):
         self._directory = directory
         self._filename = filename
         self._collection_name = collection_name
-        self._pass_number: int = pass_number
-
-    def get_pass_numbers(self) -> list:
-        """"""
-        return [self._pass_number]
 
     def start_build(self, current_info: CurrentInfo) -> None:
         """"""

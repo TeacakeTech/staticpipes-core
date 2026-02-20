@@ -16,16 +16,11 @@ the `staticpipes.pipe_base.BasePipe` class.
 
 ### Build stage
 
-During building, multiple passes are made. If one pipe needs to collect information and load it into the context 
-before another pipe uses that information to build something, make sure the first pipe has a lower pass number 
-than the second pipe.
+During building, one pass is made. All pipes are called in the order they are given to the config. If one pipe needs to 
+collect information and load it into the context before another pipe uses that information to build something, make 
+sure the first pipe is listed before the second pipe.
 
-The pipes control how many passes there are and which pipes are called in which pass by overriding the `get_pass_numbers` 
-method. This should return a list of ints, each int being a pass number that pipe should be called for. As a list 
-is returned, the same pipe can be run in multiple passes. Some pipes also allow passing parameters when 
-constructing them. Pass numbers are run in order, lowest first. 
-
-During each pass, each pipeline that wants to do work in that pass is called. The methods called are: 
+For each pipe, the methods called are: 
 
 * the `start_build` method.
 * the `build_source_file` or `source_file_excluded_during_build` method is called for each file in the source 

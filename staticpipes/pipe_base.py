@@ -12,33 +12,21 @@ class BasePipe:
         self.source_directory: SourceDirectory = None  # type: ignore
         self.build_directory: BuildDirectory = None  # type: ignore
 
-    def get_pass_numbers(self) -> list:
-        """Returns a list of pass numbers that this worker wants to run in.
-
-        The pipes that come with staticpipes default to these pass numbers:
-        - 100 for anything that excludes files or loads data into the context
-        - 1000 for anything else
-        When writing your own pipelines, you may want to copy that convention.
-        (But also, all the pipes that come with staticpipes can have their
-        pass numbers changed.)
-        """
-        return [1000]
-
     def start_build(self, current_info: CurrentInfo) -> None:
-        """Called as we start the build stage in each pass."""
+        """Called as we start the build stage."""
         pass
 
     def build_source_file(
         self, dir: str, filename: str, current_info: CurrentInfo
     ) -> None:
-        """Called once for every pass and every file in the build stage,
+        """Called once for every file in the build stage,
         unless an earlier pipeline has excluded this file."""
         pass
 
     def source_file_excluded_during_build(
         self, dir: str, filename: str, current_info: CurrentInfo
     ) -> None:
-        """Called once for every pass and every file in the build stage
+        """Called once for every file in the build stage
         if an earlier pipeline has excluded this file."""
         pass
 
@@ -47,7 +35,7 @@ class BasePipe:
         pass
 
     def start_watch(self, current_info: CurrentInfo) -> None:
-        """Called once as we start the watch stage (not multiple times in passes).
+        """Called once as we start the watch stage.
         There is no end_watch because the watch stage ends
         by the user stopping the whole program
         """
