@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 * Each pipe now runs completely before the next pipe is called. This replaces pass numbers as a simpler system.
 * Log messages are clearer about which pipe is running with new `get_description_for_logs` function.
+* `PipeLoadCollectionCSV`, parameter `filename` now defaults to `data.csv` ( similar to `PipeLoadCollectionJSONList`).
 
 ### Removed
 

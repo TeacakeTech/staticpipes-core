@@ -15,7 +15,10 @@ class PipeLoadCollectionCSV(BasePipe):
     """
 
     def __init__(
-        self, directory: str = "", filename: str = "", collection_name: str = "data"
+        self,
+        directory: str = "",
+        filename: str = "data.csv",
+        collection_name: str = "data",
     ):
         self._directory = directory
         self._filename = filename
