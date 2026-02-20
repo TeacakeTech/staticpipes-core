@@ -37,7 +37,7 @@ class PipeLoadCollectionPythonDocs(BasePipe):
         # set context
         current_info.set_context(["collection", self._collection_name], collection)
 
-    def _build_modname(self, modname, collection):
+    def _build_modname(self, modname: str, collection: Collection):
 
         # vars
         logger.debug("Building for " + modname)

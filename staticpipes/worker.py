@@ -74,7 +74,9 @@ class Worker:
         )
         self._build(run_checks=True, sys_exit_after_checks=sys_exit_after_checks)
 
-    def _build(self, run_checks=True, sys_exit_after_checks=False):
+    def _build(
+        self, run_checks: bool = True, sys_exit_after_checks: bool = False
+    ) -> None:
         # Prepare ...
         self.build_directory.prepare()
         # List files into storage
@@ -100,8 +102,7 @@ class Worker:
                 self._build_pipe(pipe_or_bundle)
         # Tidy up
         self.build_directory.remove_all_files_we_did_not_write()
-
-        # Step 2: check
+        # Check
         if run_checks:
             self._check(sys_exit_after_checks=sys_exit_after_checks)
 
@@ -123,12 +124,11 @@ class Worker:
         # end build
         pipe.end_build(self.current_info)
 
-    def _check(self, sys_exit_after_checks=False):
+    def _check(self, sys_exit_after_checks: bool = False) -> None:
         if not self.config.checks:
             logger.info("No checks defined")
             return
 
-        self._check_reports: list = []
         # start
         for check in self.config.checks:
             for c_r in check.start_check():
@@ -238,7 +238,7 @@ class Worker:
         logger.info("Watching ...")
         watcher.watch()
 
-    def process_file_during_watch(self, dir, filename):
+    def process_file_during_watch(self, dir: str, filename: str) -> None:
         # Check if we should process
         if self.build_directory.is_equal_to_source_dir(
             os.path.join(self.source_directory.dir, dir)
