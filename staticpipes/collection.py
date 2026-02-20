@@ -5,7 +5,7 @@ from staticpipes.collection_base import BaseCollection, BaseCollectionRecord
 
 class CollectionRecord(BaseCollectionRecord):
 
-    def __init__(self, id=None, data=None):
+    def __init__(self, id=None, data=None) -> None:
         self._id = id
         self._data = data
 
@@ -18,7 +18,7 @@ class CollectionRecord(BaseCollectionRecord):
 
 class Collection(BaseCollection):
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._records: list = []
 
     def add_record(self, record: BaseCollectionRecord) -> None:

@@ -7,7 +7,7 @@ from .source_directory import SourceDirectory
 
 class BasePipe:
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.config: Config = None  # type: ignore
         self.source_directory: SourceDirectory = None  # type: ignore
         self.build_directory: BuildDirectory = None  # type: ignore

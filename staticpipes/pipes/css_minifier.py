@@ -12,7 +12,7 @@ class PipeCSSMinifier(BasePipe):
     and minifies them at the same time.
     """
 
-    def __init__(self, extensions=["css"]):
+    def __init__(self, extensions: list = ["css"]):
         self.extensions = extensions
 
     def build_source_file(

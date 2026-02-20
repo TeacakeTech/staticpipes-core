@@ -12,7 +12,7 @@ class PipeJavascriptMinifier(BasePipe):
     and minifies them at the same time.
     """
 
-    def __init__(self, extensions=["js"]):
+    def __init__(self, extensions: list = ["js"]):
         self.extensions = extensions
 
     def build_source_file(

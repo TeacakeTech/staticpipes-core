@@ -12,5 +12,5 @@ class Config:
         for check in checks:
             check.config = self
 
-    def get_pipes(self):
+    def get_pipes(self) -> list:
         return self.pipes

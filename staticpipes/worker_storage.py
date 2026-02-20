@@ -4,7 +4,7 @@ from contextlib import closing
 
 class WorkerStorage:
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._connection = sqlite3.connect(":memory:")
         self._connection.row_factory = sqlite3.Row
         self._create_tables()

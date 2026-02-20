@@ -3,7 +3,7 @@ import logging
 
 
 class Handler(http.server.SimpleHTTPRequestHandler):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, directory=DIRECTORY, **kwargs)
 
 

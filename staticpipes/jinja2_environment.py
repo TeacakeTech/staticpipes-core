@@ -7,7 +7,7 @@ from staticpipes.source_directory import SourceDirectory
 
 class Jinja2Environment:
 
-    def __init__(self, autoescape=True, filters: dict = {}):
+    def __init__(self, autoescape: bool = True, filters: dict = {}):
         self._jinja2_environment: Optional[jinja2.Environment] = None
         self._autoescape = autoescape
         self._filters = filters

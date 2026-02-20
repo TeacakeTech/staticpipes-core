@@ -10,11 +10,11 @@ DEFAULT_CHECK_HTML_TAG_SETTINGS = {"img": {"required_attributes": ["alt"]}}
 
 class CheckHtmlTagsHTMLParser(html.parser.HTMLParser):
 
-    def __init__(self, dir, filename, html_tag_settings, check: BaseCheck):
+    def __init__(self, dir: str, filename: str, html_tag_settings, check: BaseCheck):
         super().__init__()
         self._html_tag_settings = html_tag_settings
-        self._dir = dir
-        self._filename = filename
+        self._dir: str = dir
+        self._filename: str = filename
         self.check_reports: list[CheckReport] = []
         self._check: BaseCheck = check
 

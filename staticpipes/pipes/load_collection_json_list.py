@@ -17,8 +17,8 @@ class PipeLoadCollectionJSONList(BasePipe):
     def __init__(
         self,
         directory="",
-        filename="data.json",
-        collection_name="data",
+        filename: str = "data.json",
+        collection_name: str = "data",
     ):
         self._directory = directory
         self._filename = filename

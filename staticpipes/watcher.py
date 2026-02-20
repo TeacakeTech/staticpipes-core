@@ -4,10 +4,12 @@ import time
 import watchdog.events
 from watchdog.observers import Observer
 
+from .worker import Worker
+
 
 class Watcher(watchdog.events.FileSystemEventHandler):
 
-    def __init__(self, worker):
+    def __init__(self, worker: Worker):
         self.worker = worker
         self.ignore_extensions = [
             # Pycharm

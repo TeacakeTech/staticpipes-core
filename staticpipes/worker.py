@@ -4,6 +4,7 @@ import os
 import sys
 
 from .build_directory import BuildDirectory
+from .config import Config
 from .current_info import CurrentInfo
 from .exceptions import WatchFunctionalityNotImplementedException
 from .source_directory import SourceDirectory
@@ -14,11 +15,11 @@ logger = logging.getLogger(__name__)
 
 class Worker:
 
-    def __init__(self, config, source_dir, build_directory):
-        self.config = config
-        self.source_directory = SourceDirectory(source_dir)
-        self.build_directory = BuildDirectory(build_directory)
-        self.current_info = None
+    def __init__(self, config: Config, source_dir: str, build_directory: str):
+        self.config: Config = config
+        self.source_directory: SourceDirectory = SourceDirectory(source_dir)
+        self.build_directory: BuildDirectory = BuildDirectory(build_directory)
+        self.current_info: CurrentInfo = None  # type: ignore
         self._check_reports: list = []
         self._worker_storage = WorkerStorage()
 

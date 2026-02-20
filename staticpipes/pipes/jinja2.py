@@ -33,8 +33,8 @@ class PipeJinja2(BasePipe):
 
     def __init__(
         self,
-        extensions=["html"],
-        watch_rebuild_all=False,
+        extensions: list = ["html"],
+        watch_rebuild_all: bool = False,
         jinja2_environment: Optional[Jinja2Environment] = None,
     ):
         self.extensions = extensions
