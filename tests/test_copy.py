@@ -14,7 +14,9 @@ def test_copy_fixture_with_extensions():
     # setup
     out_dir = tempfile.mkdtemp(prefix="staticpipes_tests_")
     config = staticpipes.config.Config(
-        pipes=[staticpipes.pipes.copy.PipeCopy(extensions=["html"])],
+        pipes_and_groups_of_pipes=[
+            staticpipes.pipes.copy.PipeCopy(extensions=["html"])
+        ],
     )
     worker = staticpipes.worker.Worker(
         config,
@@ -32,7 +34,7 @@ def test_copy_fixture_with_no_extensions():
     # setup
     out_dir = tempfile.mkdtemp(prefix="staticpipes_tests_")
     config = staticpipes.config.Config(
-        pipes=[staticpipes.pipes.copy.PipeCopy()],
+        pipes_and_groups_of_pipes=[staticpipes.pipes.copy.PipeCopy()],
     )
     worker = staticpipes.worker.Worker(
         config,
@@ -50,7 +52,9 @@ def test_copy_fixture_with_directory():
     # setup
     out_dir = tempfile.mkdtemp(prefix="staticpipes_tests_")
     config = staticpipes.config.Config(
-        pipes=[staticpipes.pipes.copy.PipeCopy(directories=["/css"])],
+        pipes_and_groups_of_pipes=[
+            staticpipes.pipes.copy.PipeCopy(directories=["/css"])
+        ],
     )
     worker = staticpipes.worker.Worker(
         config,
@@ -74,7 +78,9 @@ def test_copy_fixture_then_watch(monkeypatch):
     )
     out_dir = tempfile.mkdtemp(prefix="staticpipes_tests_")
     config = staticpipes.config.Config(
-        pipes=[staticpipes.pipes.copy.PipeCopy(extensions=["html"])],
+        pipes_and_groups_of_pipes=[
+            staticpipes.pipes.copy.PipeCopy(extensions=["html"])
+        ],
     )
     worker = staticpipes.worker.Worker(
         config,
@@ -109,7 +115,9 @@ def test_copy_ignore_dist_under_source():
     )
     out_dir = os.path.join(in_dir, "in", "_site")
     config = staticpipes.config.Config(
-        pipes=[staticpipes.pipes.copy.PipeCopy(extensions=["html"])],
+        pipes_and_groups_of_pipes=[
+            staticpipes.pipes.copy.PipeCopy(extensions=["html"])
+        ],
     )
     worker = staticpipes.worker.Worker(
         config,
@@ -140,7 +148,9 @@ def test_copy_and_delete_files_already_in_site_dir():
     )
     out_dir = tempfile.mkdtemp(prefix="staticpipes_tests_")
     config = staticpipes.config.Config(
-        pipes=[staticpipes.pipes.copy.PipeCopy(extensions=["html"])],
+        pipes_and_groups_of_pipes=[
+            staticpipes.pipes.copy.PipeCopy(extensions=["html"])
+        ],
     )
     worker = staticpipes.worker.Worker(
         config,

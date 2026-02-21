@@ -14,7 +14,7 @@ def test_css_minifier_pipe():
     # setup
     out_dir = tempfile.mkdtemp(prefix="staticpipes_tests_")
     config = staticpipes.config.Config(
-        pipes=[staticpipes.pipes.css_minifier.PipeCSSMinifier()],
+        pipes_and_groups_of_pipes=[staticpipes.pipes.css_minifier.PipeCSSMinifier()],
     )
     worker = staticpipes.worker.Worker(
         config,
@@ -38,7 +38,7 @@ def test_css_minifier_process():
     # setup
     out_dir = tempfile.mkdtemp(prefix="staticpipes_tests_")
     config = staticpipes.config.Config(
-        pipes=[
+        pipes_and_groups_of_pipes=[
             staticpipes.pipes.process.PipeProcess(
                 extensions=["css"],
                 processors=[

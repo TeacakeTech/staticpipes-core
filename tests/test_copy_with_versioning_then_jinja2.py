@@ -14,7 +14,7 @@ def test_copy_with_versioning_then_jinja2_fixture_in_filename_mode():
     # setup
     out_dir = tempfile.mkdtemp(prefix="staticpipes_tests_")
     config = staticpipes.config.Config(
-        pipes=[
+        pipes_and_groups_of_pipes=[
             staticpipes.pipes.copy_with_versioning.PipeCopyWithVersioning(
                 extensions=["css", "js"],
                 context_key="where_my_files",
@@ -66,7 +66,7 @@ def test_copy_with_versioning_then_jinja2_fixture_in_get_mode():
     # setup
     out_dir = tempfile.mkdtemp(prefix="staticpipes_tests_")
     config = staticpipes.config.Config(
-        pipes=[
+        pipes_and_groups_of_pipes=[
             staticpipes.pipes.copy_with_versioning.PipeCopyWithVersioning(
                 extensions=["css", "js"],
                 context_key="where_my_files",
@@ -117,7 +117,7 @@ def test_copy_with_versioning_with_bad_directory():
     # setup
     out_dir = tempfile.mkdtemp(prefix="staticpipes_tests_")
     config = staticpipes.config.Config(
-        pipes=[
+        pipes_and_groups_of_pipes=[
             staticpipes.pipes.copy_with_versioning.PipeCopyWithVersioning(
                 extensions=["css", "js"],
                 # this directory is wrong, it does not exist
@@ -154,7 +154,7 @@ def test_watch_while_change_js_file(monkeypatch):
     )
     out_dir = tempfile.mkdtemp(prefix="staticpipes_tests_")
     config = staticpipes.config.Config(
-        pipes=[
+        pipes_and_groups_of_pipes=[
             staticpipes.pipes.copy_with_versioning.PipeCopyWithVersioning(
                 extensions=["css", "js"],
                 context_key="where_my_files",

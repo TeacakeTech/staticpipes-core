@@ -14,7 +14,7 @@ def test_exclude_underscore_directories():
     # setup
     out_dir = tempfile.mkdtemp(prefix="staticpipes_tests_")
     config = staticpipes.config.Config(
-        pipes=[
+        pipes_and_groups_of_pipes=[
             PipeExcludeUnderscoreDirectories(),
             staticpipes.pipes.copy.PipeCopy(),
         ],

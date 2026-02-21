@@ -14,7 +14,7 @@ def test_collection_json_list():
     # setup
     out_dir = tempfile.mkdtemp(prefix="staticpipes_tests_")
     config = staticpipes.config.Config(
-        pipes=[
+        pipes_and_groups_of_pipes=[
             staticpipes.pipes.load_collection_json_list.PipeLoadCollectionJSONList(),
         ],
     )

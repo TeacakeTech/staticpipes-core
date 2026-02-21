@@ -12,7 +12,7 @@ def test_collection_python_docs():
     # setup
     out_dir = tempfile.mkdtemp(prefix="staticpipes_tests_")
     config = staticpipes.config.Config(
-        pipes=[
+        pipes_and_groups_of_pipes=[
             PipeLoadCollectionPythonDocs(
                 module_names=["staticpipes"],
             ),

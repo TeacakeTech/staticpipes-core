@@ -14,7 +14,7 @@ def test_copy_fixture_with_extensions_with_correct_directories_in_filename_mode(
     # setup
     out_dir = tempfile.mkdtemp(prefix="staticpipes_tests_")
     config = staticpipes.config.Config(
-        pipes=[
+        pipes_and_groups_of_pipes=[
             staticpipes.pipes.process.PipeProcess(
                 directories=["js"],
                 extensions=["js"],
@@ -61,7 +61,7 @@ def test_copy_fixture_with_extensions_with_correct_directories_in_get_mode():
     # setup
     out_dir = tempfile.mkdtemp(prefix="staticpipes_tests_")
     config = staticpipes.config.Config(
-        pipes=[
+        pipes_and_groups_of_pipes=[
             staticpipes.pipes.process.PipeProcess(
                 directories=["js"],
                 extensions=["js"],
@@ -104,7 +104,7 @@ def test_copy_fixture_with_extensions_with_wrong_directories():
     # setup
     out_dir = tempfile.mkdtemp(prefix="staticpipes_tests_")
     config = staticpipes.config.Config(
-        pipes=[
+        pipes_and_groups_of_pipes=[
             staticpipes.pipes.process.PipeProcess(
                 directories=["assets"],
                 extensions=["js"],

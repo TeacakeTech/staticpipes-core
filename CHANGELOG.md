@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * `PipeLoadCollectionCSV`, parameter `filename` now defaults to `data.csv` ( similar to `PipeLoadCollectionJSONList`).
 * `PipeLoadCollectionPythonDocs`, parameter `module_names` is now required.
 * More private variables in classes are now marked with `_`.
+* `pipes` parameter to `Config` has now changed to `pipes_and_groups_of_pipes`.
 
 ### Removed
 

@@ -35,7 +35,7 @@ def test_jinja2_render_contents(jinja2_environment, expected_hello_var_output_in
     )
     out_dir = tempfile.mkdtemp(prefix="staticpipes_tests_")
     config = staticpipes.config.Config(
-        pipes=[
+        pipes_and_groups_of_pipes=[
             staticpipes.pipes.exclude_underscore_directories.PipeExcludeUnderscoreDirectories(),  # noqa
             staticpipes.pipes.process.PipeProcess(
                 extensions=["html"],

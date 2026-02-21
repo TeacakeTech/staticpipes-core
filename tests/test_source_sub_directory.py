@@ -22,7 +22,7 @@ def test_source_sub_directory_copy(source_sub_directory):
     # setup
     out_dir = tempfile.mkdtemp(prefix="staticpipes_tests_")
     config = staticpipes.config.Config(
-        pipes=[
+        pipes_and_groups_of_pipes=[
             staticpipes.pipes.copy.PipeCopy(
                 extensions=["js", "txt"], source_sub_directory=source_sub_directory
             )
@@ -57,7 +57,7 @@ def test_source_sub_directory_copy_with_versioning(source_sub_directory):
     # setup
     out_dir = tempfile.mkdtemp(prefix="staticpipes_tests_")
     config = staticpipes.config.Config(
-        pipes=[
+        pipes_and_groups_of_pipes=[
             staticpipes.pipes.copy_with_versioning.PipeCopyWithVersioning(
                 extensions=["js"],
                 source_sub_directory=source_sub_directory,

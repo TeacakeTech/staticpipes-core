@@ -35,15 +35,13 @@ class Worker:
         self._worker_storage = WorkerStorage()
 
         # Look for extra Secondary Source Dirs from Bundles
-        for pipe_or_bundle in self._config.pipes:
+        for pipe_or_bundle in self._config.get_pipes_and_groups_of_pipes():
             if isinstance(pipe_or_bundle, BaseBundle):
                 for (
                     k,
                     v,
                 ) in pipe_or_bundle.get_secondary_source_directory_paths().items():
                     self.secondary_source_directories[k] = SourceDirectory(v)
-
-        for pipe_or_bundle in self._config.pipes:
             pipe_or_bundle.setup_for_worker(
                 self._config,
                 self._source_directory,
@@ -89,7 +87,7 @@ class Worker:
                         dir = "/"
                     self._worker_storage.store_file_details(dir, file)
         # For each pipe or pipe-grouping, process
-        for pipe_or_bundle in self._config.get_pipes():
+        for pipe_or_bundle in self._config.get_pipes_and_groups_of_pipes():
             if isinstance(pipe_or_bundle, BaseBundle):
                 logger.info(
                     "Processing Bundle {} ...".format(
@@ -177,7 +175,7 @@ class Worker:
                 "Checks do not work in watch yet, so no future checks will be done"  # noqa
             )
         # start watching
-        for pipe_or_bundle in self._config.pipes:
+        for pipe_or_bundle in self._config.get_pipes_and_groups_of_pipes():
             if isinstance(pipe_or_bundle, BaseBundle):
                 for pipe in pipe_or_bundle.get_pipes():
                     pipe.start_watch(self._current_info)
@@ -216,7 +214,7 @@ class Worker:
         ).start()
 
         # start watching
-        for pipe_or_bundle in self._config.pipes:
+        for pipe_or_bundle in self._config.get_pipes_and_groups_of_pipes():
             if isinstance(pipe_or_bundle, BaseBundle):
                 for pipe in pipe_or_bundle.get_pipes():
                     pipe.start_watch(self._current_info)
@@ -238,7 +236,7 @@ class Worker:
         context_version: int = self._current_info.get_context_version()
         # For this file, start processing
         self._current_info.set_current_file_excluded(False)
-        for pipe_or_bundle in self._config.get_pipes():
+        for pipe_or_bundle in self._config.get_pipes_and_groups_of_pipes():
             # Call each pipe for file
             if isinstance(pipe_or_bundle, BaseBundle):
                 for pipe in pipe_or_bundle.get_pipes():
@@ -249,7 +247,7 @@ class Worker:
             #  But that is not used for anything in watch yet.
         #  If context changed, call each pipe for context
         if context_version != self._current_info.get_context_version():
-            for pipe_or_bundle in self._config.get_pipes():
+            for pipe_or_bundle in self._config.get_pipes_and_groups_of_pipes():
                 if isinstance(pipe_or_bundle, BaseBundle):
                     for pipe in pipe_or_bundle.get_pipes():
                         pipe.context_changed_during_watch(

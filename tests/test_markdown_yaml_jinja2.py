@@ -15,7 +15,7 @@ def test_markdown_yaml_jinja2():
     # setup
     out_dir = tempfile.mkdtemp(prefix="staticpipes_tests_")
     config = staticpipes.config.Config(
-        pipes=[
+        pipes_and_groups_of_pipes=[
             staticpipes.pipes.process.PipeProcess(
                 extensions=["md"],
                 processors=[

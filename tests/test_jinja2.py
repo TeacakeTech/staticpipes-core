@@ -58,7 +58,7 @@ def test_jinja2_then_watch_while_change_output_file(
         extensions=["html"], jinja2_environment=jinja2_environment
     )
     config = staticpipes.config.Config(
-        pipes=[
+        pipes_and_groups_of_pipes=[
             staticpipes.pipes.exclude_underscore_directories.PipeExcludeUnderscoreDirectories(),  # noqa
             jinja2_pipeline,
         ],
@@ -120,7 +120,7 @@ def test_jinja2_then_watch_while_change_parent_one_level_up(monkeypatch):
     out_dir = tempfile.mkdtemp(prefix="staticpipes_tests_")
     jinja2_pipeline = PipeJinja2TestClass(extensions=["html"])
     config = staticpipes.config.Config(
-        pipes=[
+        pipes_and_groups_of_pipes=[
             staticpipes.pipes.exclude_underscore_directories.PipeExcludeUnderscoreDirectories(),  # noqa
             jinja2_pipeline,
         ],
@@ -180,7 +180,7 @@ def test_jinja2_then_watch_while_change_parent_two_levels_up(monkeypatch):
     out_dir = tempfile.mkdtemp(prefix="staticpipes_tests_")
     jinja2_pipeline = PipeJinja2TestClass(extensions=["html"])
     config = staticpipes.config.Config(
-        pipes=[
+        pipes_and_groups_of_pipes=[
             staticpipes.pipes.exclude_underscore_directories.PipeExcludeUnderscoreDirectories(),  # noqa
             jinja2_pipeline,
         ],
@@ -240,7 +240,7 @@ def test_jinja2_unknown_depends_then_watch_while_change_library(monkeypatch):
     out_dir = tempfile.mkdtemp(prefix="staticpipes_tests_")
     jinja2_pipeline = PipeJinja2TestClass(extensions=["html"])
     config = staticpipes.config.Config(
-        pipes=[
+        pipes_and_groups_of_pipes=[
             staticpipes.pipes.exclude_underscore_directories.PipeExcludeUnderscoreDirectories(),  # noqa
             jinja2_pipeline,
         ],
@@ -301,7 +301,7 @@ def test_jinja2_environment_options():
     )
     out_dir = tempfile.mkdtemp(prefix="staticpipes_tests_")
     config = staticpipes.config.Config(
-        pipes=[
+        pipes_and_groups_of_pipes=[
             PipeJinja2TestClass(
                 extensions=["html"], jinja2_environment=jinja2_environment
             ),
