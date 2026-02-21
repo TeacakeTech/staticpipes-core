@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-02-21
+
 ### Added
 
 * Secondary Source Directories, used by Jinja2 and the new pipe `PipeCopyFromSecondarySource`.
