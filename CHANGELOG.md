@@ -29,6 +29,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Only the first check report was being written out to logs; now all are
 * `Jinja2Environment` now doesn't have problems around mutable dicts in `filters` parameter.
 * `PipeLoadCollectionPythonDocs` now doesn't have problems around mutable lists in `module_names` parameter.
+* `Config` now doesn't have problems around mutable lists and dicts.
 
 ## [0.6.0] - 2026-01-16
 
