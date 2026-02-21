@@ -16,19 +16,21 @@ class PipeCopyFromSecondarySource(BasePipe):
         destination_directory: str | None = None,
         destination_filename: str | None = None,
     ):
-        self._secondary_source_name = secondary_source_name
-        self._source_directory = source_directory
-        self._source_filename = source_filename
-        self._destination_directory = destination_directory or source_directory
-        self._destination_filename = destination_filename or source_filename
+        self._secondary_source_name: str = secondary_source_name
+        self._source_directory_name: str = source_directory
+        self._source_filename: str = source_filename
+        self._destination_directory_name: str = (
+            destination_directory or source_directory
+        )
+        self._destination_filename: str = destination_filename or source_filename
 
     def start_build(self, current_info: CurrentInfo) -> None:
-        self.build_directory.copy_in_file(
-            self._destination_directory,
+        self._build_directory.copy_in_file(
+            self._destination_directory_name,
             self._destination_filename,
-            self.secondary_source_directories[
+            self._secondary_source_directories[
                 self._secondary_source_name
-            ].get_full_filename(self._source_directory, self._source_filename),
+            ].get_full_filename(self._source_directory_name, self._source_filename),
         )
 
     def source_file_changed_during_watch(self, dir, filename, current_info):
@@ -43,8 +45,8 @@ class PipeCopyFromSecondarySource(BasePipe):
             + "Destination Dir {}, Destination filename {}"
         ).format(
             self._secondary_source_name,
-            self._source_directory,
+            self._source_directory_name,
             self._source_filename,
-            self._destination_directory,
+            self._destination_directory_name,
             self._destination_filename,
         )

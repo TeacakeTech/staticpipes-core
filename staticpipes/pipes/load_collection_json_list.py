@@ -29,7 +29,7 @@ class PipeLoadCollectionJSONList(BasePipe):
 
         collection = Collection()
 
-        with self.source_directory.get_contents_as_filepointer(
+        with self._source_directory.get_contents_as_filepointer(
             self._directory, self._filename
         ) as fp:
             data = json.load(fp)

@@ -9,9 +9,18 @@ class Config:
         # Pipes
         self._pipes_and_groups_of_pipes: list = pipes_and_groups_of_pipes or []
         # Context
-        self.context: dict = context or {}
+        self._context: dict = context or {}
         # Checks
-        self.checks: list = checks or []
+        self._checks: list = checks or []
 
-    def get_pipes_and_groups_of_pipes(self) -> list:
+    @property
+    def pipes_and_groups_of_pipes(self) -> list:
         return self._pipes_and_groups_of_pipes
+
+    @property
+    def context(self) -> dict:
+        return self._context
+
+    @property
+    def checks(self) -> list:
+        return self._checks

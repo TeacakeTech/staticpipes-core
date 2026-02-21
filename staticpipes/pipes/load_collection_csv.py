@@ -28,7 +28,7 @@ class PipeLoadCollectionCSV(BasePipe):
         """"""
         collection = Collection()
 
-        with self.source_directory.get_contents_as_filepointer(
+        with self._source_directory.get_contents_as_filepointer(
             self._directory or "", self._filename
         ) as fp:
             self._load(fp, collection)

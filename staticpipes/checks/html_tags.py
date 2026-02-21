@@ -65,5 +65,5 @@ class CheckHtmlTags(BaseCheck):
             html_tag_settings=self._html_tag_settings,
             check=self,
         )
-        parser.feed(self.build_directory.get_contents_as_str(dir, filename))
+        parser.feed(self._build_directory.get_contents_as_str(dir, filename))
         return parser.check_reports

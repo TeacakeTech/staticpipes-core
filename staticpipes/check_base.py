@@ -5,8 +5,16 @@ from .config import Config
 class BaseCheck:
 
     def __init__(self) -> None:
-        self.config: Config = None  # type: ignore
-        self.build_directory: BuildDirectory = None  # type: ignore
+        self._config: Config = None  # type: ignore
+        self._build_directory: BuildDirectory = None  # type: ignore
+
+    def setup_for_worker(
+        self,
+        config: Config,
+        build_directory: BuildDirectory,
+    ) -> None:
+        self._config = config
+        self._build_directory = build_directory
 
     def start_check(self) -> list:
         """Called as we start the check stage."""

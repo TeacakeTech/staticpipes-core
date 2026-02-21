@@ -72,10 +72,12 @@ class PipeCollectionRecordsProcess(BasePipe):
     def start_build(self, current_info: CurrentInfo) -> None:
         """"""
         for processor in self._processors:
-            processor.config = self.config
-            processor.source_directory = self.source_directory
-            processor.secondary_source_directories = self.secondary_source_directories
-            processor.build_directory = self.build_directory
+            processor.setup_for_worker(
+                self._config,
+                self._source_directory,
+                self._secondary_source_directories,
+                self._build_directory,
+            )
 
         collection = current_info.get_context("collection")[self._collection_name]
 
@@ -114,7 +116,7 @@ class PipeCollectionRecordsProcess(BasePipe):
                     current_info,
                 )
 
-            self.build_directory.write(
+            self._build_directory.write(
                 process_current_info.dir,
                 process_current_info.filename,
                 process_current_info.contents,

@@ -121,7 +121,7 @@ class PipeCopyWithVersioning(BasePipe):
             out_dir = dir
 
         # Make new filename
-        contents = self.source_directory.get_contents_as_bytes(dir, filename)
+        contents = self._source_directory.get_contents_as_bytes(dir, filename)
         contents_hash = hashlib.md5(contents).hexdigest()
 
         if isinstance(self._versioning_mode, VersioningModeInFileName):
@@ -145,10 +145,10 @@ class PipeCopyWithVersioning(BasePipe):
         )
 
         # Copy File
-        self.build_directory.copy_in_file(
+        self._build_directory.copy_in_file(
             out_dir,
             new_filename,
-            self.source_directory.get_full_filename(dir, filename),
+            self._source_directory.get_full_filename(dir, filename),
         )
 
     def source_file_changed_during_watch(self, dir, filename, current_info):

@@ -92,7 +92,7 @@ class CheckInternalLinks(BaseCheck):
         check_reports: list = []
 
         parser = CheckInternalLinksHTMLParser()
-        parser.feed(self.build_directory.get_contents_as_str(dir, filename))
+        parser.feed(self._build_directory.get_contents_as_str(dir, filename))
 
         for link in parser.links:
             dirs_files_to_check = _get_dirs_files_to_check(dir, filename, link["link"])
@@ -101,7 +101,7 @@ class CheckInternalLinks(BaseCheck):
                     [
                         i
                         for i in dirs_files_to_check
-                        if self.build_directory.has_file(i[0], i[1])
+                        if self._build_directory.has_file(i[0], i[1])
                     ]
                 )
                 == 0

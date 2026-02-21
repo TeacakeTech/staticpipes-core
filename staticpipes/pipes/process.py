@@ -47,10 +47,12 @@ class PipeProcess(BasePipe):
     def start_build(self, current_info: CurrentInfo) -> None:
         """"""
         for processor in self._processors:
-            processor.config = self.config
-            processor.source_directory = self.source_directory
-            processor.secondary_source_directories = self.secondary_source_directories
-            processor.build_directory = self.build_directory
+            processor.setup_for_worker(
+                self._config,
+                self._source_directory,
+                self._secondary_source_directories,
+                self._build_directory,
+            )
 
     def build_source_file(
         self, dir: str, filename: str, current_info: CurrentInfo
@@ -79,9 +81,9 @@ class PipeProcess(BasePipe):
             dir,
             filename,
             (
-                self.source_directory.get_contents_as_bytes(dir, filename)
+                self._source_directory.get_contents_as_bytes(dir, filename)
                 if self._binary_content
-                else self.source_directory.get_contents_as_str(dir, filename)
+                else self._source_directory.get_contents_as_str(dir, filename)
             ),
             context=current_info.get_context().copy(),
         )
@@ -93,7 +95,7 @@ class PipeProcess(BasePipe):
             )
 
         # Write
-        self.build_directory.write(
+        self._build_directory.write(
             process_current_info.dir,
             process_current_info.filename,
             process_current_info.contents,

@@ -24,10 +24,10 @@ class PipeCSSMinifier(BasePipe):
         ):
             return
 
-        self.build_directory.write(
+        self._build_directory.write(
             dir,
             filename,
-            rcssmin.cssmin(self.source_directory.get_contents_as_str(dir, filename)),
+            rcssmin.cssmin(self._source_directory.get_contents_as_str(dir, filename)),
         )
 
     def source_file_changed_during_watch(self, dir, filename, current_info):

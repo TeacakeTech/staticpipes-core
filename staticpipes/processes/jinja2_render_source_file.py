@@ -32,8 +32,8 @@ class ProcessJinja2RenderSourceFile(BaseProcessor):
             self._jinja2_environment = Jinja2Environment()
 
         template = self._jinja2_environment.get(
-            source_directory=self.source_directory,
-            secondary_source_directories=self.secondary_source_directories,
+            source_directory=self._source_directory,
+            secondary_source_directories=self._secondary_source_directories,
         ).get_template(self._template)
         process_current_info.context["content"] = process_current_info.contents
         contents = template.render(process_current_info.context)

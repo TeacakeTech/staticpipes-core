@@ -2,12 +2,25 @@ class CurrentInfo:
 
     def __init__(self, context: dict = {}, watch: bool = False):
         self._context: dict = context
-        self.watch: bool = watch
-        self.current_file_excluded: bool = False
+        self._watch: bool = watch
+        self._current_file_excluded: bool = False
         self._context_history: list = []
 
+    @property
+    def watch(self) -> bool:
+        return self._watch
+
+    @property
+    def current_file_excluded(self) -> bool:
+        return self._current_file_excluded
+
+    @current_file_excluded.setter
+    def current_file_excluded(self, current_file_excluded: bool):
+        self._current_file_excluded = current_file_excluded
+
     def set_current_file_excluded(self, current_file_excluded: bool):
-        self.current_file_excluded = current_file_excluded
+        """deprecated. Can set directly now."""
+        self._current_file_excluded = current_file_excluded
 
     def get_context(self, key=None):
         if isinstance(key, str):

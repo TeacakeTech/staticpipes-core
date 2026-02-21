@@ -64,10 +64,10 @@ class PipeCopy(BasePipe):
         else:
             out_dir = dir
 
-        self.build_directory.copy_in_file(
+        self._build_directory.copy_in_file(
             out_dir,
             filename,
-            self.source_directory.get_full_filename(dir, filename),
+            self._source_directory.get_full_filename(dir, filename),
         )
 
     def source_file_changed_during_watch(self, dir, filename, current_info):

@@ -39,7 +39,7 @@ class CheckHtmlWithTidy(BaseCheck):
                 "-q",
                 "-f",
                 name_f,
-                self.build_directory.get_full_filename(dir, filename),
+                self._build_directory.get_full_filename(dir, filename),
             ],
             capture_output=True,
         )
