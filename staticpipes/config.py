@@ -8,14 +8,10 @@ class Config:
     ):
         # Pipes
         self._pipes_and_groups_of_pipes: list = pipes_and_groups_of_pipes or []
-        for pipe in self._pipes_and_groups_of_pipes:
-            pipe.config = self
         # Context
         self.context: dict = context
         # Checks
         self.checks: list = checks
-        for check in checks:
-            check.config = self
 
     def get_pipes_and_groups_of_pipes(self) -> list:
         return self._pipes_and_groups_of_pipes
