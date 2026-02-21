@@ -79,20 +79,20 @@ class PipeCopyWithVersioning(BasePipe):
 
     def __init__(
         self,
-        extensions: list = ["js", "css"],
+        extensions: list[str] | None = None,
         context_key: str = "versioning_new_filenames",
         source_sub_directory=None,
-        directories: list = ["/"],
+        directories: list[str] | None = None,
         versioning_mode: VersioningMode | None = None,
     ):
-        self._extensions = extensions
+        self._extensions: list[str] = extensions or ["js", "css"]
         self._context_key = context_key
         self._source_sub_directory = (
             "/" + source_sub_directory
             if source_sub_directory and not source_sub_directory.startswith("/")
             else source_sub_directory
         )
-        self._directories: list = directories
+        self._directories: list[str] = directories or ["/"]
         self._versioning_mode: VersioningMode = (
             versioning_mode or VersioningModeInGetParameter()
         )

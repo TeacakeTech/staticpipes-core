@@ -9,7 +9,7 @@ class BuildDirectory(BaseDirectory):
 
     def __init__(self, dir: str):
         super().__init__(dir)
-        self._written_files: list = []
+        self._written_files: list[tuple[str, str]] = []
 
     def prepare(self):
         os.makedirs(self._dir, exist_ok=True)

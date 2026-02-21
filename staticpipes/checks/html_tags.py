@@ -46,10 +46,10 @@ class CheckHtmlTags(BaseCheck):
     def __init__(
         self,
         html_tag_settings: Optional[dict] = None,
-        extensions: Optional[list] = None,
+        extensions: Optional[list[str]] = None,
     ):
         self._html_tag_settings = html_tag_settings or DEFAULT_CHECK_HTML_TAG_SETTINGS
-        self.extensions: list = extensions or ["html"]
+        self.extensions: list[str] = extensions or ["html"]
 
     def check_build_file(self, dir: str, filename: str) -> list:
         # Check Extensions

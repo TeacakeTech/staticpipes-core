@@ -34,14 +34,14 @@ class PipeProcess(BasePipe):
 
     def __init__(
         self,
-        extensions=None,
+        extensions: list[str] | None = None,
         processors=None,
-        directories: list = ["/"],
+        directories: list[str] | None = None,
         binary_content: bool = False,
     ):
-        self._extensions: list = extensions or []
+        self._extensions: list[str] = extensions or []
         self._processors = processors
-        self._directories: list = directories
+        self._directories: list[str] = directories or ["/"]
         self._binary_content: bool = binary_content
 
     def start_build(self, current_info: CurrentInfo) -> None:

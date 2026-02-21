@@ -19,12 +19,12 @@ class CollectionRecord(BaseCollectionRecord):
 class Collection(BaseCollection):
 
     def __init__(self) -> None:
-        self._records: list = []
+        self._records: list[BaseCollectionRecord] = []
 
     def add_record(self, record: BaseCollectionRecord) -> None:
         self._records.append(record)
 
-    def get_records(self) -> list:
+    def get_records(self) -> list[BaseCollectionRecord]:
         return self._records
 
     def get_record(self, id) -> typing.Optional[BaseCollectionRecord]:

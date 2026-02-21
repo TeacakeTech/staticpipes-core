@@ -2,7 +2,6 @@ import os
 import re
 import subprocess
 import tempfile
-from typing import Optional
 
 import staticpipes.utils
 from staticpipes.check_base import BaseCheck
@@ -17,9 +16,9 @@ class CheckHtmlWithTidy(BaseCheck):
 
     def __init__(
         self,
-        extensions: Optional[list] = None,
+        extensions: list[str] | None = None,
     ):
-        self._extensions: list = extensions or ["html"]
+        self._extensions: list[str] = extensions or ["html"]
 
     def check_build_file(self, dir: str, filename: str) -> list:
         # Check Extensions

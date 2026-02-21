@@ -29,17 +29,17 @@ class PipeCopy(BasePipe):
 
     def __init__(
         self,
-        extensions=None,
+        extensions: list[str] | None = None,
         source_sub_directory=None,
-        directories: list = ["/"],
+        directories: list[str] | None = None,
     ):
-        self._extensions: list = extensions or []
+        self._extensions: list[str] = extensions or []
         self._source_sub_directory = (
             "/" + source_sub_directory
             if source_sub_directory and not source_sub_directory.startswith("/")
             else source_sub_directory
         )
-        self._directories: list = directories
+        self._directories: list[str] = directories or ["/"]
 
     def build_source_file(
         self, dir: str, filename: str, current_info: CurrentInfo

@@ -16,7 +16,7 @@ class BundlePythonDocs(BaseBundle):
 
     def __init__(
         self,
-        module_names: list,
+        module_names: list[str],
         destination_dir: str = "reference",
         jinja2_environment=None,
     ):

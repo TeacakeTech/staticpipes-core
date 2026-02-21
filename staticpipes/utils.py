@@ -1,7 +1,7 @@
 from typing import Optional
 
 
-def does_filename_have_extension(filename: str, extensions: list) -> bool:
+def does_filename_have_extension(filename: str, extensions: list[str]) -> bool:
     fn = filename.lower()
     for extension in extensions:
         if fn.endswith("." + extension.lower()):
@@ -26,7 +26,7 @@ def make_dir_and_filename_from_path(path: str):
     return dir, filename
 
 
-def is_directory_in_list(check_dir: str, directories: list) -> bool:
+def is_directory_in_list(check_dir: str, directories: list[str]) -> bool:
     """Returns bool True if directory is in list
     or is a child of any directory in the list."""
     # Easy check - is just everything included?

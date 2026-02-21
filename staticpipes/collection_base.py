@@ -20,7 +20,7 @@ class BaseCollection(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def get_records(self) -> list:
+    def get_records(self) -> list[BaseCollectionRecord]:
         pass
 
     @abc.abstractmethod
