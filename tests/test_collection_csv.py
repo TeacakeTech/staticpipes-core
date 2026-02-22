@@ -14,7 +14,7 @@ def test_collection_csv():
     # setup
     out_dir = tempfile.mkdtemp(prefix="staticpipes_tests_")
     config = staticpipes.config.Config(
-        pipes_and_groups_of_pipes=[
+        [
             staticpipes.pipes.load_collection_csv.PipeLoadCollectionCSV(
                 filename="data.csv"
             ),

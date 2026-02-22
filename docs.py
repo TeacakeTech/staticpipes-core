@@ -66,7 +66,7 @@ class ProcessMarkdownPages(BaseProcessor):
 version = os.getenv("VERSION", "")
 
 config = Config(
-    pipes_and_groups_of_pipes=[
+    [
         PipeExcludeUnderscoreDirectories(),
         PipeProcess(
             extensions=["md"],

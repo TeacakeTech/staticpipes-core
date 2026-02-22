@@ -42,7 +42,7 @@ from staticpipes.pipes.collection_records_process import PipeCollectionRecordsPr
 from staticpipes.processes.jinja2_render_source_file import ProcessJinja2RenderSourceFile
 
 config = Config(
-    pipes=[
+    [
         PipeLoadCollectionCSV(filename="pets.csv",collection_name="pets"),
         PipeCollectionRecordsProcess(
             collection_name="pets",

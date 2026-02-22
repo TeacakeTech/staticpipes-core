@@ -17,7 +17,7 @@ from staticpipes.pipes.copy import PipeCopy
 import os
 
 config = Config(
-    pipes=[
+    [
         PipeCopy(extensions=["html", "css", "js"]),
     ],
 )

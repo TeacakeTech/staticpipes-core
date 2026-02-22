@@ -13,7 +13,7 @@ To copy any text file directly, add:
 from staticpipes.pipes.copy import PipeCopy
 
 config = Config(
-    pipes=[
+    [
         PipeCopy(extensions=["txt"]),
     ],
 )
@@ -35,7 +35,7 @@ class PipeNoAIRobots(BasePipe):
         self.build_directory.write("/", "robots.txt", r.text)
 
 config = Config(
-    pipes=[
+    [
         PipeNoAIRobots(),
     ],
 )

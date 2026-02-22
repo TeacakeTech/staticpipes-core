@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed
+
+* `pipes` parameter to `Config` has now changed to `pipes_and_groups_of_pipes` - correct this in docs and readme.
+
 ## [0.7.0] - 2026-02-21
 
 ### Added

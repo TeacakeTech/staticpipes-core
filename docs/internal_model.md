@@ -104,7 +104,7 @@ from staticpipes.processes.version import ProcessVersion
 from staticpipes.processes.javascript_minifier import ProcessJavascriptMinifier
 
 config = Config(
-    pipes=[
+    [
         PipeProcess(extensions=["js"], processors=[ProcessJavascriptMinifier(), ProcessVersion()]),
     ],
 )

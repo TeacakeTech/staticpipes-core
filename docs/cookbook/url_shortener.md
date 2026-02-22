@@ -47,7 +47,7 @@ from staticpipes.processes.jinja2_render_source_file import ProcessJinja2RenderS
 from staticpipes.config import Config
 
 config = Config(
-    pipes=[
+    [
         PipeLoadCollectionCSV(filename="data.csv", collection_name="links"),
         PipeCollectionRecordsProcess(
             collection_name="links",

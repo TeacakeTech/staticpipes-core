@@ -13,7 +13,7 @@ To copy JS files directly, add:
 from staticpipes.pipes.copy import PipeCopy
 
 config = Config(
-    pipes=[
+    [
         PipeCopy(extensions=["js"]),
     ],
 )
@@ -25,7 +25,7 @@ If you like putting your JS in a `assets` directory in your source, you can do:
 
 ```python
 config = Config(
-    pipes=[
+    [
         PipeCopy(extensions=["js"], source_sub_directory="assets"),
     ],
 )
@@ -41,7 +41,7 @@ Version your assets:
 from staticpipes.pipes.copy_with_versioning import PipeCopyWithVersioning
 
 config = Config(
-    pipes=[
+    [
         PipeCopyWithVersioning(extensions=["js"]),
     ]
 )
@@ -64,7 +64,7 @@ You can now get your web server to tell web browsers to cache anything in the `j
 from staticpipes.pipes.javascript_minifier import PipeJavascriptMinifier
 
 config = Config(
-    pipes=[
+    [
         PipeJavascriptMinifier(),
     ],
 )
@@ -81,7 +81,7 @@ from staticpipes.processes.version import ProcessVersion
 from staticpipes.processes.javascript_minifier import ProcessJavascriptMinifier
 
 config = Config(
-    pipes=[
+    [
         PipeExcludeUnderscoreDirectories(),
         PipeProcess(extensions=["js"], processors=[ProcessJavascriptMinifier(), ProcessVersion()]),
     ],

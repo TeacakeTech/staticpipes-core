@@ -48,7 +48,7 @@ import logging
 import os
 
 config = Config(
-    pipes=[
+    [
         PipeProcess(
             extensions=["md"],
             processors=[

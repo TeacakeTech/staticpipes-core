@@ -16,7 +16,7 @@ from staticpipes.pipes.copy import PipeCopy
 import os
 
 config = Config(
-    pipes=[
+    [
         PipeCopy(extensions=["html", "css", "js"]),
     ],
 )
@@ -48,7 +48,7 @@ Use Jinja2 templates for html files:
 from staticpipes.pipes.jinja2 import PipeJinja2
 
 config = Config(
-    pipes=[
+    [
         PipeCopy(extensions=["css", "js"]),
         PipeJinja2(extensions=["html"]),
     ],
@@ -64,7 +64,7 @@ If you like putting your CSS and JS in a `assets` directory in your source, you 
 
 ```python
 config = Config(
-    pipes=[
+    [
         PipeCopy(extensions=["css", "js"], source_sub_directory="assets"),
         PipeJinja2(extensions=["html"]),
     ],
@@ -82,7 +82,7 @@ Now `assets/css/main.css` will appear in `css/main.css`
 from staticpipes.pipes.copy_with_versioning import PipeCopyWithVersioning
 
 config = Config(
-    pipes=[
+    [
         PipeCopyWithVersioning(extensions=["css", "js"]),
         PipeJinja2(extensions=["html"]),
     ]
@@ -100,7 +100,7 @@ Exclude library files like `_layouts/base.html` templates:
 from staticpipes.pipes.exclude_underscore_directories import PipeExcludeUnderscoreDirectories
 
 config = Config(
-    pipes=[
+    [
         PipeExcludeUnderscoreDirectories(),
         PipeCopyWithVersioning(extensions=["css", "js"]),
         PipeJinja2(extensions=["html"]),
@@ -117,7 +117,7 @@ from staticpipes.pipes.javascript_minifier import PipeJavascriptMinifier
 from staticpipes.pipes.css_minifier import PipeCSSMinifier
 
 config = Config(
-    pipes=[
+    [
         PipeExcludeUnderscoreDirectories(),
         PipeJavascriptMinifier(),
         PipeCSSMinifier(),
@@ -138,7 +138,7 @@ from staticpipes.processes.javascript_minifier import ProcessJavascriptMinifier
 from staticpipes.processes.css_minifier import ProcessCSSMinifier
 
 config = Config(
-    pipes=[
+    [
         PipeExcludeUnderscoreDirectories(),
         PipeProcess(extensions=["js"], processors=[ProcessJavascriptMinifier(), ProcessVersion()]),
         PipeProcess(extensions=["css"], processors=[ProcessCSSMinifier(), ProcessVersion()]),
@@ -162,7 +162,7 @@ class PipeNoAIRobots(BasePipe):
         self.build_directory.write("/", "robots.txt", r.text)
 
 config = Config(
-    pipes=[
+    [
         PipeNoAIRobots(),
     ],
 )

@@ -28,7 +28,7 @@ If this directory is also a git repository, you can stop the `.git` repository b
 from staticpipes.pipes.exclude_dot_directories import PipeExcludeDotDirectories
 
 config = Config(
-    pipes=[
+    [
         PipeExcludeDotDirectories(),
         # rest of the pipes
     ],
@@ -63,7 +63,7 @@ If you like putting your CSS and JS in a `assets` directory in your source, you 
 
 ```python
 config = Config(
-    pipes=[
+    [
         PipeCopy(extensions=["css", "js"], source_sub_directory="assets"),
     ],
 )

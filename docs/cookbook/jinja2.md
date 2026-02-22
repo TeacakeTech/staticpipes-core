@@ -10,7 +10,7 @@ Use Jinja2 templates for HTML files:
 from staticpipes.pipes.jinja2 import PipeJinja2
 
 config = Config(
-    pipes=[
+    [
         PipeJinja2(extensions=["html"]),
     ],
     context={
@@ -31,7 +31,7 @@ Put them all in a directory that starts with a `_` like `_templates` then exclud
 from staticpipes.pipes.exclude_underscore_directories import PipeExcludeUnderscoreDirectories
 
 config = Config(
-    pipes=[
+    [
         PipeExcludeUnderscoreDirectories(),
         PipeJinja2(extensions=["html"]),
     ],

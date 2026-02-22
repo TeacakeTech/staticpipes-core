@@ -13,7 +13,7 @@ To copy CSS files directly, add:
 from staticpipes.pipes.copy import PipeCopy
 
 config = Config(
-    pipes=[
+    [
         PipeCopy(extensions=["css"]),
     ],
 )
@@ -25,7 +25,7 @@ If you like putting your CSS in a `assets` directory in your source, you can do:
 
 ```python
 config = Config(
-    pipes=[
+    [
         PipeCopy(extensions=["css"], source_sub_directory="assets"),
     ],
 )
@@ -41,7 +41,7 @@ Version your assets:
 from staticpipes.pipes.copy_with_versioning import PipeCopyWithVersioning
 
 config = Config(
-    pipes=[
+    [
         PipeCopyWithVersioning(extensions=["css"]),
     ]
 )
@@ -64,7 +64,7 @@ You can now get your web server to tell web browsers to cache anything in the `c
 from staticpipes.pipes.css_minifier import PipeCSSMinifier
 
 config = Config(
-    pipes=[
+    [
         PipeCSSMinifier(),
     ],
 )
@@ -81,7 +81,7 @@ from staticpipes.processes.version import ProcessVersion
 from staticpipes.processes.css_minifier import ProcessCSSMinifier
 
 config = Config(
-    pipes=[
+    [
         PipeExcludeUnderscoreDirectories(),
         PipeProcess(extensions=["css"], processors=[ProcessCSSMinifier(), ProcessVersion()]),
     ],
