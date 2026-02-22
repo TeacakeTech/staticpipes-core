@@ -34,8 +34,8 @@ dev= [
 staticpipesdev = ["pytest", "black", "isort", "mypy", "flake8", "sphinx"]
 
 [project.urls]
-Homepage = "https://github.com/StaticPipes/StaticPipes"
-#Documentation = "https://readthedocs.org"
+Homepage = "https://staticpipes.teacaketech.scot/"
+Documentation = "https://docs.staticpipes.teacaketech.scot/stable/"
 Repository = "https://github.com/StaticPipes/StaticPipes"
 Issues = "https://github.com/StaticPipes/StaticPipes/issues"
 Changelog = "https://github.com/StaticPipes/StaticPipes/blob/main/CHANGELOG.md"
