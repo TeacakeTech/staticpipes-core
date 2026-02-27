@@ -4,6 +4,8 @@ import os
 from markdown_it import MarkdownIt
 
 from staticpipes.bundles.python_docs import BundlePythonDocs
+from staticpipes.checks.file_contains_text import CheckFileContainsText
+from staticpipes.checks.file_exists import CheckFileExists
 from staticpipes.checks.html_tags import CheckHtmlTags
 from staticpipes.checks.html_with_tidy import CheckHtmlWithTidy
 from staticpipes.checks.internal_links import CheckInternalLinks
@@ -89,6 +91,11 @@ config = Config(
         CheckHtmlWithTidy(),
         CheckHtmlTags(),
         CheckInternalLinks(),
+        # It may seem wasteful to check the file exists then check text in it,
+        # but this docs.py file is run as part of C.I.
+        # so this is helping test the code too!
+        CheckFileExists("cookbook/jinja2", "index.html"),
+        CheckFileContainsText("cookbook/jinja2", "index.html", "Jinja2 Cookbook"),
     ],
     context={
         "base_url": "/{}/".format(version) if version else "/",
