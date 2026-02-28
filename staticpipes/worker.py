@@ -98,7 +98,8 @@ class Worker:
             else:
                 self._build_pipe(pipe_or_bundle)
         # Tidy up
-        self._build_directory.remove_all_files_we_did_not_write()
+        if self._config.remove_build_directory_content_we_did_not_touch:
+            self._build_directory.remove_all_files_we_did_not_write()
         # Check
         if run_checks:
             self._check(sys_exit_after_checks=sys_exit_after_checks)

@@ -5,13 +5,14 @@ class Config:
         pipes_and_groups_of_pipes: list | None = None,
         context: dict | None = None,
         checks: list | None = None,
+        remove_build_directory_content_we_did_not_touch: bool = True,
     ):
-        # Pipes
         self._pipes_and_groups_of_pipes: list = pipes_and_groups_of_pipes or []
-        # Context
         self._context: dict = context or {}
-        # Checks
         self._checks: list = checks or []
+        self._remove_build_directory_content_we_did_not_touch: bool = (
+            remove_build_directory_content_we_did_not_touch
+        )
 
     @property
     def pipes_and_groups_of_pipes(self) -> list:
@@ -24,3 +25,7 @@ class Config:
     @property
     def checks(self) -> list:
         return self._checks
+
+    @property
+    def remove_build_directory_content_we_did_not_touch(self) -> bool:
+        return self._remove_build_directory_content_we_did_not_touch
