@@ -1,5 +1,6 @@
 import argparse
 import logging
+import os
 import sys
 
 from .worker import Worker
@@ -78,5 +79,11 @@ def cli(
             secondary_source_directories=secondary_source_directories,
         )
         worker.serve(
-            server_address=args.address or "localhost", server_port=args.port or 8000
+            server_address=(
+                args.address
+                or os.getenv("STATICPIPES_DEFAULT_SERVER_ADDRESS", "localhost")
+            ),
+            server_port=(
+                args.port or int(os.getenv("STATICPIPES_DEFAULT_SERVER_PORT", "8000"))
+            ),
         )

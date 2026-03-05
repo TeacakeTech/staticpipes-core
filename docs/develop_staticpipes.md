@@ -38,7 +38,7 @@ docker run --rm -it --name staticpipesdevcontainer -v .:/workspace -p 8000:8000 
 To see the docs site, run:
 
 ```
-python docs.py s -a 0.0.0.0
+python docs.py s
 ```
 
 And go to [http://localhost:8000/](http://localhost:8000/)

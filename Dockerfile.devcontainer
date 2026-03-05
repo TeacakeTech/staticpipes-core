@@ -8,6 +8,7 @@ WORKDIR /workspace
 RUN /bin/bash -c "echo \"export PATH=\$PATH:/root/.local/bin/\" >> /root/.bashrc"
 RUN /bin/bash -c "echo \"alias lint='black staticpipes tests ; isort staticpipes tests ; flake8 staticpipes tests ; mypy --install-types --non-interactive -p staticpipes'\" >> /root/.bashrc"
 RUN /bin/bash -c "echo \"alias test='py.test tests; python docs.py check'\" >> /root/.bashrc"
+RUN /bin/bash -c "echo \"export STATICPIPES_DEFAULT_SERVER_ADDRESS=0.0.0.0\" >> /root/.bashrc"
 
 COPY pyproject.toml .
 RUN pip3 install --user -e .[allbuild,dev,staticpipesdev]
