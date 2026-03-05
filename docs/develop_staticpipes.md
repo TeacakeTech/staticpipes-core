@@ -11,13 +11,13 @@ If you want to develop the actual tool (instead of just using it to build a webs
 
 You can just open a dev container to get an environment with all the features you need.
 
-To see an example site, run:
+To see the docs site, run:
 
 ```
 python docs.py s
 ```
 
-And go to [http://localhost:8000/](http://localhost:8000/)
+And go to port 8000 on the correct host.
 
 ### Docker
 
@@ -26,16 +26,16 @@ You can also open a Docker container to get an environment with all the features
 To setup:
 
 ```
-docker build -t staticpatchdevcontainer  -f Dockerfile.devcontainer .
+docker build -t staticpipesdevcontainer  -f Dockerfile.devcontainer .
 ```
 
 To run:
 
 ```
-docker run --rm -it --name staticpatchdevcontainer -v .:/workspace -p 8000:8000 staticpatchdevcontainer bash
+docker run --rm -it --name staticpipesdevcontainer -v .:/workspace -p 8000:8000 staticpipesdevcontainer bash
 ```
 
-To see an example site, run:
+To see the docs site, run:
 
 ```
 python docs.py s -a 0.0.0.0
@@ -45,27 +45,17 @@ And go to [http://localhost:8000/](http://localhost:8000/)
 
 ### Test
 
-Run:
+If inside the dev container or Docker, just run:
 
 ```
-pytest tests/
+test
 ```
 
 ### Lint
 
-Run:
+If inside the dev container or Docker, just run:
 
 ```
-black staticpipes tests docs.py
-isort staticpipes tests docs.py
-flake8 staticpipes tests docs.py
-mypy --install-types --non-interactive -p staticpipes
+lint
 ```
 
-### Docs
-
-Run:
-
-```
-python docs.py serve
-```

@@ -1,4 +1,4 @@
-FROM python:3.13-bookworm
+FROM python:3.13-trixie
 
 RUN apt-get update
 RUN apt-get install -y tidy
@@ -6,6 +6,8 @@ RUN apt-get install -y tidy
 WORKDIR /workspace
 
 RUN /bin/bash -c "echo \"export PATH=\$PATH:/root/.local/bin/\" >> /root/.bashrc"
+RUN /bin/bash -c "echo \"alias lint='black staticpipes tests ; isort staticpipes tests ; flake8 staticpipes tests ; mypy --install-types --non-interactive -p staticpipes'\" >> /root/.bashrc"
+RUN /bin/bash -c "echo \"alias test='py.test tests; python docs.py check'\" >> /root/.bashrc"
 
 COPY pyproject.toml .
 RUN pip3 install --user -e .[allbuild,dev,staticpipesdev]
