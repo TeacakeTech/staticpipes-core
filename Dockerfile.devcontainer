@@ -1,16 +1,33 @@
 FROM python:3.13-trixie
 
-RUN apt-get update
-RUN apt-get install -y tidy
+ARG USERNAME=human
+ARG USER_UID=1000
+ARG USER_GID=$USER_UID
 
+# Install needed packages
+RUN apt-get update
+RUN apt-get install -y tidy sudo
+
+# Add User
+RUN groupadd --gid $USER_GID $USERNAME
+RUN useradd --uid $USER_UID --gid $USER_GID -m $USERNAME --shell /bin/bash
+RUN echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME && chmod 0440 /etc/sudoers.d/$USERNAME
+
+# Add workdir
+RUN mkdir /workspace && chown $USERNAME /workspace
 WORKDIR /workspace
 
-RUN /bin/bash -c "echo \"export PATH=\$PATH:/root/.local/bin/\" >> /root/.bashrc"
-RUN /bin/bash -c "echo \"alias lint='black staticpipes tests ; isort staticpipes tests ; flake8 staticpipes tests ; mypy --install-types --non-interactive -p staticpipes'\" >> /root/.bashrc"
-RUN /bin/bash -c "echo \"alias test='py.test tests; python docs.py check'\" >> /root/.bashrc"
-RUN /bin/bash -c "echo \"export STATICPIPES_DEFAULT_SERVER_ADDRESS=0.0.0.0\" >> /root/.bashrc"
+# Set user & setup user environment
+USER $USERNAME
+RUN /bin/bash -c "echo \"export PATH=\$PATH:/home/$USERNAME/.local/bin/\" >> /home/$USERNAME/.bashrc"
+RUN /bin/bash -c "echo \"alias lint='black staticpipes tests ; isort staticpipes tests ; flake8 staticpipes tests ; mypy --install-types --non-interactive -p staticpipes'\" >> /home/$USERNAME/.bashrc"
+RUN /bin/bash -c "echo \"alias test='py.test tests; python docs.py check'\" >> /home/$USERNAME/.bashrc"
+RUN /bin/bash -c "echo \"export STATICPIPES_DEFAULT_SERVER_ADDRESS=0.0.0.0\" >> /home/$USERNAME/.bashrc"
 
+# Install project dependencies
 COPY pyproject.toml .
+COPY README.md .
 RUN pip3 install --user -e .[allbuild,dev,staticpipesdev]
 
-CMD ["bash"]
+# Finally ...
+CMD ["/bin/bash"]
