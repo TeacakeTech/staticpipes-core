@@ -2,6 +2,7 @@ import copy
 import logging
 import os
 import sys
+import traceback
 
 from .build_directory import BuildDirectory
 from .bundle_base import BaseBundle
@@ -276,4 +277,14 @@ class Worker:
                     "WATCH FEATURE NOT IMPLEMENTED IN PIPE, "
                     + "YOU MAY HAVE TO BUILD MANUALLY: {}"
                 ).format(pipe.get_description_for_logs())
+            )
+        except Exception as exc:
+            logger.error(
+                "Error on file %(dir)s/%(filename)s and pipe %(pipe)s\n\n%(exception)s",
+                {
+                    "dir": dir,
+                    "filename": filename,
+                    "pipe": pipe.get_description_for_logs(),
+                    "exception": "".join(traceback.format_exception(exc)),
+                },
             )

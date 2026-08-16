@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * new check `CheckFileContainsText`
 * new config option `remove_build_directory_content_we_did_not_touch`
 * new env variables `STATICPIPES_DEFAULT_SERVER_ADDRESS` and `STATICPIPES_DEFAULT_SERVER_PORT` - makes it easier to use inside a dev container.
+* Catch and log exceptions thrown in pipes during watch https://github.com/TeacakeTech/staticpipes-core/issues/6
 
 ### Removed
 
