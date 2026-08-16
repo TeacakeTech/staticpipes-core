@@ -108,7 +108,18 @@ class Worker:
     def _build_pipe(self, pipe) -> None:
         logger.info("Processing Pipe {} ...".format(pipe.get_description_for_logs()))
         # start build
-        pipe.start_build(self._current_info)
+        try:
+            pipe.start_build(self._current_info)
+        except Exception as exc:
+            logger.error(
+                "Error in start_build in pipe %(pipe)s\n\n%(exception)s",
+                {
+                    "pipe": pipe.get_description_for_logs(),
+                    "exception": "".join(traceback.format_exception(exc)),
+                },
+            )
+            if not self._config.on_build_exception_continue:
+                raise exc
         # files
         for dir, file, excluded in self._worker_storage.get_source_files():
             self._current_info.set_current_file_excluded(excluded)
@@ -117,7 +128,22 @@ class Worker:
                 pipe.source_file_excluded_during_build(dir, file, self._current_info)
             else:
                 logger.debug("Processing File {} {} ...".format(dir, file))
-                pipe.build_source_file(dir, file, self._current_info)
+                try:
+                    pipe.build_source_file(dir, file, self._current_info)
+                except Exception as exc:
+                    logger.error(
+                        "Error in build_source_file "
+                        + "in file %(dir)s/%(filename)s "
+                        + "and pipe %(pipe)s\n\n%(exception)s",
+                        {
+                            "dir": dir,
+                            "filename": file,
+                            "pipe": pipe.get_description_for_logs(),
+                            "exception": "".join(traceback.format_exception(exc)),
+                        },
+                    )
+                    if not self._config.on_build_exception_continue:
+                        raise exc
                 if self._current_info.current_file_excluded:
                     self._worker_storage.exclude_file(dir, file)
         # end build

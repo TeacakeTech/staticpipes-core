@@ -6,6 +6,7 @@ class Config:
         context: dict | None = None,
         checks: list | None = None,
         remove_build_directory_content_we_did_not_touch: bool = True,
+        on_build_exception_continue: bool = False,
     ):
         self._pipes_and_groups_of_pipes: list = pipes_and_groups_of_pipes or []
         self._context: dict = context or {}
@@ -13,6 +14,7 @@ class Config:
         self._remove_build_directory_content_we_did_not_touch: bool = (
             remove_build_directory_content_we_did_not_touch
         )
+        self._on_build_exception_continue: bool = on_build_exception_continue
 
     @property
     def pipes_and_groups_of_pipes(self) -> list:
@@ -29,3 +31,7 @@ class Config:
     @property
     def remove_build_directory_content_we_did_not_touch(self) -> bool:
         return self._remove_build_directory_content_we_did_not_touch
+
+    @property
+    def on_build_exception_continue(self) -> bool:
+        return self._on_build_exception_continue
